@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3" package="com.jiasy.threeGame" version="1.0.0">
+    <ui-application appid="com.jiasy.threeGame" exec="hellolua" type="capp" multiple="false" taskmanage="true" nodisplay="false">
+        <icon>threeGame.png</icon>
+        <label>threeGame</label>
+	</ui-application>
+</manifest>

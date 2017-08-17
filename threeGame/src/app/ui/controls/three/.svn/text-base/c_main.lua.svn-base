@@ -1,0 +1,143 @@
+--[[
+    调用方式 
+        1.模块名[moduleName] + 界面类名[className] 的方式
+            local _targetUi=uiControl:getInstance():jumpTo("three","main")
+        2._targetUi在场景中，只有调用 init 才能用。否则只是空层
+            _targetUi:init({})
+]]
+--class define--------------------------------------------------------
+local C_disUI=require("src.app.base.ui.disUI")
+local c_main = class("c_main",C_disUI)
+local ActionData = require "com.fight.model.ActionData"
+
+local function pursue(self, pursuer, target, callback, speed, a)
+    speed = speed or 5
+    a = a or 0
+    local token = {}
+    token.handle = cc.Director:getInstance():getScheduler():scheduleScriptFunc(function()
+            local px, py = pursuer:getPosition()
+            local tx, ty = target:getPosition()
+            local p = target:getParent():convertToWorldSpace({x = tx, y = ty})   
+            p = self:convertToNodeSpace(p)
+            tx, ty = p.x, p.y
+            local dx, dy = tx - px, ty - py 
+            if math.abs(dx) < 10 and math.abs(dy) < 10 then 
+                cc.Director:getInstance():getScheduler():unscheduleScriptEntry(token.handle)
+                callback() 
+            return end
+            local radian = math.atan2(dy, dx)
+            local vx, vy = speed * math.cos(radian), speed * math.sin(radian)
+            pursuer:setPosition(px + vx, py + vy)
+            speed = speed + a
+    end, 0, false)  
+end
+
+local colors = {{r = 1, g = 1, b = 0}, {r = 1, g = 0, b = 0}, {r = 0, g = 1, b = 0}, {r = 0, g = 0, b = 1}, {r = 1, g = 1, b = 1}}
+
+--ui create------------------------------------------
+function c_main:ctor(params_)
+    c_main.super.ctor(self,params_)
+    self.className="main"
+    self.moduleName="three"
+    self.layerType="ui"
+end
+
+--init data and place------------------------------------------
+function c_main:init(initDict_)
+    c_main.super.init(self,initDict_)
+    -----ui init----------------------------------------------------------
+  
+    local pveView = self.battle:init(initDict_)
+    local _threeDict={}
+    _threeDict.pveView= pveView
+    _threeDict.blockBreakInfoCallBack = 
+    function(_, data)
+        for k, item in pairs(data) do
+            local head, tail, color, level = string.find(k, "type_(%d+)_(%w+)")
+            color = tonumber(color)
+            local num = #item
+            print("color, level", color, level, num)
+            if num > 0 then
+                if level == "n" then
+                    for i = 1,  1 do
+                        local actionData = ActionData.new()
+                        actionData:setSkill(2)
+                        self:unitAct(color, actionData, item[1].x, item[1].y)                  
+                    end 
+                elseif level == "s" then
+                    num = math.max(num - 2, 0)
+                    for i = 1,  num do
+                        local actionData = ActionData.new()
+                        actionData:setSkill(1)
+                        self:unitAct(color, actionData, item[1].x, item[1].y)                  
+                    end                
+                else
+                    error()
+                end
+            end
+        end
+    end
+    _threeDict.roundEndCallBack = 
+    function(dict_)
+        initDict_:frameHandler()                  
+    end
+
+    local _specialDict={}--自定义数据初始化子UI
+    local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
+
+    _specialDict["three"]= _threeDict
+    _avoidInitDict["battle"]="avoidInitHere"--上面初始化过了
+    
+    self:initSubUIs(_specialDict,_avoidInitDict)
+
+    self._pveView = pveView
+    self._proxy = initDict_
+
+    self._proxy:refresh()     
+end
+--ui stateChange-------------------------------------
+function c_main:stateChange(stateName_,rightNow_)
+    --Logic here,then change state.
+    --判断切换这个状态时候需要的操作，数据整理等等。
+    c_main.super.stateChange(self,stateName_,rightNow_)
+end
+function c_main:unitAct(color, actionData, x, y)
+    --local p = self:convertToWorldSpace({x = x, y = y}) 
+    local p = self:convertToNodeSpace({x = x, y = y})
+
+    local unit = self._pveView:getContent():getPositiveUnits()[color]
+
+    local particle = displayUtils:getInstance():createPartical("partical_group", "free")
+    -- local particle = cc.ParticleMeteor:create()
+    -- particle:setGravity(cc.vertex2F(0, 0))
+    -- particle:setLife(0.5)
+    -- particle:setLifeVar(0.4)
+    -- particle:setAutoRemoveOnFinish(true)
+    -- particle:setStartColor(colors[actionData:getTrigger()])
+    particle:setPosition({x = p.x, y = p.y})
+    self:addChild(particle, 3)
+
+    pursue(self, particle, unit, function()
+        self._proxy:unitPushAction(color, true, actionData)
+        particle:stopSystem()
+    end, 15, 0.2)   
+end
+
+--btn click call back---------------------------------------------------
+function c_main:btnClicked(btnName_,rollName_,listName_,itemDataDict_)
+    c_main.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
+end
+
+function c_main:onCreate()
+    c_main.super.onCreate(self)
+    --print(self.moduleName .. " : " .. self.className .. " : " .. "onCreate")
+    --ui add logic here
+end
+
+function c_main:onDestory()
+    --ui remove logic here
+    --print(self.moduleName .. " : " .. self.className .. " : " .. "onDestory")
+    c_main.super.onDestory(self)
+end
+
+return c_main

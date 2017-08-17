@@ -1,0 +1,141 @@
+--imports----------------------------------------------------------
+local C_main_three_grids = require("src.app.ui.controls.three.c_main_three_grids")
+local C_main_three_blocks = require("src.app.ui.controls.three.c_main_three_blocks")
+local C_main_three_downs = require("src.app.ui.controls.three.c_main_three_downs")
+
+local uiState=require("src.app.base.ui.uiState")
+local p_main_three = {}
+
+function p_main_three:initPlace(referUI_,container_)
+	local du=displayUtils:getInstance()
+	local lu=languageUtils:getInstance()
+	local uc=uiControl:getInstance()
+	local _maskInfos={}
+	--Place all displays----------------------------------------------------------
+	referUI_.grids=C_main_three_grids.new();
+	referUI_.grids.name="grids"
+	du:placeAndAddChildToContainer(referUI_.grids,container_,0.00,0.00,-0.05,26.15,0,1,1,1,2)
+	table.insert(referUI_.uiList,referUI_.grids)
+	du:setLogicParent(referUI_.grids,referUI_)
+	referUI_.blocks=C_main_three_blocks.new();
+	referUI_.blocks.name="blocks"
+	du:placeAndAddChildToContainer(referUI_.blocks,container_,0.00,0.00,-0.05,26.15,0,1,1,1,3)
+	table.insert(referUI_.uiList,referUI_.blocks)
+	du:setLogicParent(referUI_.blocks,referUI_)
+	referUI_.downs=C_main_three_downs.new();
+	referUI_.downs.name="downs"
+	du:placeAndAddChildToContainer(referUI_.downs,container_,0.00,0.00,-4.05,11.15,0,1,1,1,4)
+	table.insert(referUI_.uiList,referUI_.downs)
+	du:setLogicParent(referUI_.downs,referUI_)
+	referUI_.nextBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.nextBtn.name="nextBtn"
+	du:setBtnText(referUI_.nextBtn,lu:tansWord("next"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.nextBtn,container_,0.50,0.50,-257.45,606.45,0,1,1,1,6)
+	referUI_.nextBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.nextBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("nextBtn")
+		end
+	)
+	du:setLogicParent(referUI_.nextBtn,referUI_)
+	referUI_.prevBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.prevBtn.name="prevBtn"
+	du:setBtnText(referUI_.prevBtn,lu:tansWord("prev"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.prevBtn,container_,0.50,0.50,-48.65,606.45,0,1,1,1,8)
+	referUI_.prevBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.prevBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("prevBtn")
+		end
+	)
+	du:setLogicParent(referUI_.prevBtn,referUI_)
+	referUI_.aiNormalBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.aiNormalBtn.name="aiNormalBtn"
+	du:setBtnText(referUI_.aiNormalBtn,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.aiNormalBtn,container_,0.50,0.50,55.75,606.45,0,1,1,1,9)
+	referUI_.aiNormalBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.aiNormalBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("aiNormalBtn")
+		end
+	)
+	du:setLogicParent(referUI_.aiNormalBtn,referUI_)
+	referUI_.aiQuickBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.aiQuickBtn.name="aiQuickBtn"
+	du:setBtnText(referUI_.aiQuickBtn,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.aiQuickBtn,container_,0.50,0.50,160.15,606.45,0,1,1,1,10)
+	referUI_.aiQuickBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.aiQuickBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("aiQuickBtn")
+		end
+	)
+	du:setLogicParent(referUI_.aiQuickBtn,referUI_)
+	referUI_.aiFlyBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.aiFlyBtn.name="aiFlyBtn"
+	du:setBtnText(referUI_.aiFlyBtn,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.aiFlyBtn,container_,0.50,0.50,264.6,606.45,0,1,1,1,11)
+	referUI_.aiFlyBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.aiFlyBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("aiFlyBtn")
+		end
+	)
+	du:setLogicParent(referUI_.aiFlyBtn,referUI_)
+	referUI_.resetBtn=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
+	referUI_.resetBtn.name="resetBtn"
+	du:setBtnText(referUI_.resetBtn,lu:tansWord("reset"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
+	du:placeAndAddChildToContainer(referUI_.resetBtn,container_,0.50,0.50,-153.05,606.45,0,1,1,1,12)
+	referUI_.resetBtn:addClickEventListener(
+		function(sender) 
+			if referUI_:isTouchAble()==false then return end
+			if referUI_.resetBtn:isVisible()==false then return end
+			if referUI_:getParentUIByLayerType("roll") then assert(false,"disBtn cann't contains by rollLayer.") end
+			referUI_:btnClicked("resetBtn")
+		end
+	)
+	du:setLogicParent(referUI_.resetBtn,referUI_)
+	referUI_.bg= cc.Sprite:create("bg_ballarea.png")
+	referUI_.bg.name="bg"
+	du:placeAndAddChildToContainer(referUI_.bg,container_,0.50,0.50,0,288,0,1,1,1,1)
+	du:setLogicParent(referUI_.bg,referUI_)
+	referUI_.pic_mask_3= cc.Sprite:create("bg_ballarea.png")
+	referUI_.pic_mask_3.name="pic_mask_3"
+	du:placeAndAddChildToContainer(referUI_.pic_mask_3,container_,0.50,0.50,-4,288,0,1,1,1,5)
+	du:setLogicParent(referUI_.pic_mask_3,referUI_)
+	local _pic_mask_3Mask={}
+	_pic_mask_3Mask.stencil=referUI_.pic_mask_3
+	_pic_mask_3Mask.maskNumber=3
+	table.insert(_maskInfos,_pic_mask_3Mask)
+	du.ttfConfig.fontSize = 18
+	du.ttfConfig.outlineSize = 0 
+	referUI_.desText=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("aaaaaaa"), cc.TEXT_ALIGNMENT_CENTER)
+	referUI_.desText.name="desText"
+	referUI_.desText:setString("desText")
+	du:textSet(referUI_.desText,255,255,255,515.85,29.2)
+	du:placeAndAddChildToContainer(referUI_.desText,container_,0.50,1.00,-0.05,585,0,1,1,1,7)
+	referUI_.desText.isText=true
+	du:setLogicParent(referUI_.desText,referUI_)
+	
+	while #_maskInfos>0 do
+		local _maskInfo=table.remove(_maskInfos)
+		du:createMask(container_,_maskInfo.stencil,_maskInfo.maskNumber)
+	end
+
+	-----special keys----------------------------------------------------------
+    referUI_.alignMode='B'
+    
+end
+
+
+return p_main_three
