@@ -57,7 +57,13 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
     local _trailMotion = nil
     local _trailCount = nil
     if self.type>=1 and self.type <10 then
-        _trailMotion = cc.MotionStreak:create(0.3, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
+        local _display = cc.Sprite:create("icon_ball_"..tostring(self.type)..".png")
+        -- _pic:setScale(0.5)
+        -- _pic:setPosition(cc.p(0,0))
+        -- _pic:setAnchorPoint(cc.p(0,0))
+        -- _display = cc.Layer:create()
+        -- _display:addChild(_pic)
+        _trailMotion = cc.MotionStreak:create(0.5, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
         _trailCount = trailCount_
     elseif  tonumber(self.type) == 11 then
         _display = cc.Sprite:create("icon_ball_11.png")

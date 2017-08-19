@@ -629,6 +629,9 @@ function c_main_three_blocks:chainSpecialBlockActive()
                 break
             end
         end
+        if _haveActiveBlockBoo then
+            break
+        end
     end
     --有处于激活状态的Block
     if _haveActiveBlockBoo then
@@ -802,9 +805,8 @@ function c_main_three_blocks:fallDown()
     if self:chainSpecialBlockActive() then
         -- 碎掉连锁触发的block。
         self:breakBlocks(true)
-        -- 碎掉之后，继续下落
-        self:delayFallDown(self.blockAnimationRemoveTime)
-        return
+        -- -- 碎掉之后，继续下落
+        -- self:delayFallDown(self.blockAnimationRemoveTime)
     end
 
     for _row = self.rowMax, 1, -1 do
@@ -889,6 +891,9 @@ function c_main_three_blocks:fallDown()
                         self:roundEndCallBack()
                     end
                 end
+            else
+                self:findAndRemoveMatches(false)
+                self.blockMovingBool = true
             end
         end
         self:allBlockCanMatch() -- 重置block状态。Great
@@ -1126,7 +1131,16 @@ function c_main_three_blocks:swapSpecialDelayActive(activeBlocks_)
         end
     end
     self:breakBlocks(true) --不需要记录消除信息
-    self:checkFallDown()
+
+    --等待爆破结束之后再进行下落
+    local function checkFallDownCallBack()
+        self:checkFallDown()
+    end
+    local _delayCheckFallDown = cc.Sequence:create(
+        cc.DelayTime:create(self.blockAnimationRemoveTime), 
+        cc.CallFunc:create(checkFallDownCallBack)
+    )
+    self:runAction(_delayCheckFallDown)
 end
 
 
