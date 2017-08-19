@@ -12,6 +12,7 @@ end
 --init data and place------------------------------------------
 function c_main_three_downs_down:init(initDict_)
     c_main_three_downs_down.super.init(self, initDict_)
+    self.main = self:getUiParent()
 end
 
 --ui stateChange-------------------------------------
