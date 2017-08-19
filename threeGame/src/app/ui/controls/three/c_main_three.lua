@@ -29,31 +29,6 @@ end
 --btn click call back---------------------------------------------------
 function c_main_three:btnClicked(btnName_, rollName_, listName_, itemDataDict_)
     c_main_three.super.btnClicked(self, btnName_, rollName_, listName_, itemDataDict_)
-    ----- check btn name----------------------------------------------------------
-    if btnName_ == "btn_next" then
-        print("Btn_pressed : " .. self.className .. " -> nextBtn"); ---------------------------- nextBtn
-        self.blocks:nextLevel()
-    end
-    if btnName_ == "btn_prev" then
-        print("Btn_pressed : " .. self.className .. " -> prevBtn"); ---------------------------- prevBtn
-        self.blocks:prevLevel()
-    end
-    if btnName_ == "btn_aiNormal" then
-        print("Btn_pressed : " .. self.className .. " -> aiNormalBtn"); ---------------------------- aiNormalBtn
-        self.blocks:preSetPar("ai_normal")
-    end
-    if btnName_ == "btn_aiQuick" then
-        print("Btn_pressed : " .. self.className .. " -> aiQuickBtn"); ---------------------------- aiQuickBtn
-        self.blocks:preSetPar("ai_quick")
-    end
-    if btnName_ == "btn_aiFly" then
-        print("Btn_pressed : " .. self.className .. " -> aiFlyBtn"); ---------------------------- aiFlyBtn
-        self.blocks:preSetPar("ai_fly")
-    end
-    if btnName_ == "btn_reset" then
-        print("Btn_pressed : " .. self.className .. " -> resetBtn"); ---------------------------- resetBtn
-        self.blocks:replayLevel()
-    end
 end
 
 function c_main_three:onCreate()

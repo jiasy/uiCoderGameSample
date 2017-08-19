@@ -484,17 +484,26 @@ end
 function block:addTargetGrid(targetGrids_)
     table.insert(self.targetGrids, targetGrids_)
 end
+function block:getRemoveEffectByType()
 
+end
 function block:removeByAnimation()
     if self.removed == false then
         local _tempSp = self.disUtils:createAnimation("xiaochudonghua")
-        self:placeInPos()
+        if self.type <10 then
+            _tempSp = self.disUtils:createAnimation("xiaochudonghua")
+        elseif self.type == 11 then
+            _tempSp = self.disUtils:createAnimation("ani_move")
+        end
         _tempSp:setPosition(cc.p(self:getPositionX(), self:getPositionY()))
         if self.match then
             _tempSp:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
         elseif self.chainMatch then
             --_tempSp:setBlendFunc(cc.blendFunc(gl.ONE , gl.ONE))
         end
+
+
+        self:placeInPos()
         self.threeGame:addChild(_tempSp, self.threeGame.blockEffectIndex) --特效层添加特效
         self.removed = true
         --这个地块里面拿出去

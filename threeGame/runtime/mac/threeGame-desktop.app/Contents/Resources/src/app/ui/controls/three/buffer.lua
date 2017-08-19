@@ -7,7 +7,7 @@ local buffer = class("buffer",
 
 function buffer:ctor(threeGame_, block_)
     self.threeGame = threeGame_
-    self.disUtils = self.threeGame.disUtils
+    self.displayUtils = self.threeGame.displayUtils
     self.block = block_
     self.bufferSp = nil
     self.type = 0
@@ -39,7 +39,7 @@ function buffer:reInitByType(type_, animation_)
 end
 
 function buffer:addAnimation(animationName_)
-    local _animation = self.disUtils:createAnimation(animationName_, false)
+    local _animation = self.displayUtils:createAnimation(animationName_, false)
     if self.block then
         _animation:setPosition(cc.p(self.block:getPositionX(), self.block:getPositionY()))
     else
@@ -155,7 +155,7 @@ function buffer:removeFromGame()
         end
     end
     self.block = nil
-    self.disUtils = nil
+    self.displayUtils = nil
     self.threeGame = nil
     self:stopAllActions()
     self:removeFromParent(true)

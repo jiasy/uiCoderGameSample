@@ -23,12 +23,12 @@ function c_main:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _battleDict={}
-    --_specialDict["battle"]= _battleDict
-    --_avoidInit["battle"]="avoidInitHere"
     --local _threeDict={}
     --_specialDict["three"]= _threeDict
     --_avoidInit["three"]="avoidInitHere"
+    --local _battleDict={}
+    --_specialDict["battle"]= _battleDict
+    --_avoidInit["battle"]="avoidInitHere"
     
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
@@ -49,6 +49,26 @@ end
 --btn click call back---------------------------------------------------
 function c_main:btnClicked(btnName_,rollName_,listName_,itemDataDict_)
     c_main.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
+    -----check btn name----------------------------------------------------------
+    if btnName_=="btn_next" then
+    	print("Btn_pressed : "..self.className.." -> btn_next");----------------------------btn_next
+    end
+    if btnName_=="btn_prev" then
+    	print("Btn_pressed : "..self.className.." -> btn_prev");----------------------------btn_prev
+    end
+    if btnName_=="btn_reset" then
+    	print("Btn_pressed : "..self.className.." -> btn_reset");----------------------------btn_reset
+    end
+    if btnName_=="btn_aiNormal" then
+    	print("Btn_pressed : "..self.className.." -> btn_aiNormal");----------------------------btn_aiNormal
+    end
+    if btnName_=="btn_aiQuick" then
+    	print("Btn_pressed : "..self.className.." -> btn_aiQuick");----------------------------btn_aiQuick
+    end
+    if btnName_=="btn_aiFly" then
+    	print("Btn_pressed : "..self.className.." -> btn_aiFly");----------------------------btn_aiFly
+    end
+    
 end
 
 function c_main:onCreate()

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="183fabe3-3a91-4761-b625-e18574947771" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/baseRequire.lua" afterPath="$PROJECT_DIR$/app/base/baseRequire.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/control/uiControl.lua" afterPath="$PROJECT_DIR$/app/base/control/uiControl.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/ui/disBase.lua" afterPath="$PROJECT_DIR$/app/base/ui/disBase.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/ui/disRoll.lua" afterPath="$PROJECT_DIR$/app/base/ui/disRoll.lua" />
@@ -9,8 +10,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/ui/disUIBtn.lua" afterPath="$PROJECT_DIR$/app/base/ui/disUIBtn.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/ui/uiState.lua" afterPath="$PROJECT_DIR$/app/base/ui/uiState.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/base/util/displayUtils.lua" afterPath="$PROJECT_DIR$/app/base/util/displayUtils.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/main/c_main.lua" afterPath="$PROJECT_DIR$/app/ui/controls/main/c_main.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/PVEView.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/PVEView.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/block.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/block.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/buffer.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/buffer.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/c_main.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/c_main.lua" />
@@ -20,7 +19,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_downs.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_downs.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_downs_down.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_downs_down.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_grids.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/c_main_three_grids.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controls/three/fight/UnitView.lua" afterPath="$PROJECT_DIR$/app/ui/controls/three/fight/UnitView.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main.lua" afterPath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main_battle.lua" afterPath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main_battle.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main_three.lua" afterPath="$PROJECT_DIR$/app/ui/controlsReplace/three/c_main_three.lua" />
@@ -36,7 +34,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/places/three/p_main_three_downs_down.lua" afterPath="$PROJECT_DIR$/app/ui/places/three/p_main_three_downs_down.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/ui/places/three/p_main_three_grids.lua" afterPath="$PROJECT_DIR$/app/ui/places/three/p_main_three_grids.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/MainScene.lua" afterPath="$PROJECT_DIR$/app/views/MainScene.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/com/fight/UnitView.lua" afterPath="$PROJECT_DIR$/com/fight/UnitView.lua" />
     </list>
     <ignored path="src.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -58,51 +55,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="c_main.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controls/main/c_main.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main_grids.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_grids.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="32" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main_three_blocks.lua" pinned="false" current-in-tab="true">
+      <file leaf-file-name="c_main_three_blocks.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_three_blocks.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-525">
-              <caret line="275" column="65" selection-start-line="275" selection-start-column="65" selection-end-line="275" selection-end-column="65" />
+            <state relative-caret-position="15">
+              <caret line="275" column="7" selection-start-line="275" selection-start-column="7" selection-end-line="275" selection-end-column="7" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="c_main_grids.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_grids.lua">
+      <file leaf-file-name="c_main_battle_blockCount.lua" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_battle_blockCount.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="375">
+              <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pursure.lua" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/ui/controls/three/pursure.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -111,28 +88,8 @@
       <file leaf-file-name="c_main_three.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_three.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
+            <state relative-caret-position="555">
               <caret line="37" column="88" selection-start-line="37" selection-start-column="88" selection-end-line="37" selection-end-column="88" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main_hearts.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="32" column="49" selection-start-line="32" selection-start-column="49" selection-end-line="32" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main_hearts_heart.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts_heart.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="37" column="29" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -141,18 +98,8 @@
       <file leaf-file-name="MainScene.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/MainScene.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="c_main_hearts_heart.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_hearts_heart.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="330">
+              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -220,6 +167,8 @@
         <option value="$PROJECT_DIR$/app/ui/controls/sample/c_main.lua" />
         <option value="$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_grids.lua" />
         <option value="$PROJECT_DIR$/app/ui/controls/three/c_main_three_blocks.lua" />
+        <option value="$PROJECT_DIR$/app/ui/controls/three/c_main_battle_blockCount.lua" />
+        <option value="$PROJECT_DIR$/app/ui/controls/three/pursure.lua" />
       </list>
     </option>
   </component>
@@ -367,6 +316,10 @@
               <option name="myItemId" value="controls" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="three" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -387,10 +340,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="controls" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="three" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -511,10 +460,6 @@
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
           <option name="myVcsRoot" value="$PROJECT_DIR$" />
-          <option name="myCopyRoot" value="$PROJECT_DIR$/com/fight" />
-        </SvnCopyRootSimple>
-        <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="$PROJECT_DIR$" />
           <option name="myCopyRoot" value="$PROJECT_DIR$/packages/mvc" />
         </SvnCopyRootSimple>
       </list>
@@ -535,10 +480,6 @@
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
           <option name="myVcsRoot" value="$PROJECT_DIR$" />
-          <option name="myCopyRoot" value="$PROJECT_DIR$/com/fight" />
-        </SvnCopyRootSimple>
-        <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="$PROJECT_DIR$" />
           <option name="myCopyRoot" value="$PROJECT_DIR$/packages/mvc" />
         </SvnCopyRootSimple>
       </list>
@@ -554,17 +495,18 @@
       <workItem from="1458724138356" duration="443000" />
       <workItem from="1502635480194" duration="237000" />
       <workItem from="1502635732203" duration="4447000" />
+      <workItem from="1503041744988" duration="54000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5127000" />
+    <option name="totallyTimeSpent" value="5181000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18956336" sideWeight="0.49325627" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19116081" sideWeight="0.49325627" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23788546" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
@@ -606,22 +548,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/base/ui/disUIBtn.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="33" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/base/ui/mcChildObject.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="39" selection-start-line="20" selection-start-column="39" selection-end-line="20" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/base/util/actionUtils.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -706,58 +632,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/common/c_item_uiJumper.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="33" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="34" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_roll.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_roll_item.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="33" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_rollh.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="37" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_sub.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/common/c_item_uiJumper.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_roll.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_roll_item.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/develop/c_uiJumper_rollh.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_sub.lua" />
     <entry file="file://$PROJECT_DIR$/app/ui/controls/three/buffer.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
@@ -790,22 +673,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/three/PVEView.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="40" column="54" selection-start-line="40" selection-start-column="54" selection-end-line="40" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_nextBtn.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="16" selection-start-line="37" selection-start-column="16" selection-end-line="37" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/three/PVEView.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_nextBtn.lua" />
     <entry file="file://$PROJECT_DIR$/app/base/control/uiControl.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -870,22 +739,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_testUIBtn.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_sampleUIBtn_lib.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="24" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_testUIBtn.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/uiBtn/c_sampleUIBtn_lib.lua" />
     <entry file="file://$PROJECT_DIR$/app/base/ui/disBase.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -930,79 +785,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1497">
           <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
-          <folding>
-            <marker date="1502880089000" expanded="true" signature="33:82" placeholder=" doc comment" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/main/c_main.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="49" selection-start-line="32" selection-start-column="49" selection-end-line="32" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_hearts_heart.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts_heart.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="37" column="29" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/main/c_main.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_hearts_heart.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_hearts_heart.lua" />
     <entry file="file://$PROJECT_DIR$/app/views/MainScene.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
+        <state relative-caret-position="330">
+          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_grids.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="32" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_grids.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controlsReplace/sample/c_main_grids.lua" />
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/sample/c_main_grids.lua" />
     <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_three.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
+        <state relative-caret-position="555">
           <caret line="37" column="88" selection-start-line="37" selection-start-column="88" selection-end-line="37" selection-end-column="88" />
           <folding />
         </state>
@@ -1010,8 +814,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_three_blocks.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-525">
-          <caret line="275" column="65" selection-start-line="275" selection-start-column="65" selection-end-line="275" selection-end-column="65" />
+        <state relative-caret-position="15">
+          <caret line="275" column="7" selection-start-line="275" selection-start-column="7" selection-end-line="275" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/three/pursure.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ui/controls/three/c_main_battle_blockCount.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
           <folding />
         </state>
       </provider>

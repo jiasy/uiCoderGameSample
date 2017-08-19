@@ -173,6 +173,41 @@ function displayUtilsInstance:picFitWindowSize(pic_,type_)
 	return nil,nil
 end
 
+function displayUtilsInstance:defFromDis(disX_,disY_)
+	local _deg = nil
+    if disX_ == 0 and disY_==0 then
+        
+    elseif disX_ == 0 then
+        if disY_>0 then
+            _deg =90
+        else
+            _deg =270
+        end
+    elseif disY_ == 0 then
+        if disX_>0 then
+            _deg =0
+        else
+            _deg =180
+        end
+    else
+        local _tempDeg = math.deg(math.atan(disY_/disX_))
+        if _tempDeg >0 then
+            if disX_ <0 then
+                _deg = _tempDeg +180
+            else
+                _deg = _tempDeg
+            end
+        else
+            if disX_ <0 then
+                _deg = _tempDeg +180
+            else
+                _deg = _tempDeg + 360
+            end
+        end
+    end
+    return _deg
+end
+
 function displayUtilsInstance:createPartical(particalName_,type_)
     local _aniSprite = cc.ParticleSystemQuad:create(string.format("%s.plist",particalName_))
     if type_ == "free" then

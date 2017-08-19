@@ -31,11 +31,15 @@ function c_main:init(initDict_)
 
     local function blockBreakInfoCallBack(_,data_)  
         print "three main - blockBreakInfoCallBack"
-        for k,v in pairs( data_ ) do
-            if #v>0 then
-                print(k,v)
+        for k,_blockArr in pairs( data_ ) do
+            if #_blockArr>0 then
+                local _keyArr = string.split(k,"_")
+                local _type = _keyArr[2]
+                local _special = _keyArr[3]
+                self.battle:getBlockCount(_type,_special,_blockArr)
             end
         end
+
     end 
     local function roundEndCallBack()  
         print "three main - roundEndCallBack"
@@ -60,6 +64,34 @@ end
 --btn click call back---------------------------------------------------
 function c_main:btnClicked(btnName_, rollName_, listName_, itemDataDict_)
     c_main.super.btnClicked(self, btnName_, rollName_, listName_, itemDataDict_)
+     ----- check btn name----------------------------------------------------------
+    if btnName_ == "btn_next" then
+        print("Btn_pressed : " .. self.className .. " -> nextBtn"); ---------------------------- nextBtn
+        self.three.blocks:nextLevel()
+        self.battle:reset()
+    end
+    if btnName_ == "btn_prev" then
+        print("Btn_pressed : " .. self.className .. " -> prevBtn"); ---------------------------- prevBtn
+        self.three.blocks:prevLevel()
+        self.battle:reset()
+    end
+    if btnName_ == "btn_aiNormal" then
+        print("Btn_pressed : " .. self.className .. " -> aiNormalBtn"); ---------------------------- aiNormalBtn
+        self.three.blocks:preSetPar("ai_normal")
+    end
+    if btnName_ == "btn_aiQuick" then
+        print("Btn_pressed : " .. self.className .. " -> aiQuickBtn"); ---------------------------- aiQuickBtn
+        self.three.blocks:preSetPar("ai_quick")
+    end
+    if btnName_ == "btn_aiFly" then
+        print("Btn_pressed : " .. self.className .. " -> aiFlyBtn"); ---------------------------- aiFlyBtn
+        self.three.blocks:preSetPar("ai_fly")
+    end
+    if btnName_ == "btn_reset" then
+        print("Btn_pressed : " .. self.className .. " -> resetBtn"); ---------------------------- resetBtn
+        self.three.blocks:replayLevel()
+        self.battle:reset()
+    end
 end
 
 function c_main:onCreate()

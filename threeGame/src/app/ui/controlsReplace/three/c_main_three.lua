@@ -44,26 +44,6 @@ end
 --btn click call back---------------------------------------------------
 function c_main_three:btnClicked(btnName_,rollName_,listName_,itemDataDict_)
     c_main_three.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
-    -----check btn name----------------------------------------------------------
-    if btnName_=="btn_next" then
-    	print("Btn_pressed : "..self.className.." -> btn_next");----------------------------btn_next
-    end
-    if btnName_=="btn_prev" then
-    	print("Btn_pressed : "..self.className.." -> btn_prev");----------------------------btn_prev
-    end
-    if btnName_=="btn_reset" then
-    	print("Btn_pressed : "..self.className.." -> btn_reset");----------------------------btn_reset
-    end
-    if btnName_=="btn_aiNormal" then
-    	print("Btn_pressed : "..self.className.." -> btn_aiNormal");----------------------------btn_aiNormal
-    end
-    if btnName_=="btn_aiQuick" then
-    	print("Btn_pressed : "..self.className.." -> btn_aiQuick");----------------------------btn_aiQuick
-    end
-    if btnName_=="btn_aiFly" then
-    	print("Btn_pressed : "..self.className.." -> btn_aiFly");----------------------------btn_aiFly
-    end
-    
 end
 
 function c_main_three:onCreate()

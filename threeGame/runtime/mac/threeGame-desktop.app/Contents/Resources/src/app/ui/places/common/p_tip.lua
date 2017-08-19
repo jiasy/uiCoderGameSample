@@ -20,13 +20,13 @@ function p_tip:initPlace(referUI_,container_)
 		end
 	)
 	du:setLogicParent(referUI_.btn_close,referUI_)
-	referUI_.instance197=cc.Scale9Sprite:create("common_tip_bg_back.png", cc.rect(0,0,100.00,100.00), cc.rect(25.00,25.00,50.00,50.00))
-	referUI_.instance197.name="instance197"
-	du:placeAndAddChildToContainer(referUI_.instance197,container_,0.00,1.00,-200,100,0,1,1,1,1)
-	referUI_.instance197:setContentSize(cc.size(400.00, 200.00))
-	du:setLogicParent(referUI_.instance197,referUI_)
-	referUI_.instance197.isSp9=true
-	du:setSp9Info(referUI_.instance197,"common_tip_bg_back.png")
+	referUI_.instance299=cc.Scale9Sprite:create("common_tip_bg_back.png", cc.rect(0,0,100.00,100.00), cc.rect(25.00,25.00,50.00,50.00))
+	referUI_.instance299.name="instance299"
+	du:placeAndAddChildToContainer(referUI_.instance299,container_,0.00,1.00,-200,100,0,1,1,1,1)
+	referUI_.instance299:setContentSize(cc.size(400.00, 200.00))
+	du:setLogicParent(referUI_.instance299,referUI_)
+	referUI_.instance299.isSp9=true
+	du:setSp9Info(referUI_.instance299,"common_tip_bg_back.png")
 	du.ttfConfig.fontSize = 20
 	du.ttfConfig.outlineSize = 0 
 	referUI_.content=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("des"), cc.TEXT_ALIGNMENT_LEFT)

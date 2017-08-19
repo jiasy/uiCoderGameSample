@@ -12,8 +12,43 @@ end
 --init data and place------------------------------------------
 function c_main_battle:init(initDict_)
     c_main_battle.super.init(self,initDict_)
+    -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
+    --local _blockCount2Dict={}
+    --_specialDict["blockCount2"]= _blockCount2Dict
+    --_avoidInit["blockCount2"]="avoidInitHere"
+    --local _blockCount3Dict={}
+    --_specialDict["blockCount3"]= _blockCount3Dict
+    --_avoidInit["blockCount3"]="avoidInitHere"
+    --local _blockCount4Dict={}
+    --_specialDict["blockCount4"]= _blockCount4Dict
+    --_avoidInit["blockCount4"]="avoidInitHere"
+    --local _blockCount5Dict={}
+    --_specialDict["blockCount5"]= _blockCount5Dict
+    --_avoidInit["blockCount5"]="avoidInitHere"
+    --local _blockCount6Dict={}
+    --_specialDict["blockCount6"]= _blockCount6Dict
+    --_avoidInit["blockCount6"]="avoidInitHere"
+    --local _blockCount8Dict={}
+    --_specialDict["blockCount8"]= _blockCount8Dict
+    --_avoidInit["blockCount8"]="avoidInitHere"
+    --local _blockCount9Dict={}
+    --_specialDict["blockCount9"]= _blockCount9Dict
+    --_avoidInit["blockCount9"]="avoidInitHere"
+    --local _blockCount10Dict={}
+    --_specialDict["blockCount10"]= _blockCount10Dict
+    --_avoidInit["blockCount10"]="avoidInitHere"
+    --local _blockCount11Dict={}
+    --_specialDict["blockCount11"]= _blockCount11Dict
+    --_avoidInit["blockCount11"]="avoidInitHere"
+    --local _blockCount7Dict={}
+    --_specialDict["blockCount7"]= _blockCount7Dict
+    --_avoidInit["blockCount7"]="avoidInitHere"
+    --local _blockCount1Dict={}
+    --_specialDict["blockCount1"]= _blockCount1Dict
+    --_avoidInit["blockCount1"]="avoidInitHere"
+    
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
 
