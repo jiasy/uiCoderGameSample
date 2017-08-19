@@ -23,10 +23,10 @@ function block:ctor(threeGame_)
     self.activePic = nil --8
 
     self.threeGame = threeGame_
+
+    self.isDebug = self.threeGame.main.isDebug
     --当前的游戏ID
     self.currentLevelID = self.threeGame.currentLevelID
-    --是否是测试
-    self.isDebug = self.threeGame.isDebug
     --动画控制引用
     self.disUtils = displayUtils:getInstance()
     --类型
@@ -399,10 +399,20 @@ function block:moveToGridByCR(col_, row_, time_, countMoveBoo_, moveType_)
 end
 
 function block:moveEndAnimation(time_)
-    local _scale1= cc.EaseBounceIn:create(cc.ScaleTo:create(time_*0.5,0.8,1.2));
-    local _scale2= cc.EaseBounceOut:create(cc.ScaleTo:create(time_*0.5,1));
-    local _seqAction = cc.Sequence:create(_scale1, _scale2)
-    self:runAction(_seqAction)
+    local _scale1= cc.EaseElasticIn:create(cc.ScaleTo:create(time_*0.5,1.3,0.8));
+    local _scale2= cc.EaseElasticOut:create(cc.ScaleTo:create(time_*0.5,1));
+    local _place1= cc.EaseBounceIn:create(cc.MoveTo:create(time_*0.5,cc.p(0,-15)));
+    local _place2= cc.EaseBounceOut:create(cc.MoveTo:create(time_*0.5,cc.p(0,0)));
+
+    local _seqAction = cc.Sequence:create(
+        cc.Spawn:create(
+            _scale1, _place1
+        ),
+        cc.Spawn:create(
+            _scale2, _place2
+        )
+    )
+    self.blockPic:runAction(_seqAction)
 end
 
 --是否能斜向移动
@@ -500,29 +510,66 @@ end
 function block:getRemoveEffectByType()
 
 end
-function block:removeByAnimation()
+function block:putEffectIntoThreeGame()
+    local _tempSp = self.disUtils:createAnimation("xiaochudonghua")
+    if self.type <10 then
+        _tempSp = self.disUtils:createAnimation("xiaochudonghua")
+    elseif self.type == 11 then
+        _tempSp = self.disUtils:createAnimation("ani_move")
+    end
+    _tempSp:setPosition(cc.p(self:getPositionX(), self:getPositionY()))
+    if self.match then
+        _tempSp:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
+    elseif self.chainMatch then
+        _tempSp:setBlendFunc(cc.blendFunc(gl.ONE , gl.ONE))
+    end
+    self.threeGame:addChild(_tempSp, self.threeGame.blockEffectIndex) --特效层添加特效
+end
+
+
+function block:removeByAnimation(time_)
     if self.removed == false then
-        local _tempSp = self.disUtils:createAnimation("xiaochudonghua")
-        if self.type <10 then
-            _tempSp = self.disUtils:createAnimation("xiaochudonghua")
-        elseif self.type == 11 then
-            _tempSp = self.disUtils:createAnimation("ani_move")
-        end
-        _tempSp:setPosition(cc.p(self:getPositionX(), self:getPositionY()))
-        if self.match then
-            _tempSp:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
-        elseif self.chainMatch then
-            --_tempSp:setBlendFunc(cc.blendFunc(gl.ONE , gl.ONE))
-        end
-
-
+        -- 老动画
         self:placeInPos()
-        self.threeGame:addChild(_tempSp, self.threeGame.blockEffectIndex) --特效层添加特效
         self.removed = true
         --这个地块里面拿出去
         self.threeGame.blocks[self.col][self.row] = nil
-        --TODO 动画
-        self:removeFromGame()
+
+        -- 消除了播放一个消除特效--------------------------
+        local function breakEffectCallBack()
+            self:putEffectIntoThreeGame()
+        end
+        local _breakEffectAction = cc.Sequence:create(
+            cc.DelayTime:create(time_*0.8),
+            cc.CallFunc:create(breakEffectCallBack)
+        )
+        self:runAction(_breakEffectAction)
+        -- 消除了之后，清除--------------------------
+        local function removeCallBack()
+            self:removeFromGame()
+        end
+
+        local _delayRemoveAction = cc.Sequence:create(
+            cc.EaseExponentialIn:create(
+                cc.RotateTo:create(time_*0.5,180)
+            ),
+            cc.Spawn:create(
+                cc.EaseExponentialOut:create(
+                    cc.RotateTo:create(time_*0.5 ,359)
+                ),
+                cc.EaseElasticOut:create(
+                    cc.ScaleTo:create(time_*0.5 ,0.5)
+                )
+            ),
+            -- cc.EaseElasticIn:create(
+            --     cc.RotateTo:create(time_*0.5,180)
+            -- ),
+            -- cc.EaseElasticOut:create(
+            --     cc.RotateTo:create(time_*0.5 ,359)
+            -- ),
+            cc.CallFunc:create(removeCallBack)
+        )
+        self:runAction(_delayRemoveAction)
     else
         print("ERROR 已经移除过了，不能再次移除")
     end

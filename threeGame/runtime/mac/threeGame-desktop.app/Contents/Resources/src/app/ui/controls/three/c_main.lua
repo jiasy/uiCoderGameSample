@@ -21,10 +21,18 @@ end
 function c_main:init(initDict_)
     c_main.super.init(self, initDict_)
 
+    self.isDebug=false
+
     -- getBlock 轨迹移动时间
     self.getBlockMoveTime = 1
     -- getBlock 给轨迹消散预留时间
     self.getBlockWaitTime = 0.5
+    --回合数
+    self.roundCount = 0
+    --当前关最大回合数
+    self.roundMax = 0
+    -- 显示场景中 blockCount的个数
+    self.blockCountMax =11
 
     -- ----- ui init----------------------------------------------------------
     local _specialDict = {} --自定义数据初始化子UI
@@ -49,6 +57,7 @@ function c_main:init(initDict_)
     end 
     local function roundEndCallBack()
         print "three main - roundEndCallBack"
+        self.roundCount = self.roundCount + 1
     end
 
     self.three.blocks.blockBreakInfoCallBack = blockBreakInfoCallBack

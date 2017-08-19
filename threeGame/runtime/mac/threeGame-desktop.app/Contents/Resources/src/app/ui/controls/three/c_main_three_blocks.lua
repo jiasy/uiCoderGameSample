@@ -36,8 +36,6 @@ function c_main_three_blocks:init(initDict_)
     self.containerLayer = nil
     --传送数据
     self.transBreakBlockInfo = {}
-    --是否是测试
-    self.isDebug = true;
 
 
     --提示相关
@@ -222,7 +220,7 @@ function c_main_three_blocks:preSetPar(type_)
 end
 
 function c_main_three_blocks:errorLog(str_)
-    if self.isDebug then
+    if self.main.isDebug then
         self.debugLog:setString(str_)
         print(str_)
     end
@@ -538,6 +536,7 @@ function c_main_three_blocks:chain_x_h(col_, row_) --nx1
     _tempBlocks = self:getChainAbleBlocks(col_, row_, self.colMax, 0)
     local _x_h_animation = self.displayUtils:createAnimation("ani_blast_x_h", false)
     _x_h_animation:setPosition(cc.p(0, self.grids[1][row_]:getPositionY()))
+    _x_h_animation:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
     self.containerLayer:addChild(_x_h_animation, self.chainEffectIndex)
 
     return _tempBlocks
@@ -552,6 +551,7 @@ function c_main_three_blocks:chain_x_v(col_, row_) --1xn
     local _x_h_animation = self.displayUtils:createAnimation("ani_blast_x_h", false)
     _x_h_animation:setPosition(cc.p(self.grids[col_][1]:getPositionX(), self.grids[1][5]:getPositionY()))
     _x_h_animation:setRotation(90)
+    _x_h_animation:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
     self.containerLayer:addChild(_x_h_animation, self.chainEffectIndex)
     return _tempBlocks
 end
@@ -561,6 +561,7 @@ function c_main_three_blocks:chain_z(col_, row_) --3x3
     _tempBlocks = self:getChainAbleBlocks(col_, row_, 1, 1)
     local _z_animation = self.displayUtils:createAnimation("ani_blast_z", false)
     _z_animation:setPosition(cc.p(self.grids[col_][row_]:getPositionX(), self.grids[col_][row_]:getPositionY()))
+    _z_animation:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
     self.containerLayer:addChild(_z_animation, self.chainEffectIndex)
     return _tempBlocks
 end
@@ -855,7 +856,7 @@ function c_main_three_blocks:fallDown()
                         end
                         if _downBlock then --格子移动
                             _downBlock.fallingBoo = true
-                            if self.isDebug then _downBlock.moveLabel:setString("M") end
+                            if self.main.isDebug then _downBlock.moveLabel:setString("M") end
                             _downBlock:setCR(_col, _row)
                             _downBlock:moveToSelfCR(self.movePreGridTime, true)
                         end
@@ -865,7 +866,7 @@ function c_main_three_blocks:fallDown()
                 -- 刚才下落的block，落入到格子中了
                 if _tempBlock.fallingBoo then
                     _tempBlock.fallingBoo = false
-                    if self.isDebug then _tempBlock.moveLabel:setString("") end
+                    if self.main.isDebug then _tempBlock.moveLabel:setString("") end
                     _tempBlock:moveEndAnimation(self.moveEndAnimationTime);
                 end
             end
@@ -906,7 +907,7 @@ function c_main_three_blocks:breakType11()
             local _type11=_type11s[i]
             _type11.match = true
             self:breakBlocks(true)--碎掉钥匙
-            self:delayFallDown(self.type11RemoveAnimationTime)
+            self:delayFallDown(self.blockAnimationRemoveTime)
         end
         self:showDownUnderType11()
         return true
@@ -1065,7 +1066,7 @@ function c_main_three_blocks:createMotionBetweenBlocks(fromBlock_, targetBlock_,
     -- local _fromWorldPos =self:convertToWorldSpace(cc.p(fromBlock_:getPositionX(),fromBlock_:getPositionY()))
     -- local _targetWorldPos =self:convertToWorldSpace(cc.p(targetBlock_:getPositionX(),targetBlock_:getPositionY()))
     -- table.insert(self.cureMotionList,CureMotion.new(self,self.chainLineEffectIndex,_fromWorldPos,_targetWorldPos,_display,_trailMotion,moveTime_,moveTime_,onInPosition,self,self.trailCount))
-    local _linkSp = cc.MotionStreak:create(0.3, 0.5, 15, cc.c3b(255, 255, 255),"icon_ball_10.png")
+    local _linkSp = cc.MotionStreak:create(0.3, 5, 40, cc.c3b(255, 255, 255),"icon_ball_10.png")
     _linkSp:setPosition(cc.p(fromBlock_:getPositionX(), fromBlock_:getPositionY()))
     local function callBack() _linkSp:removeFromParent(true) end
     _linkSp:runAction(cc.Sequence:create(cc.MoveTo:create(moveTime_ * 0.4, cc.p(targetBlock_:getPositionX(), targetBlock_:getPositionY())), cc.DelayTime:create(moveTime_ * 0.6), cc.CallFunc:create(callBack)))
@@ -1439,7 +1440,7 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
                             table.insert(_blockBreakInfo["type_".._tempBlock.type.."_".._type], self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(), _tempBlock:getPositionY())))
                         end
                         if _tempBlock.type == 11 then
-                            _tempBlock:removeByAnimation(self.type11RemoveAnimationTime)
+                            _tempBlock:removeByAnimation(self.blockAnimationRemoveTime)
                         else
                             _tempBlock:removeByAnimation(self.blockAnimationRemoveTime)
                         end
@@ -1472,7 +1473,7 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
         local function callBack()
              self:blockBreakInfoCallBack(_blockBreakInfo)
         end
-        local _delayBreakAction = cc.Sequence:create(cc.DelayTime:create(self.blockAnimationRemoveTime*0.5), cc.CallFunc:create(callBack))
+        local _delayBreakAction = cc.Sequence:create(cc.DelayTime:create(self.blockAnimationRemoveTime*0.8), cc.CallFunc:create(callBack))
         self:runAction(_delayBreakAction)
     end
 
