@@ -32,22 +32,22 @@ function p_main_battle:initPlace(referUI_,container_)
 	du:setLogicParent(referUI_.blockCount5,referUI_)
 	referUI_.blockCount6=C_main_battle_blockCount.new();
 	referUI_.blockCount6.name="blockCount6"
-	du:placeAndAddChildToContainer(referUI_.blockCount6,container_,0.00,0.00,-107,500.9,0,1,1,1,7)
+	du:placeAndAddChildToContainer(referUI_.blockCount6,container_,0.00,0.00,-107.7,513.9,0,1,1,1,7)
 	table.insert(referUI_.uiList,referUI_.blockCount6)
 	du:setLogicParent(referUI_.blockCount6,referUI_)
 	referUI_.blockCount8=C_main_battle_blockCount.new();
 	referUI_.blockCount8.name="blockCount8"
-	du:placeAndAddChildToContainer(referUI_.blockCount8,container_,0.00,0.00,4.6,500.9,0,1,1,1,8)
+	du:placeAndAddChildToContainer(referUI_.blockCount8,container_,0.00,0.00,3.9,513.9,0,1,1,1,8)
 	table.insert(referUI_.uiList,referUI_.blockCount8)
 	du:setLogicParent(referUI_.blockCount8,referUI_)
 	referUI_.blockCount9=C_main_battle_blockCount.new();
 	referUI_.blockCount9.name="blockCount9"
-	du:placeAndAddChildToContainer(referUI_.blockCount9,container_,0.00,0.00,60.4,500.9,0,1,1,1,9)
+	du:placeAndAddChildToContainer(referUI_.blockCount9,container_,0.00,0.00,59.7,513.9,0,1,1,1,9)
 	table.insert(referUI_.uiList,referUI_.blockCount9)
 	du:setLogicParent(referUI_.blockCount9,referUI_)
 	referUI_.blockCount10=C_main_battle_blockCount.new();
 	referUI_.blockCount10.name="blockCount10"
-	du:placeAndAddChildToContainer(referUI_.blockCount10,container_,0.00,0.00,116.2,500.9,0,1,1,1,10)
+	du:placeAndAddChildToContainer(referUI_.blockCount10,container_,0.00,0.00,115.5,513.9,0,1,1,1,10)
 	table.insert(referUI_.uiList,referUI_.blockCount10)
 	du:setLogicParent(referUI_.blockCount10,referUI_)
 	referUI_.blockCount11=C_main_battle_blockCount.new();
@@ -57,7 +57,7 @@ function p_main_battle:initPlace(referUI_,container_)
 	du:setLogicParent(referUI_.blockCount11,referUI_)
 	referUI_.blockCount7=C_main_battle_blockCount.new();
 	referUI_.blockCount7.name="blockCount7"
-	du:placeAndAddChildToContainer(referUI_.blockCount7,container_,0.00,0.00,-51.2,500.9,0,1,1,1,12)
+	du:placeAndAddChildToContainer(referUI_.blockCount7,container_,0.00,0.00,-51.9,513.9,0,1,1,1,12)
 	table.insert(referUI_.uiList,referUI_.blockCount7)
 	du:setLogicParent(referUI_.blockCount7,referUI_)
 	referUI_.blockCount1=C_main_battle_blockCount.new();

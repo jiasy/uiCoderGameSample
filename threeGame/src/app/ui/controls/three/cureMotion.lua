@@ -47,6 +47,8 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     local _trailCount = math.random(1,_trailTypeMax)
     if trailCount_ then
         _trailCount = trailCount_%_trailTypeMax +1
+    else
+        _trailCount = 1
     end
 
     _trail = require("src.app.ui.controls.common.c_move_trail_"..tostring(_trailCount)).new()
@@ -119,6 +121,7 @@ function cureMotion:defFromDis(disX_,disY_)
             end
         end
     end
+
     return _deg
 end
 

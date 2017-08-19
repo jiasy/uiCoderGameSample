@@ -20,6 +20,12 @@ end
 --init data and place------------------------------------------
 function c_main:init(initDict_)
     c_main.super.init(self, initDict_)
+
+    -- getBlock 轨迹移动时间
+    self.getBlockMoveTime = 1
+    -- getBlock 给轨迹消散预留时间
+    self.getBlockWaitTime = 0.5
+
     -- ----- ui init----------------------------------------------------------
     local _specialDict = {} --自定义数据初始化子UI
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。
@@ -41,7 +47,7 @@ function c_main:init(initDict_)
         end
 
     end 
-    local function roundEndCallBack()  
+    local function roundEndCallBack()
         print "three main - roundEndCallBack"
     end
 
@@ -52,6 +58,16 @@ function c_main:init(initDict_)
     local _tempGrids = self.three.grids:getGrids(self.three.blocks.colMax, self.three.blocks.rowMax)
     self.three.blocks:initBlocks(_tempGrids)
 
+end
+
+function c_main:updateF( type_ )
+    c_main.super.updateF(self, type_)
+    -- 重置 三消的回合状态
+    if self.three.blocks.canOperationBoo == false then
+        if self.battle:isGetBlockEnd() then
+            self.three.blocks.canOperationBoo = true
+        end
+    end
 end
 
 --ui stateChange-------------------------------------

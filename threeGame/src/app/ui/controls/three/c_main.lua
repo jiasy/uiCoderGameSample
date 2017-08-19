@@ -20,6 +20,12 @@ end
 --init data and place------------------------------------------
 function c_main:init(initDict_)
     c_main.super.init(self, initDict_)
+
+    -- getBlock 轨迹移动时间
+    self.getBlockMoveTime = 1
+    -- getBlock 给轨迹消散预留时间
+    self.getBlockWaitTime = 0.5
+
     -- ----- ui init----------------------------------------------------------
     local _specialDict = {} --自定义数据初始化子UI
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。

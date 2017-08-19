@@ -11,10 +11,16 @@ function block:ctor(threeGame_)
     self.blockPic = nil --1
     self.effectAni = nil --2
     self.levelPic = nil --3
+    --闪光动画
     self.shinePic = nil --4
-    --self.bufferPic=nil--5
-    self.stransPic = nil --6
+    --
+    self.bufferPic=nil--5
+    --转换动画
+    self.transPic = nil --6
+    --提示动画
     self.tipAni = nil --7
+    --激活动画
+    self.activePic = nil --8
 
     self.threeGame = threeGame_
     --当前的游戏ID
@@ -45,6 +51,8 @@ function block:ctor(threeGame_)
     self.chainMatch = false
     --临近有Match的？
     self.nearMatch = false
+    --特殊的block在被chainMatch的时候，先处于激活状态。
+    self.activeBoo =false
     --移动中？
     self.fallingBoo = false
     --移除标记
@@ -180,6 +188,11 @@ function block:bufferCureOne()
     end
 end
 
+function block:activeShow()
+    self.activePic = self.disUtils:createAnimation("ani_move", true)
+    self:addChild(self.activePic, 8)
+end
+
 --变更成目标类型
 function block:changeToSelfType()
     self:reinit(self.toType, self.toLevel, true)
@@ -187,8 +200,8 @@ function block:changeToSelfType()
     self.toLevel = nil
     self.changingBoo = false
     self:createDisplay() --创建显示
-    self.stransPic = self.disUtils:createAnimation("ani_transition", false)
-    self:addChild(self.stransPic, 6)
+    self.transPic = self.disUtils:createAnimation("ani_transition", false)
+    self:addChild(self.transPic, 6)
 end
 
 --变成什么

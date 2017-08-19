@@ -1,7 +1,6 @@
 --class define--------------------------------------------------------
 local C_disMC = require("src.app.base.ui.disMC")
 local c_main_battle_blockCount = class("c_main_battle_blockCount", C_disMC)
-local Pursure = require("src.app.ui.controls.three.pursure")
 local CureMotion = require("src.app.ui.controls.three.cureMotion")
 
 --ui create------------------------------------------
@@ -56,11 +55,13 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
     -- body
     local _display = nil
     local _trailMotion = nil
+    local _trailCount = nil
     if self.type>=1 and self.type <10 then
-        _trailMotion = cc.MotionStreak:create(0.4, 3, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
+        _trailMotion = cc.MotionStreak:create(0.3, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
+        _trailCount = trailCount_
     elseif  tonumber(self.type) == 11 then
         _display = cc.Sprite:create("icon_ball_11.png")
-        _trailMotion = cc.MotionStreak:create(0.3, 2, 40, cc.c3b(255, 255, 255), "icon_ball_10.png")
+        _trailMotion = cc.MotionStreak:create(0.3, 6, 20, cc.c3b(255, 255, 255), "icon_ball_10.png")
     end
     --local _display = self.displayUtils:createPartical("blockCount", "free")
     local _targetPo =self:convertToWorldSpace(cc.p(0,0))
@@ -75,7 +76,7 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
     -- onInPosition 到位置之后触发方法
     -- self 逻辑容器DisUI
     -- trailCount_ 轨迹计数，避免随机导致的可能两个相邻的block使用了同一个轨迹
-    table.insert(self.cureMotionList,CureMotion.new(self,100,po_,_targetPo,_display,_trailMotion,1,1,onInPosition,self,trailCount_))
+    table.insert(self.cureMotionList,CureMotion.new(self,100,po_,_targetPo,_display,_trailMotion,self.main.getBlockMoveTime,self.main.getBlockWaitTime,onInPosition,self,_trailCount))
 end
 
 
