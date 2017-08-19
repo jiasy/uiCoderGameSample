@@ -1067,11 +1067,11 @@ function c_main_three_blocks:createMotionBetweenBlocks(fromBlock_, targetBlock_,
     -- -- body
     -- local _display = nil
     -- local _trailMotion = nil
-    -- _trailMotion = cc.MotionStreak:create(0.3, 5, 15, cc.c3b(255, 255, 255), "icon_ball_"..tostring(fromBlock_.type)..".png")
+    -- _trailMotion = cc.MotionStreak:create(0.3, 5, 15, cc.c3b(255, 255, 255), "blade.png")
     -- local _fromWorldPos =self:convertToWorldSpace(cc.p(fromBlock_:getPositionX(),fromBlock_:getPositionY()))
     -- local _targetWorldPos =self:convertToWorldSpace(cc.p(targetBlock_:getPositionX(),targetBlock_:getPositionY()))
     -- table.insert(self.cureMotionList,CureMotion.new(self,self.chainLineEffectIndex,_fromWorldPos,_targetWorldPos,_display,_trailMotion,moveTime_,moveTime_,onInPosition,self,self.trailCount))
-    local _linkSp = cc.MotionStreak:create(0.3, 5, 40, cc.c3b(255, 255, 255),"icon_ball_10.png")
+    local _linkSp = cc.MotionStreak:create(0.3, 5, 10, cc.c3b(255, 255, 255),"btnUp.png")
     _linkSp:setPosition(cc.p(fromBlock_:getPositionX(), fromBlock_:getPositionY()))
     local function callBack() _linkSp:removeFromParent(true) end
     _linkSp:runAction(cc.Sequence:create(cc.MoveTo:create(moveTime_ * 0.4, cc.p(targetBlock_:getPositionX(), targetBlock_:getPositionY())), cc.DelayTime:create(moveTime_ * 0.6), cc.CallFunc:create(callBack)))

@@ -67,7 +67,7 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
         _trailCount = trailCount_
     elseif  tonumber(self.type) == 11 then
         _display = cc.Sprite:create("icon_ball_11.png")
-        _trailMotion = cc.MotionStreak:create(0.3, 6, 20, cc.c3b(255, 255, 255), "icon_ball_10.png")
+        --_trailMotion = cc.MotionStreak:create(0.3, 6, 20, cc.c3b(255, 255, 255), "icon_ball_10.png")
     end
     --local _display = self.displayUtils:createPartical("blockCount", "free")
     local _targetPo =self:convertToWorldSpace(cc.p(0,0))
