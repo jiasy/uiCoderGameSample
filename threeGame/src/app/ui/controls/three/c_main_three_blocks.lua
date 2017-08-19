@@ -13,9 +13,10 @@ end
 --init data and place------------------------------------------
 function c_main_three_blocks:init(initDict_)
     c_main_three_blocks.super.init(self, initDict_)
+    self.main = self:getUiParent()
 
-    --我方行动回合
-    -- self.positiveRoundBoo = false
+    --操作限制
+    self.canOperationBoo = false
 
     --游戏进行ID
     self.currentLevelID = 0
@@ -25,7 +26,7 @@ function c_main_three_blocks:init(initDict_)
     --一共有多少种Block
     self.blockMaxTypes = 15
     --当前测试关卡序号
-    self.currentLevelIndex = 15
+    self.currentLevelIndex = 18
     --随机次数
     self.needRandomCountMax = 101
     --承载体
@@ -102,6 +103,8 @@ function c_main_three_blocks:init(initDict_)
     self.type11RemoveAnimationTime = 0
     --type10改变其他block的时间
     self.type10ChangeOtherTime = 0
+    --连锁导致的其他special被激活，各个Special进行触发的时候，进行的延时等待
+    self.specialBlockActiveTime=0
 
     --不能触发出没时间的条件--TODO 游戏结束，游戏暂停
     self.touchMoved = false --触摸中
@@ -159,6 +162,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.moveEndAnimationTime = 0.4
         self.type11RemoveAnimationTime = 1
         self.type10ChangeOtherTime = 1
+        self.specialBlockActiveTime = 1
     elseif type_ == "ai_normal" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
         self.aiAutoBoo = true
@@ -169,6 +173,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.moveEndAnimationTime = 0.2
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.5
+        self.specialBlockActiveTime = 0.5
         self:aiSwap()
     elseif type_ == "ai_quick" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
@@ -180,6 +185,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.moveEndAnimationTime = 0.1
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.3
+        self.specialBlockActiveTime = 0.3
         self:aiSwap()
     elseif type_ == "ai_fly" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
@@ -191,6 +197,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.moveEndAnimationTime = 0.05
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.1
+        self.specialBlockActiveTime = 0.1
         self:aiSwap()
     end
 end
@@ -491,6 +498,8 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     end
 
     self.blockMovingBool = true
+    -- 重置11下面的提示
+    self:showDownUnderType11()
     self:fallDown()
 end
 
@@ -669,7 +678,7 @@ function c_main_three_blocks:swapBlocks(block1_, block2_, forceSwapBool_)
             self:clearDelayTipAction()
             self.blockMovingBool = true
             self:delayFallDown(self.blockAnimationRemoveTime + self.moveEndAnimationTime)
-            -- self.positiveRoundBoo = false
+            self.canOperationBoo = false
             self.swappingBlock1 = nil --强制交换的在forceSwapEnd中清空
             self.swappingBlock2 = nil
         end
@@ -841,6 +850,9 @@ function c_main_three_blocks:fallDown()
                     end
                 else
                     if self:needReplaceBlocks() == false then
+                        --整理type11的显示
+                        self:showDownUnderType11()
+                        --回合结束回调
                         self:roundEndCallBack()
                     end
                 end
@@ -850,6 +862,26 @@ function c_main_three_blocks:fallDown()
         -- block 到了稳定的位置后，做完了稳定动画。再进行匹配判断。
         local _delayTime = cc.DelayTime:create(self.moveEndAnimationTime)
         self:runAction(cc.Sequence:create(_delayTime, cc.CallFunc:create(moveEndAnimationOver)))
+    end
+end
+
+function c_main_three_blocks:showDownUnderType11()
+    local _downs = self.logicParent.downs
+    for i = 1, self.colMax do
+        local _haveType11 = false
+        for j = 1, self.rowMax do
+            local _tempBlock = self:getBlockByCR(i, j)
+            if _tempBlock and _tempBlock.type ==11 then
+                _haveType11 =true
+                break
+            end
+        end
+        local _down =  _downs["down_"..tostring(i)]
+        if _haveType11 then
+           _down:setVisible(true)
+        else
+           _down:setVisible(false)
+        end
     end
 end
 
@@ -864,6 +896,7 @@ function c_main_three_blocks:allBlockCanMatch()
                 _tempBlock.chainMatch = false
                 _tempBlock.nearMatch = false
                 _tempBlock.fallingBoo = false
+                _tempBlock.activeBoo =false
             end
         end
     end
@@ -933,11 +966,17 @@ function c_main_three_blocks:specialChainBlockActive(specialBlock_, type_)
         end
         _activeType = specialBlock_.type
     elseif specialBlock_.type == 10 then --y 需要触发连锁的哪个类型
+        local _type = 0
+        if type_ == 0 then
+            _type =self:getBlockRandomType()
+        else
+            _type=type_
+        end
         _tempBlocks = {}
         for i = 1, self.colMax do
             for j = 1, self.rowMax do
                 local _tempBlock = self:getBlockByCR(i, j)
-                if _tempBlock and _tempBlock.type == type_ then
+                if _tempBlock and _tempBlock.type == _type then
                     self:createMotionBetweenBlocks(specialBlock_, _tempBlock, self.type10ChangeOtherTime)
                     table.insert(_tempBlocks, _tempBlock)
                 end

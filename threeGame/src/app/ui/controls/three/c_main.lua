@@ -41,7 +41,7 @@ function c_main:init(initDict_)
         end
 
     end 
-    local function roundEndCallBack()  
+    local function roundEndCallBack()
         print "three main - roundEndCallBack"
     end
 
@@ -52,6 +52,16 @@ function c_main:init(initDict_)
     local _tempGrids = self.three.grids:getGrids(self.three.blocks.colMax, self.three.blocks.rowMax)
     self.three.blocks:initBlocks(_tempGrids)
 
+end
+
+function c_main:updateF( type_ )
+    c_main.super.updateF(self, type_)
+    -- 重置 三消的回合状态
+    if self.three.blocks.canOperationBoo == false then
+        if self.battle:isGetBlockEnd() then
+            self.three.blocks.canOperationBoo = true
+        end
+    end
 end
 
 --ui stateChange-------------------------------------

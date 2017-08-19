@@ -45,6 +45,8 @@ function block:ctor(threeGame_)
     self.chainMatch = false
     --临近有Match的？
     self.nearMatch = false
+    --特殊的block在被chainMatch的时候，先处于激活状态。
+    self.activeBoo =false
     --移动中？
     self.fallingBoo = false
     --移除标记

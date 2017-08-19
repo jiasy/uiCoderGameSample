@@ -80,7 +80,7 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     end
     local function moveEndCallBack( )
         if callback_ then
-            callback_()
+            callback_(self)
         end
     end
     self:runAction(cc.Sequence:create(cc.DelayTime:create(moveTime_), cc.CallFunc:create(moveEndCallBack),cc.DelayTime:create(waitTime_), cc.CallFunc:create(endCallBack)))

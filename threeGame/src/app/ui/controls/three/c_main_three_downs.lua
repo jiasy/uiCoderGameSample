@@ -12,6 +12,7 @@ end
 --init data and place------------------------------------------
 function c_main_three_downs:init(initDict_)
     c_main_three_downs.super.init(self, initDict_)
+    self.main = self:getUiParent()
     ----- ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
