@@ -27,6 +27,10 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     local _disX = _po2.x - _po1.x
     local _disY = _po2.y - _po1.y
     local _deg = self:defFromDis(_disX,_disY)
+    -- 原地不动
+    if _deg == nil then
+        return 
+    end
     _deg = 360 -_deg
     --print ("_deg = ".. tostring(_deg))
     -- 旋转自己
@@ -92,7 +96,7 @@ end
 function cureMotion:defFromDis(disX_,disY_)
     local _deg = nil
     if disX_ == 0 and disY_==0 then
-        
+        --原地不动
     elseif disX_ == 0 then
         if disY_>0 then
             _deg =90

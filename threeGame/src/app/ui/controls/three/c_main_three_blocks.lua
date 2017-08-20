@@ -29,7 +29,7 @@ function c_main_three_blocks:init(initDict_)
     --一共有多少种Block
     self.blockMaxTypes = 15
     --当前测试关卡序号
-    self.currentLevelIndex = 18
+    self.currentLevelIndex = 9
     --随机次数
     self.needRandomCountMax = 101
     --承载体
@@ -107,7 +107,13 @@ function c_main_three_blocks:init(initDict_)
     --type10改变其他block的时间
     self.type10ChangeOtherTime = 0
     --type10改变其他block 运行轨迹的时间
-    self.type10ChangeOtherMoveTime = 1
+    self.type10ChangeOtherMoveTime = 0
+    --交换的时间
+    self.swapBlockTime = 0
+    --无匹配，交换提示时间
+    self.replaceTipTime = 0.5
+    --无匹配，交换时间
+    self.replaceTime = 1
 
     --连锁导致的其他special被激活，各个Special进行触发的时候，进行的延时等待
     self.specialBlockActiveTime=0
@@ -173,6 +179,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.type10ChangeOtherTime = 1
         self.type10ChangeOtherMoveTime = 1
         self.specialBlockActiveTime = 1
+        self.swapBlockTime = 0.3
         self.showMatchTime = 0.5
     elseif type_ == "ai_normal" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
@@ -186,6 +193,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.type10ChangeOtherTime = 0.5
         self.type10ChangeOtherMoveTime = 1
         self.specialBlockActiveTime = 0.5
+        self.swapBlockTime = 0.2
         self.showMatchTime = 0.2
         self:aiSwap()
     elseif type_ == "ai_quick" then
@@ -200,6 +208,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.type10ChangeOtherTime = 0.3
         self.type10ChangeOtherMoveTime = 1
         self.specialBlockActiveTime = 0.3
+        self.swapBlockTime = 0.1
         self.showMatchTime = 0.1
         self:aiSwap()
     elseif type_ == "ai_fly" then
@@ -214,6 +223,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.type10ChangeOtherTime = 0.1
         self.type10ChangeOtherMoveTime = 1
         self.specialBlockActiveTime = 0.1
+        self.swapBlockTime = 0.05
         self.showMatchTime = 0.05
         self:aiSwap()
     end
@@ -624,8 +634,10 @@ function c_main_three_blocks:chainSpecialBlockActive()
                 --激活状态，变为匹配状态
                 _tempBlock.activeBoo = false
                 _tempBlock.match = true
-                --连锁触发
-                self:specialChainBlockActive(_tempBlock,0)
+                --特殊块就连锁触发
+                if self:isSpecialBlock(_tempBlock) then
+                    self:specialChainBlockActive(_tempBlock,0)
+                end
                 break
             end
         end
@@ -701,20 +713,26 @@ end
 --交换两个block
 function c_main_three_blocks:swapBlocks(block1_, block2_, forceSwapBool_)
     self.swapping = true
+    local _isV = block1_.col == block2_.col
     local _tempCol = block1_.col
     local _tempRow = block1_.row
     --交换位置序号
     block1_:setCR(block2_.col, block2_.row)
     block2_:setCR(_tempCol, _tempRow)
     --移动--手指滑动 + 无法匹配 触发的移动，不需要进行移动个数统计操作
-    block1_:moveToSelfCR(self.movePreGridTime, false, "swap")
-    block2_:moveToSelfCR(self.movePreGridTime, false, "swap")
+    block1_:moveToSelfCR(self.swapBlockTime, false, "swap")
+    block2_:moveToSelfCR(self.swapBlockTime, false, "swap")
+    -- 交换动画
+    block1_:swapAnimation(self.swapBlockTime,_isV)
+    block2_:swapAnimation(self.swapBlockTime,_isV)
 
     --判断移动后的match
     local function checkMatchCallBack()
         self.swapping = false
         if self:findAndRemoveMatches(true) == false then --没有匹配，所以没有进行任何match消除
             self:swapBlocks(self.swappingBlock1, self.swappingBlock2, true) --换回来
+            self.swappingBlock1:swapBackAnimation(self.swapBlockTime,_isV)
+            self.swappingBlock2:swapBackAnimation(self.swapBlockTime,_isV)
         else --有消除的，就开始下落
             self:clearDelayTipAction()
             self.blockMovingBool = true
@@ -736,7 +754,7 @@ function c_main_three_blocks:swapBlocks(block1_, block2_, forceSwapBool_)
         self.swappingBlock2 = nil
     end
 
-    local _delayTime = cc.DelayTime:create(self.movePreGridTime)
+    local _delayTime = cc.DelayTime:create(self.swapBlockTime)
     if forceSwapBool_ == false then --交换后检测匹配
         self:runAction(cc.Sequence:create(_delayTime, cc.CallFunc:create(checkMatchCallBack)))
         local _moveEffect1 = self.displayUtils:createAnimation("ani_move", false)
@@ -805,8 +823,9 @@ function c_main_three_blocks:fallDown()
     if self:chainSpecialBlockActive() then
         -- 碎掉连锁触发的block。
         self:breakBlocks(true)
-        -- -- 碎掉之后，继续下落
+        -- -- -- 碎掉之后，继续下落
         -- self:delayFallDown(self.blockAnimationRemoveTime)
+        -- return
     end
 
     for _row = self.rowMax, 1, -1 do
@@ -876,12 +895,12 @@ function c_main_three_blocks:fallDown()
     end
     if self.movingBlockNum == 0 then --下落完毕
         local function moveEndAnimationOver()
-            if self:breakType11() == false then -- 消除钥匙[没有可以消除的钥匙，进行下面的操作]
-                if self:findAndRemoveMatches(false) then --匹配
-                    self.blockMovingBool = true
-                    -- 消除掉匹配的block,继续进行FallDown
-                    self:delayFallDown(self.blockAnimationRemoveTime + self.moveEndAnimationTime)
-                else
+            if self:findAndRemoveMatches(false) then --匹配
+                self.blockMovingBool = true
+                -- 消除掉匹配的block,继续进行FallDown
+                self:delayFallDown(self.blockAnimationRemoveTime + self.moveEndAnimationTime)
+            else
+                if self:breakType11() == false then -- 消除钥匙[没有可以消除的钥匙，进行下面的操作]
                     --没有匹配的，当前玩家回合结束
                     self.blockMovingBool = false
                     if self:needReplaceBlocks() == false then
@@ -891,9 +910,6 @@ function c_main_three_blocks:fallDown()
                         self:roundEndCallBack()
                     end
                 end
-            else
-                self:findAndRemoveMatches(false)
-                self.blockMovingBool = true
             end
         end
         self:allBlockCanMatch() -- 重置block状态。Great
@@ -912,7 +928,7 @@ function c_main_three_blocks:breakType11()
             local _type11=_type11s[i]
             _type11.match = true
             self:breakBlocks(true)--碎掉钥匙
-            self:delayFallDown(self.blockAnimationRemoveTime)
+            self:delayFallDown(self.type11RemoveAnimationTime)
         end
         self:showDownUnderType11()
         return true
@@ -1060,17 +1076,6 @@ end
 
 --在两个blocks之间进行motion
 function c_main_three_blocks:createMotionBetweenBlocks(fromBlock_, targetBlock_, moveTime_)
-    -- self.trailCount = self.trailCount + 1
-    -- local function onInPosition(cureMotion_)
-    --     table.removebyvalue(self.cureMotionList,cureMotion_)
-    -- end
-    -- -- body
-    -- local _display = nil
-    -- local _trailMotion = nil
-    -- _trailMotion = cc.MotionStreak:create(0.3, 5, 15, cc.c3b(255, 255, 255), "blade.png")
-    -- local _fromWorldPos =self:convertToWorldSpace(cc.p(fromBlock_:getPositionX(),fromBlock_:getPositionY()))
-    -- local _targetWorldPos =self:convertToWorldSpace(cc.p(targetBlock_:getPositionX(),targetBlock_:getPositionY()))
-    -- table.insert(self.cureMotionList,CureMotion.new(self,self.chainLineEffectIndex,_fromWorldPos,_targetWorldPos,_display,_trailMotion,moveTime_,moveTime_,onInPosition,self,self.trailCount))
     local _linkSp = cc.MotionStreak:create(0.3, 5, 10, cc.c3b(255, 255, 255),"btnUp.png")
     _linkSp:setPosition(cc.p(fromBlock_:getPositionX(), fromBlock_:getPositionY()))
     local function callBack() _linkSp:removeFromParent(true) end
@@ -1078,12 +1083,26 @@ function c_main_three_blocks:createMotionBetweenBlocks(fromBlock_, targetBlock_,
     self.containerLayer:addChild(_linkSp, self.chainLineEffectIndex)
 end
 
+
+function c_main_three_blocks:createCureMotionBetweenBlocks(type_,fromWorldPos_, targetWorldPos_, moveTime_)
+    self.trailCount = self.trailCount + 1
+    local function onInPosition(cureMotion_)
+        table.removebyvalue(self.cureMotionList,cureMotion_)
+    end
+    -- body
+    local _display = nil
+    local _trailMotion = nil
+    _trailMotion = cc.MotionStreak:create(0.3, 3, 80, cc.c3b(255, 255, 255), "icon_ball_"..tostring(type_)..".png")
+    table.insert(self.cureMotionList,CureMotion.new(self,self.chainLineEffectIndex,fromWorldPos_,targetWorldPos_,_display,_trailMotion,moveTime_,moveTime_,onInPosition,self,self.trailCount))
+end
+
+
 --数组链式
 function c_main_three_blocks:chainBlocks(tempBlocks_, activeType_)
     for i = 1, #tempBlocks_ do
         local _tempBlock = tempBlocks_[i]
         if _tempBlock.match == false and _tempBlock.chainMatch == false and _tempBlock.activeBoo == false then --连锁反应中没处理过的
-            if self:isSpecialBlocl(_tempBlock) then --自动消除中有特殊方块
+            if self:isSpecialBlock(_tempBlock) then --自动消除中有特殊方块
                 _tempBlock:activeShow()
                 _tempBlock.activeBoo = true
             else
@@ -1094,7 +1113,7 @@ function c_main_three_blocks:chainBlocks(tempBlocks_, activeType_)
 end
 
 --是否是一个特殊的方块
-function c_main_three_blocks:isSpecialBlocl(block_)
+function c_main_three_blocks:isSpecialBlock(block_)
     if 
         (block_.level ~= nil and block_.level ~= "") 
         or 
@@ -1123,8 +1142,10 @@ function c_main_three_blocks:swapSpecialDelayActive(activeBlocks_)
     self.movingBlockNum = self.movingBlockNum - 1
     for i = 1, #activeBlocks_ do
         local _tempBlock = activeBlocks_[i]
-        if self:isSpecialBlocl(_tempBlock) then --自动消除中有特殊方块
-            _tempBlock:activeShow()
+        _tempBlock:activeShow()
+
+        --_tempBlock.activeBoo =true
+        if self:isSpecialBlock(_tempBlock) then --自动消除中有特殊方块
             _tempBlock.activeBoo = true
         else
             _tempBlock.chainMatch = true
@@ -1327,7 +1348,7 @@ function c_main_three_blocks:findAndRemoveMatches(swapBoo_)
                 if _tempMatchBlock.match == false and _tempMatchBlock:isChanging() == false then
                     _tempMatchBlock.match = true --避免两次进行移除操作
                     if _tempMatchBlock.chainMatch == false then --连锁反应中没处理过的
-                        if self:isSpecialBlocl(_tempMatchBlock) then --自动消除中有特殊方块
+                        if self:isSpecialBlock(_tempMatchBlock) then --自动消除中有特殊方块
                             self:specialChainBlockActive(_tempMatchBlock, 0)
                         end
                     end
@@ -1436,6 +1457,7 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
             _blockBreakInfo["type_"..i.."_s"]={}
         end 
     end
+    local _haveType11Boo=false
     local _blockRemoveCount = 0
     for _col = 1, self.colMax do --清理 匹配方块
         for _row = 1, self.rowMax do
@@ -1454,7 +1476,8 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
                             table.insert(_blockBreakInfo["type_".._tempBlock.type.."_".._type], self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(), _tempBlock:getPositionY())))
                         end
                         if _tempBlock.type == 11 then
-                            _tempBlock:removeByAnimation(self.blockAnimationRemoveTime)
+                            _tempBlock:removeByAnimation(self.type11RemoveAnimationTime)
+                            _haveType11Boo = true
                         else
                             _tempBlock:removeByAnimation(self.blockAnimationRemoveTime)
                         end
@@ -1464,7 +1487,10 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
                     end
                 else
                     if _tempBlock:isChanging() then --这个不能移除掉，变形成新的了
+                        --变成他要变成的那个种类
                         _tempBlock:changeToSelfType()
+                        --添加一个普通的消除。
+                        table.insert(_blockBreakInfo["type_".._tempBlock.type.."_n"], self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(), _tempBlock:getPositionY())))
                     end
                     if _tempBlock.nearMatch then
                         if _tempBlock.bufferIns ~= nil and _tempBlock.bufferIns:nearClearAble() then
@@ -1487,7 +1513,12 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
         local function callBack()
              self:blockBreakInfoCallBack(_blockBreakInfo)
         end
-        local _delayBreakAction = cc.Sequence:create(cc.DelayTime:create(self.blockAnimationRemoveTime*0.8), cc.CallFunc:create(callBack))
+        local _delayTime = self.blockAnimationRemoveTime
+        if _haveType11Boo then
+            _delayTime = self.type11RemoveAnimationTime
+        end
+
+        local _delayBreakAction = cc.Sequence:create(cc.DelayTime:create(_delayTime), cc.CallFunc:create(callBack))
         self:runAction(_delayBreakAction)
     end
 
@@ -1525,9 +1556,9 @@ function c_main_three_blocks:getTwoBlockSwapType(block1_, block2_)
             (block2_.level == "z" and block1_.type == 10) then
         return "z-y"
     end
-    if (block1_.type == 10 and self:isSpecialBlocl(block2_) == false)
+    if (block1_.type == 10 and self:isSpecialBlock(block2_) == false)
             or
-            (self:isSpecialBlocl(block1_) == false and block2_.type == 10) then
+            (self:isSpecialBlock(block1_) == false and block2_.type == 10) then
         return "n-y"
     end
     return nil
@@ -1747,7 +1778,13 @@ function c_main_three_blocks:needReplaceBlocks()
     end
 
     if _againBoo then --需要重来
-        self:replaceBlocks()
+        local function func()
+            self:replaceBlocks()
+        end            
+        local _funAction = cc.CallFunc:create(func)
+        local _delayTimeAction =cc.DelayTime:create(self.replaceTipTime)
+        local _seqAction = cc.Sequence:create(_delayTimeAction, _funAction)
+        self:runAction(_seqAction)
     else
         self:clearDelayTipAction()
         self.aiSwapping = false
@@ -1773,9 +1810,12 @@ function c_main_three_blocks:replaceBlocks()
             local _tempBlock = self:getBlockByCR(i, j)
             if _tempBlock and _tempBlock:replaceAble() then
                 local _tempGridInfo = {} --地块序号信息
+                local _tempBlock = self:getBlockByCR(i, j)
                 _tempGridInfo.col = i
                 _tempGridInfo.row = j
-                table.insert(_replaceAbleBlocks, self:getBlockByCR(i, j))
+                _tempGridInfo.x = _tempBlock:getPositionX()
+                _tempGridInfo.y = _tempBlock:getPositionY()
+                table.insert(_replaceAbleBlocks, _tempBlock)
                 table.insert(_replaceAbleGrids, _tempGridInfo)
             else
                 table.insert(_unReplaceAbleBlocks, _tempBlock)
@@ -1791,12 +1831,36 @@ function c_main_three_blocks:replaceBlocks()
         table.insert(_replaceAbleGridsNew, _replaceAbleGrids[_randomIndex])
         table.remove(_replaceAbleGrids, _randomIndex)
     end
-
+    --//DOINGTHINGS
     for i = 1, #_replaceAbleGridsNew do --摆放
         local _tempGrid = _replaceAbleGridsNew[i]
         local _tempBlock = _replaceAbleBlocks[i]
         _tempBlock:setCR(_tempGrid.col, _tempGrid.row)
-        _tempBlock:moveToSelfCR(self.movePreGridTime * 2, true, "replace")
+        _tempBlock:moveToSelfCR(self.replaceTime, true, "replace")
+        local _fromWorldPos =self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(),_tempBlock:getPositionY()))
+        local _targetWorldPos =self:convertToWorldSpace(cc.p(_tempGrid.x,_tempGrid.y))
+        self:createCureMotionBetweenBlocks(_tempBlock.type,_fromWorldPos,_targetWorldPos,self.replaceTime)
+        -- --先不可视
+        -- self:allBlockVisible(false)
+        -- local function func()
+        --     --轨迹动画过后，可见
+        --      self:allBlockVisible(true)
+        -- end            
+        -- local _funAction = cc.CallFunc:create(func)
+        -- local _delayTimeAction =cc.DelayTime:create(self.replaceTime)
+        -- local _seqAction = cc.Sequence:create(_delayTimeAction, _funAction)
+        -- self:runAction(_seqAction)
+    end
+end
+
+function c_main_three_blocks:allBlockVisible(isVisible_)
+    for i = 1, self.colMax do
+        for j = 1, self.rowMax do
+            local _tempBlock = self:getBlockByCR(i, j)
+            if _tempBlock then
+                _tempBlock:setVisible(isVisible_)
+            end
+        end
     end
 end
 

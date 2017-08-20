@@ -44,7 +44,6 @@ function c_main:init(initDict_)
     self:initSubUIs(_specialDict, _avoidInitDict)
 
     local function blockBreakInfoCallBack(_,data_)  
-        print "three main - blockBreakInfoCallBack"
         for k,_blockArr in pairs( data_ ) do
             if #_blockArr>0 then
                 local _keyArr = string.split(k,"_")

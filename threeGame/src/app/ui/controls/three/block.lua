@@ -398,6 +398,38 @@ function block:moveToGridByCR(col_, row_, time_, countMoveBoo_, moveType_)
     end
 end
 
+function block:swapAnimation(time_,isV_)
+    local _tempScaleX =1
+    local _tempScaleY =1
+    if isV_ then
+        _tempScaleX = 0.5
+        _tempScaleY = 1.5
+    else
+        _tempScaleX = 1.5
+        _tempScaleY = 0.5
+    end
+    local _scale1= cc.EaseSineInOut:create(cc.ScaleTo:create(time_*0.5,_tempScaleX,_tempScaleY));
+    local _scale2= cc.EaseSineInOut:create(cc.ScaleTo:create(time_*0.5,1));
+    local _seqAction = cc.Sequence:create(_scale1,_scale2)
+    self:runAction(_seqAction)
+end
+
+function block:swapBackAnimation(time_,isV_)
+    local _tempScaleX =1
+    local _tempScaleY =1
+    if isV_ then
+        _tempScaleX = 0.7
+        _tempScaleY = 1.3
+    else
+        _tempScaleX = 1.3
+        _tempScaleY = 0.7
+    end
+    local _scale1= cc.EaseBounceIn:create(cc.ScaleTo:create(time_*0.5,_tempScaleX,_tempScaleY));
+    local _scale2= cc.EaseBounceOut:create(cc.ScaleTo:create(time_*0.5,1));
+    local _seqAction = cc.Sequence:create(_scale1,_scale2)
+    self:runAction(_seqAction)
+end
+
 function block:moveEndAnimation(time_)
     local _scale1= cc.EaseElasticIn:create(cc.ScaleTo:create(time_*0.5,1.3,0.8));
     local _scale2= cc.EaseElasticOut:create(cc.ScaleTo:create(time_*0.5,1));
