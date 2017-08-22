@@ -51,6 +51,11 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
         self.count:setString(tostring(self.blockCount))
         self:gtp(2)
         table.removebyvalue(self.cureMotionList,cureMotion_)
+        if #self.cureMotionList == 0 then--自己的获取完了的时候
+            if self.logicParent:isGetBlockEnd() then--如果，其他的blockCount 也获取完了。
+                self.main:battleGetBlockEnd() -- 通知 main. battle已经获取了所有的block
+            end
+        end
     end
     -- body
     local _display = nil

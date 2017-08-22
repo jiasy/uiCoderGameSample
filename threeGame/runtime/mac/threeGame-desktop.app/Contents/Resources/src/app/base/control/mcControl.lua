@@ -28,7 +28,7 @@ end
 --update frame 
 function mcControlInstance:updateF()
     local function _update() self:updateF() end
-    self.actionUtils:nodeDelayCall(self.uiControl.mainContainer,0.017,_update)
+    self.actionUtils:nodeDelayCall(self.uiControl.mainContainer,0.02,_update)
     self:updateLayerArr(911)--Update layer's currentFrame.
     self:updateLayerArr(912)--Run action's in currentFrame.
     self:updateLayerArr(913)--Enter currentFrame.

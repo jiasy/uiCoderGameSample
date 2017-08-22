@@ -20,9 +20,7 @@ end
 --init data and place------------------------------------------
 function c_main:init(initDict_)
     c_main.super.init(self, initDict_)
-
-    self.isDebug=false
-
+    self.frameCount = 0
     -- getBlock 轨迹移动时间
     self.getBlockMoveTime = 1
     -- getBlock 给轨迹消散预留时间
@@ -33,6 +31,23 @@ function c_main:init(initDict_)
     self.roundMax = 0
     -- 显示场景中 blockCount的个数
     self.blockCountMax =11
+
+    --各个关卡的配置
+    self.levelConfigs = nil
+    --各种格子的配置
+    self.blockConfigs = nil
+
+    --当前关卡序号
+    self.currentLevelIndex = 10
+
+    -- 有初始化 数据就是正常玩的。
+    if initDict_ then
+        self.isDebug = false
+        --按照给定的关卡来设定
+        self.currentLevelIndex = initDict_.currentLevelIndex
+    else -- 没有初始化数据，就是测试
+        self.isDebug = false
+    end
 
     -- ----- ui init----------------------------------------------------------
     local _specialDict = {} --自定义数据初始化子UI
@@ -62,19 +77,75 @@ function c_main:init(initDict_)
     self.three.blocks.blockBreakInfoCallBack = blockBreakInfoCallBack
     self.three.blocks.roundEndCallBack = roundEndCallBack
 
-    --初始化
+    --初始化 
+    --创建 grids 和 block 之间的关系
     local _tempGrids = self.three.grids:getGrids(self.three.blocks.colMax, self.three.blocks.rowMax)
     self.three.blocks:initBlocks(_tempGrids)
-
+    --读取配置
+    self:getBlockConfigs() --获取方块配置
+    self:getLevelConfigs() --获取关卡配置
+    --初始化当前关卡
+    self:replayLevel()
 end
+
 
 function c_main:updateF( type_ )
     c_main.super.updateF(self, type_)
-    -- 重置 三消的回合状态
-    if self.three.blocks.canOperationBoo == false then
-        if self.battle:isGetBlockEnd() then
-            self.three.blocks.canOperationBoo = true
-        end
+end
+
+
+--获取关卡配置
+function c_main:getLevelConfigs()
+    local _fileFullPath = cc.FileUtils:getInstance():fullPathForFilename("levelConfig.json")
+    local _str = io.readfile(_fileFullPath)
+    local _tempObj = json.decode(_str)
+    self.levelConfigs = _tempObj
+end
+
+function c_main:getBlockConfigs()
+    -- local _fileFullPath = cc.FileUtils:getInstance():fullPathForFilename("blockConfig.json")
+    -- local _str = io.readfile(_fileFullPath)
+    -- local _tempObj = json.decode(_str)
+    -- self.blockConfigs = _tempObj
+end
+
+function c_main:reinitByLevelIndex(levelIndex_)
+    self.three.blocks:reinitByLevelIndex(self.levelConfigs.levelDatas[levelIndex_])
+end
+
+function c_main:nextLevel()
+    self.currentLevelIndex = self.currentLevelIndex + 1
+    if self.currentLevelIndex > #self.levelConfigs.levelDatas then
+        self.currentLevelIndex = 1
+    end
+    self:replayLevel()
+end
+
+function c_main:replayLevel()
+    --地块初始化结束之后，进行blocks的初始化
+    local function gridRestEnd()
+        self:reinitByLevelIndex(self.currentLevelIndex)
+    end
+    --重置battle
+    self.battle:reset()
+    --清理上次的block和各种变量
+    self.three.blocks:clearCurrentLevel()
+    --初始化地块
+    self.three.grids:reset(self.levelConfigs.levelDatas[self.currentLevelIndex] , gridRestEnd)
+end
+
+function c_main:prevLevel()
+    self.currentLevelIndex = self.currentLevelIndex - 1
+    if self.currentLevelIndex < 1 then
+        self.currentLevelIndex = #self.levelConfigs.levelDatas
+    end
+    self:replayLevel()
+end
+
+--battle 部分是否获取完了所有消除的方块。
+function c_main:battleGetBlockEnd()
+    if self.three.blocks.canOperationBoo == false then-- 重置 三消的回合状态
+        self.three.blocks.canOperationBoo = true
     end
 end
 
@@ -91,13 +162,11 @@ function c_main:btnClicked(btnName_, rollName_, listName_, itemDataDict_)
      ----- check btn name----------------------------------------------------------
     if btnName_ == "btn_next" then
         print("Btn_pressed : " .. self.className .. " -> nextBtn"); ---------------------------- nextBtn
-        self.three.blocks:nextLevel()
-        self.battle:reset()
+        self:nextLevel()
     end
     if btnName_ == "btn_prev" then
         print("Btn_pressed : " .. self.className .. " -> prevBtn"); ---------------------------- prevBtn
-        self.three.blocks:prevLevel()
-        self.battle:reset()
+        self:prevLevel()
     end
     if btnName_ == "btn_aiNormal" then
         print("Btn_pressed : " .. self.className .. " -> aiNormalBtn"); ---------------------------- aiNormalBtn
@@ -113,8 +182,7 @@ function c_main:btnClicked(btnName_, rollName_, listName_, itemDataDict_)
     end
     if btnName_ == "btn_reset" then
         print("Btn_pressed : " .. self.className .. " -> resetBtn"); ---------------------------- resetBtn
-        self.three.blocks:replayLevel()
-        self.battle:reset()
+        self:replayLevel()
     end
 end
 

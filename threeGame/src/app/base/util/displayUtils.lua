@@ -220,21 +220,28 @@ function displayUtilsInstance:createPartical(particalName_,type_)
    	return _aniSprite
 end
 
-function displayUtilsInstance:createAnimation(animationName_,loop_,fun_)
+function displayUtilsInstance:createAnimation(animationName_,loop_,fun_,isPng_)
     local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
-    sharedSpriteFrameCache:addSpriteFrames(
+    local _picFormat = "%s.pvr.ccz"
+    local _picFix = ".png"
+    if isPng_ then
+    	_picFormat = "%s.png"
+    	_picFix=""
+    end
+
+    local _frames = sharedSpriteFrameCache:addSpriteFrames(
         string.format("%s.plist",animationName_)
         ,
-        string.format("%s.pvr.ccz",animationName_)
+        string.format(_picFormat,animationName_)
         )
-    local _spriteFrames=self.spriteFrames[animationName_]
 
+    local _spriteFrames=self.spriteFrames[animationName_]
     if _spriteFrames==nil then
     	_spriteFrames={}
 	    local _loopBoolean=true
 	    local j=1
 	    while _loopBoolean do
-	    	local _spritePicName=string.format("%s%04d.png",animationName_,j)
+	    	local _spritePicName=string.format("%s%04d".._picFix,animationName_,j)
 	        local _tempSpriteFrame=sharedSpriteFrameCache:getSpriteFrame(_spritePicName)
 	        table.insert(_spriteFrames, _tempSpriteFrame)
 	        if _tempSpriteFrame == nil then

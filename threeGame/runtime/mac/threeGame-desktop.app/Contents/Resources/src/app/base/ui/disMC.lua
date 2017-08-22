@@ -7,6 +7,7 @@ function disMC:ctor(params_)
 	self.totalFrames=0
 	self.frameNames={}
 	self.frameActions={}
+	self.frameInts={}
 	self.mcChildObjectArr={}
 	self.mcControl=mcControl:getInstance()
 	self.testUtils=testUtils:getInstance()
@@ -246,7 +247,19 @@ end
 
 --帧名变帧数
 function disMC:getFrameIntByFrameName(name_)
-	return self.frameNames[name_]
+	local _frameInt = self.frameInts[name_]
+	if _frameInt then
+		return _frameInt
+	else
+		--反向创建关联关系。帧数跟帧名
+		for _int,_name in pairs( self.frameNames ) do
+		   	if _name == name_ then
+		   		self.frameInts[name_] = _int
+		   		return _int
+		   	end
+		end
+	end
+	return nil
 end
 
 --create-- call when init
@@ -275,6 +288,7 @@ function disMC:onDelete()
 	self.mcChildObjectArr=nil
 	self.testUtils=nil
 	self.frameNames=nil
+	self.frameInts=nil
 	self.mcControl=nil
 	disMC.super.onDelete(self)
 end

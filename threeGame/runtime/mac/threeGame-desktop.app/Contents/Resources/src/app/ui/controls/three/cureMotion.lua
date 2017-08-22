@@ -58,6 +58,7 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     _trail = require("src.app.ui.controls.common.c_move_trail_"..tostring(_trailCount)).new()
 
     _trail.name="trail"
+    self.logicalParent = logicalParent_
     -- 只放到uiList中，这样可以更新的到
     table.insert(logicalParent_.uiList,_trail)
     -- 设置大小
@@ -65,10 +66,11 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     _trail.currentScale = _dis/500
     _trail:setScale(_trail.currentScale)
     _trail:init(nil)
+    --flash 摆放轨迹移动的图片。隐藏掉。
     _trail.container.pic:setVisible(false)
     self:addChild(_trail)
 
-    if disPlay_ then
+    if disPlay_ then-- 显示对象，添加到承载容器中
         _trail.container:addChild(disPlay_)
         disPlay_:setRotation(-_deg)
         disPlay_:setScale(1/_trail.currentScale)
@@ -81,8 +83,7 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     end
     
     local function endCallBack( )
-        self:removeFromParent()
-        table.removebyvalue(logicalParent_.uiList,_trail)
+        self:cleanSelf()
     end
     local function moveEndCallBack( )
         if callback_ then
@@ -91,6 +92,13 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     end
     self:runAction(cc.Sequence:create(cc.DelayTime:create(moveTime_), cc.CallFunc:create(moveEndCallBack),cc.DelayTime:create(waitTime_), cc.CallFunc:create(endCallBack)))
 
+end
+
+function cureMotion:cleanSelf()
+    self:stopAllActions()
+    self:removeFromParent()
+    table.removebyvalue(self.logicalParent.uiList,_trail)
+    self.logicalParent =nil
 end
 
 function cureMotion:defFromDis(disX_,disY_)

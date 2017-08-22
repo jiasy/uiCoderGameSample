@@ -35,6 +35,7 @@ function c_main_battle:reset()
         self["blockCount"..tostring(i)]:reset()
     end
     self.trailCount = 0
+    self.hero:gtp("start")
 end
 
 --init data and place------------------------------------------

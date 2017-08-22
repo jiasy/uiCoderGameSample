@@ -24,12 +24,8 @@ function c_main_three_blocks:init(initDict_)
     --游戏进行ID
     self.currentLevelID = 0
 
-    --管卡配置预存
-    self.levelConfigs = nil
     --一共有多少种Block
     self.blockMaxTypes = 15
-    --当前测试关卡序号
-    self.currentLevelIndex = 9
     --随机次数
     self.needRandomCountMax = 101
     --承载体
@@ -114,6 +110,8 @@ function c_main_three_blocks:init(initDict_)
     self.replaceTipTime = 0.5
     --无匹配，交换时间
     self.replaceTime = 1
+    --初始化 Block 的时间
+    self.initBlocksPlaceTime = 1;
 
     --连锁导致的其他special被激活，各个Special进行触发的时候，进行的延时等待
     self.specialBlockActiveTime=0
@@ -343,26 +341,12 @@ function c_main_three_blocks:clearDelayAiAction()
     self:stopActionByTag(self.delayAiActionTag)
 end
 
---获取关卡配置
-function c_main_three_blocks:getLevelConfigs()
-    local _fileFullPath = cc.FileUtils:getInstance():fullPathForFilename("levelConfig.json")
-    local _str = io.readfile(_fileFullPath)
-    local _tempObj = json.decode(_str)
-    self.levelConfigs = _tempObj
-end
-
-function c_main_three_blocks:getBlockConfigs()
-    -- local _fileFullPath = cc.FileUtils:getInstance():fullPathForFilename("blockConfig.json")
-    -- local _str = io.readfile(_fileFullPath)
-    -- local _tempObj = json.decode(_str)
-    -- self.blockConfigs = _tempObj
-end
-
 --根据关卡号进行创建
-function c_main_three_blocks:reinitByLevelIndex(levelIndex_)
+function c_main_three_blocks:reinitByLevelIndex(levelConfig_)
+    self.currentLevelID = self.currentLevelID + 1
     self:clearCurrentLevel()
     self:preSetPar("normal")
-    self:initByLevelConfig(self.levelConfigs.levelDatas[levelIndex_])
+    self:initByLevelConfig(levelConfig_)
 end
 
 --清理当前关卡
@@ -389,13 +373,6 @@ function c_main_three_blocks:clearCurrentLevel()
     self.movingBlockNum = 0 -- 没有正在移动的方块
     self.debugLog:setString("")
 
-    -- 地块可见
-    for i = 1, self.colMax do
-        for j = 1, self.rowMax do
-            local _tempGrid = self.grids[i][j] --不能用getGridByCR
-            _tempGrid:setVisible(true)
-        end
-    end
     --清除block
     for i = 1, self.colMax do
         for j = 1, self.rowMax do
@@ -432,6 +409,12 @@ function c_main_three_blocks:clearCurrentLevel()
         self.gridBuffers[i] = {}
     end
 
+    --清理轨迹路径
+    while #self.cureMotionList>0 do
+        local _cureMotion=table.remove(self.cureMotionList, 1)
+        _cureMotion:cleanSelf()
+    end
+
     if self.containerLayer then
         self.containerLayer:removeFromParent(true)
     end
@@ -443,48 +426,10 @@ function c_main_three_blocks:clearCurrentLevel()
     self:stopAllActions()
 end
 
-function c_main_three_blocks:nextLevel()
-    -- if self.blockMovingBool then
-    --     print("nextLevel -- 在游戏消除过程中 无法进行")
-    --     return
-    -- end
-    self.currentLevelIndex = self.currentLevelIndex + 1
-    if self.currentLevelIndex > #self.levelConfigs.levelDatas then
-        self.currentLevelIndex = 1
-    end
-    self:replayLevel()
-end
-
-function c_main_three_blocks:replayLevel()
-    -- if self.blockMovingBool then
-    --     print("replayLevel -- 在游戏消除过程中 无法进行")
-    --     return
-    -- end
-    self.currentLevelID = self.currentLevelID + 1
-    self:reinitByLevelIndex(self.currentLevelIndex)
-end
-
-function c_main_three_blocks:prevLevel()
-    -- if self.blockMovingBool then
-    --     print("prevLevel -- 在游戏消除过程中 无法进行")
-    --     return
-    -- end
-    self.currentLevelIndex = self.currentLevelIndex - 1
-    if self.currentLevelIndex < 1 then
-        self.currentLevelIndex = #self.levelConfigs.levelDatas
-    end
-    self:replayLevel()
-end
-
 --根据当前关卡配置，初始化
 function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     --设置测试标题
-    self.logicParent.desText:setString(self.currentLevelIndex .. " : " .. currentLevelConfig_.des)
-
-    for i = 1, #currentLevelConfig_.lostGrids do
-        local _tempGridInfo = currentLevelConfig_.lostGrids[i]
-        self:getGridByCR(_tempGridInfo.col, _tempGridInfo.row):setVisible(false)
-    end
+    self.logicParent.desText:setString(self.main.currentLevelIndex .. " : " .. currentLevelConfig_.des)
 
     for i = 1, #currentLevelConfig_.blockInfos do
         local _tempBlockInfo = currentLevelConfig_.blockInfos[i]
@@ -511,16 +456,65 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     -- 当前关随机几个颜色
     self.randomMax = currentLevelConfig_.randomMax
 
-    local _fallDownBoo = false --有下落需求
-
     if self:needRandom() == false then --没有超过随机次数限制
         
     end
 
+    -- 开始进行，实际摆放位置，初始化显示-------------------------------------
     self.blockMovingBool = true
-    -- 重置11下面的提示
-    self:showDownUnderType11()
-    self:fallDown()
+    --移动到初始化位置<先拿走，创建轨迹移动>
+    self:moveBlockToInitPlace() 
+
+    --延时进行游戏开始
+    local function initBlocksPlaceEndCallBack()
+        -- 重置属性，然后定位Block<再移动回原来的位置>
+        self:allBlockCanMatch()
+        -- 重置11下面的提示
+        self:showDownUnderType11()
+        self:fallDown()
+    end
+
+    -- 延时，初始化格子摆放
+    local _funAction = cc.CallFunc:create(initBlocksPlaceEndCallBack)
+    local _delayTime = cc.DelayTime:create(self.initBlocksPlaceTime)
+    local _seqAction = cc.Sequence:create(_delayTime, _funAction)
+    self:runAction(_seqAction)
+
+end
+--创建显示
+function c_main_three_blocks:moveBlockToInitPlace()
+    for i = 1, self.colMax do --col
+        for j = 1, self.rowMax do --row
+            local _tempBlock = self:getBlockByCR(i, j)
+            if _tempBlock and _tempBlock:replaceAble() then
+                local _deg = math.random(1,180)
+                local _y = math.sin(math.rad(_deg))*1000
+                local _x = math.cos(math.rad(_deg))*1000
+                local _targetWorldPos =self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(),_tempBlock:getPositionY()))
+                _tempBlock:setPosition(cc.p(_x,_y))
+                local _fromWorldPos =self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(),_tempBlock:getPositionY()))
+                self:createCureMotionBetweenBlocks(_tempBlock.type,_fromWorldPos,_targetWorldPos,self.initBlocksPlaceTime)
+            end
+        end
+    end
+
+    -- TODO 处理一个 找不到原因的bug--------------------------------V
+    -- block 进入 场景的时候，会闪一下。有个轨迹往外的闪烁，这里让它开始几帧不可见，这样闪烁就看不到了
+    local function bugSolution( ... )
+       for i=1 , #self.cureMotionList do
+        local _cureMotion=self.cureMotionList[i]
+        _cureMotion:setVisible(true)
+    end      
+    end
+    for i=1 , #self.cureMotionList do
+        local _cureMotion=self.cureMotionList[i]
+        _cureMotion:setVisible(false)
+    end 
+    local _funAction = cc.CallFunc:create(bugSolution)
+    local _delayTime = cc.DelayTime:create(0.3)
+    local _seqAction = cc.Sequence:create(_delayTime, _funAction)
+    self:runAction(_seqAction)
+    -- TODO 处理一个 找不到原因的bug--------------------------------^
 end
 
 --方块位置，两个方向延展多少进行获取
@@ -733,6 +727,8 @@ function c_main_three_blocks:swapBlocks(block1_, block2_, forceSwapBool_)
             self:swapBlocks(self.swappingBlock1, self.swappingBlock2, true) --换回来
             self.swappingBlock1:swapBackAnimation(self.swapBlockTime,_isV)
             self.swappingBlock2:swapBackAnimation(self.swapBlockTime,_isV)
+            self:getGridByCR(self.swappingBlock1.col,self.swappingBlock1.row):gtp("unMatch")
+            self:getGridByCR(self.swappingBlock2.col,self.swappingBlock2.row):gtp("unMatch")
         else --有消除的，就开始下落
             self:clearDelayTipAction()
             self.blockMovingBool = true
@@ -791,8 +787,8 @@ function c_main_three_blocks:addBlockTo(col_, row_, type_, level_, buffer_, crea
         --按照三个属性 重置。
         _block:reinit(type_, _block.initLevel, false)
         _block:setCR(col_, row_)
-        _block:setPosition(_tempGrid:getPositionX(), _tempGrid:getPositionY() + self.blockTouchSize)
         self.containerLayer:addChild(_block, self.blockPlaceIndex)
+        _block:setPosition(_tempGrid:getPositionX(), _tempGrid:getPositionY() + self.blockTouchSize)
         if createDisplay_ then --创建显示
             _block:createDisplay()
         end
@@ -1471,11 +1467,13 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
                             if _tempBlock.level ~= nil and _tempBlock.level ~= "" then
                                 _type = "n"
                             else
+                                self:getGridByCR(_col,_row):gtp("shake")
                                 _type = "s"
                             end
                             table.insert(_blockBreakInfo["type_".._tempBlock.type.."_".._type], self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(), _tempBlock:getPositionY())))
                         end
                         if _tempBlock.type == 11 then
+                            self:getGridByCR(_col,_row):gtp("Type11End")
                             _tempBlock:removeByAnimation(self.type11RemoveAnimationTime)
                             _haveType11Boo = true
                         else
@@ -1498,7 +1496,6 @@ function c_main_three_blocks:breakBlocks(getBreakBlockInfos_)
                         end
                     end
                 end
-
             end
         end
     end
@@ -1703,9 +1700,6 @@ function c_main_three_blocks:initBlocks(grids_)
             self.gridBuffers[i][j] = nil
         end
     end
-    self:getBlockConfigs() --获取方块配置
-    self:getLevelConfigs() --获取关卡配置
-    self:replayLevel() --按照currentLevelIndex进行管卡初始化
 end
 
 --避免没有可能的匹配--纯随机关卡中使用。或者无匹配管卡中使用
@@ -1749,7 +1743,6 @@ function c_main_three_blocks:needRandom()
     print("_randomCount : " .. _randomCount)
 
     self:createBlockDisplay() --创建Block的显示
-
     return _showEditBoo
 end
 
@@ -1840,16 +1833,6 @@ function c_main_three_blocks:replaceBlocks()
         local _fromWorldPos =self:convertToWorldSpace(cc.p(_tempBlock:getPositionX(),_tempBlock:getPositionY()))
         local _targetWorldPos =self:convertToWorldSpace(cc.p(_tempGrid.x,_tempGrid.y))
         self:createCureMotionBetweenBlocks(_tempBlock.type,_fromWorldPos,_targetWorldPos,self.replaceTime)
-        -- --先不可视
-        -- self:allBlockVisible(false)
-        -- local function func()
-        --     --轨迹动画过后，可见
-        --      self:allBlockVisible(true)
-        -- end            
-        -- local _funAction = cc.CallFunc:create(func)
-        -- local _delayTimeAction =cc.DelayTime:create(self.replaceTime)
-        -- local _seqAction = cc.Sequence:create(_delayTimeAction, _funAction)
-        -- self:runAction(_seqAction)
     end
 end
 
