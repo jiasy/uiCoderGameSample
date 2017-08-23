@@ -12,8 +12,13 @@ end
 --init data and place------------------------------------------
 function c_main_battle_blockCount:init(initDict_)
     c_main_battle_blockCount.super.init(self,initDict_)
+    -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
+    --local _blockShowDict={}
+    --_specialDict["blockShow"]= _blockShowDict
+    --_avoidInit["blockShow"]="avoidInitHere"
+    
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
 
@@ -28,7 +33,7 @@ function c_main_battle_blockCount:btnClicked(btnName_,rollName_,listName_,itemDa
     c_main_battle_blockCount.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
 end
 
---frame name call back---------------------------------------------------
+--frame name call back----------------------------------------------------- 帧名不要带下杠线
 function c_main_battle_blockCount:onFrameName(frameName_)
     c_main_battle_blockCount.super.onFrameName(self,frameName_)
 

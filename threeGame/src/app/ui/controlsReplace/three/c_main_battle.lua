@@ -15,9 +15,9 @@ function c_main_battle:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _heroDict={}
-    --_specialDict["hero"]= _heroDict
-    --_avoidInit["hero"]="avoidInitHere"
+    --local _fazhenDict={}
+    --_specialDict["fazhen"]= _fazhenDict
+    --_avoidInit["fazhen"]="avoidInitHere"
     --local _blockCount2Dict={}
     --_specialDict["blockCount2"]= _blockCount2Dict
     --_avoidInit["blockCount2"]="avoidInitHere"

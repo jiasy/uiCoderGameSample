@@ -10,7 +10,19 @@ function c_main_battle_blockCount:ctor(params_)
     self.moduleName = "three"
     self.blockCount = 0
     self.type=0
+    -- 移动轨迹集合
     self.cureMotionList = {}
+    --旋转属性
+    self.currentRotateSpeed = 0
+    self.targetRotateSpeed = 0
+    self.speedEqual = 0.3
+    self.currentR = 0
+    self.targetR = 0
+    self.rEqual = 0.5
+    self.xs = 0.3
+    self.currentRotation = 0
+    --圆心
+    self.targetDisplay = nil
 end
 
 --init data and place------------------------------------------
@@ -21,13 +33,45 @@ function c_main_battle_blockCount:init(initDict_)
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。
     self:initSubUIs(_specialDict, _avoidInitDict)
     self.count:setString(self.blockCount)
-    --更换小图标
-    local _texture = cc.Director:getInstance():getTextureCache():addImage("icon_ball_"..tostring(self.type)..".png")
-    self.colorShow:setTexture(_texture)
+    -- --更换小图标
+    -- local _texture = cc.Director:getInstance():getTextureCache():addImage("icon_ball_"..tostring(self.type)..".png")
+    -- self.colorShow:setTexture(_texture)
+
+    if self.type == 1 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_goust").new()
+    elseif self.type == 2 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_gui").new()
+    elseif self.type == 3 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_duyan").new()
+    elseif self.type == 4 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_huli").new()
+    elseif self.type == 5 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_mao").new()
+    end
+
+    if 
+        self.type == 1 
+        or
+        self.type == 2 
+        or
+        self.type == 3
+        or
+        self.type == 4 
+        or
+        self.type == 5
+    then
+        self.blockPic.name="disMc"
+        self.blockPic:init(nil)
+        self.blockShow.pic:setVisible(false)
+        self.blockShow:addChild(self.blockPic,10)
+        -- 只放到uiList中，这样可以更新的到
+        table.insert(self.logicParent.uiList,self.blockPic)
+    end
 
 end
 
-function c_main_battle_blockCount:reset()
+--根据当前关卡的randomMax固定一个初始角度
+function c_main_battle_blockCount:reset(currentRotation_)
     --清空原有轨迹移动对象
     for i=1 , #self.cureMotionList do
         local item=self.cureMotionList[i]
@@ -40,13 +84,37 @@ function c_main_battle_blockCount:reset()
     self.count:setString(tostring(self.blockCount))
     --动画重置
     self:gts(1)
+    -- 重置旋转属性
+    self:resetRotationAndSpeed(currentRotation_)
 end
+
+--重置旋转 属性
+function c_main_battle_blockCount:resetRotationAndSpeed(currentRotation_)
+    self.currentRotation = currentRotation_ + 18
+    self.currentRotateSpeed = 0
+    self.targetRotateSpeed = 0
+    self.currentR = 0
+    self.targetR = 0
+    --重置位置
+    self:setPosition(cc.p(self.targetDisplay:getPositionX(),self.targetDisplay:getPositionY()))
+end
+
+function c_main_battle_blockCount:resetRotationPos()
+    self.currentRotation = self.currentRotation + self.currentRotateSpeed
+    local _y = self.currentR * math.sin(math.rad(self.currentRotation)) + self.targetDisplay:getPositionY()
+    local _x = self.currentR * math.cos(math.rad(self.currentRotation)) + self.targetDisplay:getPositionX()
+    self:setPosition(cc.p(_x,_y))
+end
+
 function c_main_battle_blockCount:isGetBlockEnd()
     return #self.cureMotionList == 0
 end
 
 function c_main_battle_blockCount:getBlock(po_,trailCount_)
     local function onInPosition(cureMotion_)
+        if self.blockPic then
+            self.blockPic:playIdleAnimation()
+        end
         self.blockCount = self.blockCount +1
         self.count:setString(tostring(self.blockCount))
         self:gtp(2)
@@ -117,6 +185,14 @@ function c_main_battle_blockCount:onDestory()
     --ui remove logic here
     --print(self.moduleName .. " : " .. self.className .. " : " .. "onDestory")
     c_main_battle_blockCount.super.onDestory(self)
+    if self.blockPic then --宝石图片
+        if self.blockPic.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.blockPic)
+            self.blockPic:onDelete()
+        end
+        self.blockPic:removeFromParent(true)
+        self.blockPic = nil
+    end
 end
 
 return c_main_battle_blockCount

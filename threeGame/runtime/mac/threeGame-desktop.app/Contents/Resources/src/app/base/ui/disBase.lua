@@ -128,7 +128,7 @@ function disBase:onDestory()
 	elseif self.lifeState=="destory" then
 		assert(false, self.moduleName.." : "..self.className.." already destory~!")
 	elseif self.createBoo=="none" then
-		print("NOTICE : "..self.moduleName.." : "..self.className.." destory without create...")
+		assert("NOTICE : "..self.moduleName.." : "..self.className.." destory without create...")
 	end
 end
 

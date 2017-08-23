@@ -28,7 +28,7 @@ function c_main_three_downs_down:btnClicked(btnName_,rollName_,listName_,itemDat
     c_main_three_downs_down.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
 end
 
---frame name call back---------------------------------------------------
+--frame name call back----------------------------------------------------- 帧名不要带下杠线
 function c_main_three_downs_down:onFrameName(frameName_)
     c_main_three_downs_down.super.onFrameName(self,frameName_)
 

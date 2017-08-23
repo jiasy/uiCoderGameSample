@@ -22,11 +22,11 @@ function block:ctor(threeGame_)
     --激活动画
     self.activePic = nil --8
 
-    self.threeGame = threeGame_
+    self.parent_blocks = threeGame_
 
-    self.isDebug = self.threeGame.main.isDebug
+    self.isDebug = self.parent_blocks.main.isDebug
     --当前的游戏ID
-    self.currentLevelID = self.threeGame.currentLevelID
+    self.currentLevelID = self.parent_blocks.currentLevelID
     --动画控制引用
     self.disUtils = displayUtils:getInstance()
     --类型
@@ -161,7 +161,7 @@ function block:reinit(type_, level_, createDis_)
 end
 
 function block:addBufferByType(type_)
-    if self.currentLevelID ~= self.threeGame.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     if type_ == 0 then
@@ -175,7 +175,7 @@ function block:addBufferByType(type_)
             print("ERROR 除了类别2,其他都不能叠加")
         end
     else
-        self.bufferIns = Buffer.new(self.threeGame, self)
+        self.bufferIns = Buffer.new(self.parent_blocks, self)
         self.bufferIns:reInitByType(type_, "ani_transition")
         self:addChild(self.bufferIns, 5)
     end
@@ -221,13 +221,13 @@ function block:isChanging()
 end
 
 function block:setCR(col_, row_)
-    if self.currentLevelID ~= self.threeGame.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     if self.col ~= 0 and self.row ~= 0 then --规避初始化
         --这个地块里面拿出去
-        if self.threeGame.blocks[self.col][self.row] == self then
-            self.threeGame.blocks[self.col][self.row] = nil
+        if self.parent_blocks.blocks[self.col][self.row] == self then
+            self.parent_blocks.blocks[self.col][self.row] = nil
         else
             --print("TODO setCR 这个地块上 还有 别的 方块")
         end
@@ -238,7 +238,7 @@ function block:setCR(col_, row_)
     if self.isDebug then self.colLabel:setString(string.format("%d", self.col)) end
     if self.isDebug then self.rowLabel:setString(string.format("%d", self.row)) end
     --放到另外一个地块上
-    self.threeGame.blocks[col_][row_] = self
+    self.parent_blocks.blocks[col_][row_] = self
 end
 
 --是否可闪
@@ -281,9 +281,13 @@ function block:isShining()
     end
 end
 
-function block:createDisplay()
+function block:cleanDisplay()
     --清除之前显示元素
     if self.blockPic then --宝石图片
+        if self.blockPic.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.blockPic)
+            self.blockPic:onDelete()
+        end
         self.blockPic:removeFromParent(true)
         self.blockPic = nil
     end
@@ -299,14 +303,48 @@ function block:createDisplay()
     end
 
     self:shinePicClear()
+end
+function block:createDisplay()
+    self:cleanDisplay()
 
     local _baseName = "icon_ball_"
     local _effectName = _baseName .. self.type
     local _picFileName = _effectName .. ".png"
 
-    self.blockPic = cc.Sprite:create(_picFileName)
-    self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
-    self:addChild(self.blockPic, 1)
+    if self.type == 1 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_goust").new()
+    elseif self.type == 2 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_gui").new()
+    elseif self.type == 3 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_duyan").new()
+    elseif self.type == 4 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_huli").new()
+    elseif self.type == 5 then
+        self.blockPic = require("src.app.ui.controls.common.c_block_mao").new()
+    else
+        self.blockPic = cc.Sprite:create(_picFileName)
+        self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
+        self:addChild(self.blockPic, 1)
+    end
+
+    if 
+        self.type == 1 
+        or
+        self.type == 2 
+        or
+        self.type == 3
+        or
+        self.type == 4 
+        or
+        self.type == 5
+    then
+        self.blockPic.name="disMc"
+        self.blockPic:startRandomIdle(self.parent_blocks.blockIdleRandomBegin,self.parent_blocks.blockIdleRandomEnd)
+        self.blockPic:init(nil)
+        self:addChild(self.blockPic,1)
+        -- 只放到uiList中，这样可以更新的到
+        table.insert(self.parent_blocks.uiList,self.blockPic)
+    end
 
     if self.level and self.level ~= "" then
         if self.type > 9 then
@@ -338,7 +376,7 @@ end
 
 --移动向自己的所在位置
 function block:moveToSelfCR(time_, countMove_, moveType_)
-    if self.currentLevelID ~= self.threeGame.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     self:moveToGridByCR(self.col, self.row, time_, countMove_, moveType_)
@@ -346,24 +384,24 @@ end
 
 --获得自己所在的地块的坐标
 function block:getSelfGridPos()
-    if self.currentLevelID ~= self.threeGame.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
-    local _grid = self.threeGame:getGridByCR(self.col, self.row)
+    local _grid = self.parent_blocks:getGridByCR(self.col, self.row)
     return cc.p(_grid:getPositionX(), _grid:getPositionY())
 end
 
 --按照这个时间向那个cr的grids所在地移动
 function block:moveToGridByCR(col_, row_, time_, countMoveBoo_, moveType_)
-    if self.currentLevelID ~= self.threeGame.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
-    local _grid = self.threeGame:getGridByCR(col_, row_)
+    local _grid = self.parent_blocks:getGridByCR(col_, row_)
     if time_ == 0 then --立刻到位
         self:setPosition(cc.p(_grid:getPositionX(), _grid:getPositionY()))
     else --延时
         if countMoveBoo_ then --个数统计操作
-            self.threeGame.movingBlockNum = self.threeGame.movingBlockNum + 1
+            self.parent_blocks.movingBlockNum = self.parent_blocks.movingBlockNum + 1
         end
 
         local _moveAction
@@ -384,8 +422,8 @@ function block:moveToGridByCR(col_, row_, time_, countMoveBoo_, moveType_)
         if countMoveBoo_ then -- 非初始化的block,具有移动能力的。
             local function moveEnd()
                 --self:placeInPos()--位置精确
-                self.threeGame.movingBlockNum = self.threeGame.movingBlockNum - 1
-                self.threeGame:checkFallDown()
+                self.parent_blocks.movingBlockNum = self.parent_blocks.movingBlockNum - 1
+                self.parent_blocks:checkFallDown()
             end
 
             local _funAction = cc.CallFunc:create(moveEnd)
@@ -532,7 +570,7 @@ end
 
 --放到格子所在的位置
 function block:placeInPos()
-    local _tempGrid = self.threeGame:getGridByCR(self.col, self.row)
+    local _tempGrid = self.parent_blocks:getGridByCR(self.col, self.row)
     self:setPosition(_tempGrid:getPositionX(), _tempGrid:getPositionY())
 end
 
@@ -555,7 +593,7 @@ function block:putEffectIntoThreeGame()
     elseif self.chainMatch then
         _tempSp:setBlendFunc(cc.blendFunc(gl.ONE , gl.ONE))
     end
-    self.threeGame:addChild(_tempSp, self.threeGame.blockEffectIndex) --特效层添加特效
+    self.parent_blocks:addChild(_tempSp, self.parent_blocks.blockEffectIndex) --特效层添加特效
 end
 
 
@@ -565,7 +603,7 @@ function block:removeByAnimation(time_)
         self:placeInPos()
         self.removed = true
         --这个地块里面拿出去
-        self.threeGame.blocks[self.col][self.row] = nil
+        self.parent_blocks.blocks[self.col][self.row] = nil
 
         -- 消除了播放一个消除特效--------------------------
         local function breakEffectCallBack()
@@ -609,8 +647,9 @@ end
 
 --移除清理
 function block:removeFromGame()
-    self:clearTip();
-    local _threeCanMatchBlocks = self.threeGame.canMatchBlocks
+    self:cleanDisplay()
+    self:clearTip()
+    local _threeCanMatchBlocks = self.parent_blocks.canMatchBlocks
     if _threeCanMatchBlocks then
         for i = 1, #_threeCanMatchBlocks do
             local _tempBlock = _threeCanMatchBlocks[i]
@@ -623,7 +662,7 @@ function block:removeFromGame()
     self:shinePicClear()
     self.disUtils = nil
     self.targetGrids = nil
-    self.threeGame = nil
+    self.parent_blocks = nil
     self.targetGrids = {}
     self:stopAllActions()
     self:removeFromParent(true)

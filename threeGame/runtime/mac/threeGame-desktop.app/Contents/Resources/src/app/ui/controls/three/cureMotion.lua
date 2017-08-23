@@ -46,8 +46,7 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
     -- _pic:setScaleY(10/_pic:getContentSize().height)
     -- self:addChild(_pic)
 
-    local _trailTypeMax = 20
-    local _trail 
+    local _trailTypeMax = 20 
     local _trailCount = math.random(1,_trailTypeMax)
     if trailCount_ then
         _trailCount = trailCount_%_trailTypeMax +1
@@ -55,29 +54,29 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
         _trailCount = 1
     end
 
-    _trail = require("src.app.ui.controls.common.c_move_trail_"..tostring(_trailCount)).new()
+    self.trail = require("src.app.ui.controls.common.c_move_trail_"..tostring(_trailCount)).new()
 
-    _trail.name="trail"
+    self.trail.name="trail"
     self.logicalParent = logicalParent_
     -- 只放到uiList中，这样可以更新的到
-    table.insert(logicalParent_.uiList,_trail)
+    table.insert(self.logicalParent.uiList,self.trail)
     -- 设置大小
     
-    _trail.currentScale = _dis/500
-    _trail:setScale(_trail.currentScale)
-    _trail:init(nil)
+    self.trail.currentScale = _dis/500
+    self.trail:setScale(self.trail.currentScale)
+    self.trail:init(nil)
     --flash 摆放轨迹移动的图片。隐藏掉。
-    _trail.container.pic:setVisible(false)
-    self:addChild(_trail)
+    self.trail.container.pic:setVisible(false)
+    self:addChild(self.trail)
 
     if disPlay_ then-- 显示对象，添加到承载容器中
-        _trail.container:addChild(disPlay_)
+        self.trail.container:addChild(disPlay_)
         disPlay_:setRotation(-_deg)
-        disPlay_:setScale(1/_trail.currentScale)
+        disPlay_:setScale(1/self.trail.currentScale)
     end
 
     if trailMotion_ then
-        _trail.trailMotion = trailMotion_
+        self.trail.trailMotion = trailMotion_
         trailMotion_:setPosition(cc.p(_dis,0))
         self:addChild(trailMotion_)
     end
@@ -95,10 +94,11 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
 end
 
 function cureMotion:cleanSelf()
+    table.removebyvalue(self.logicalParent.uiList,self.trail)
+    self.logicalParent =nil
+    self.trail:onDelete()
     self:stopAllActions()
     self:removeFromParent()
-    table.removebyvalue(self.logicalParent.uiList,_trail)
-    self.logicalParent =nil
 end
 
 function cureMotion:defFromDis(disX_,disY_)

@@ -118,6 +118,10 @@ function c_main_three_blocks:init(initDict_)
     --显示连锁的那几个动画的时间
     self.showMatchTime = 0
 
+    --Block idle 动画播放相关
+    self.blockIdleRandomBegin=300
+    self.blockIdleRandomEnd=500
+
 
     --不能触发出没时间的条件--TODO 游戏结束，游戏暂停
     self.touchMoved = false --触摸中

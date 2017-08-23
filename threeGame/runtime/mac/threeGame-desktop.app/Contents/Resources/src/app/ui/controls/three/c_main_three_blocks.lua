@@ -118,6 +118,10 @@ function c_main_three_blocks:init(initDict_)
     --显示连锁的那几个动画的时间
     self.showMatchTime = 0
 
+    --Block idle 动画播放相关
+    self.blockIdleRandomBegin=300
+    self.blockIdleRandomEnd=500
+
 
     --不能触发出没时间的条件--TODO 游戏结束，游戏暂停
     self.touchMoved = false --触摸中
@@ -460,6 +464,8 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
         
     end
 
+    -- 开始进行，实际摆放位置，初始化显示-------------------------------------
+    self.blockMovingBool = true
     --移动到初始化位置<先拿走，创建轨迹移动>
     self:moveBlockToInitPlace() 
 
@@ -467,13 +473,10 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     local function initBlocksPlaceEndCallBack()
         -- 重置属性，然后定位Block<再移动回原来的位置>
         self:allBlockCanMatch()
-        self.blockMovingBool = true
         -- 重置11下面的提示
         self:showDownUnderType11()
         self:fallDown()
     end
-
-    
 
     -- 延时，初始化格子摆放
     local _funAction = cc.CallFunc:create(initBlocksPlaceEndCallBack)

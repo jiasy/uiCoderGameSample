@@ -18,13 +18,13 @@ function p_main:initPlace(referUI_,container_)
 	du:setLogicParent(referUI_.three,referUI_)
 	referUI_.battle=C_main_battle.new();
 	referUI_.battle.name="battle"
-	du:placeAndAddChildToContainer(referUI_.battle,container_,0.00,0.00,0,676,0,1,1,1,2)
+	du:placeAndAddChildToContainer(referUI_.battle,container_,0.00,0.00,0,656,0,1,1,1,2)
 	table.insert(referUI_.uiList,referUI_.battle)
 	du:setLogicParent(referUI_.battle,referUI_)
 	referUI_.btn_next=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_next.name="btn_next"
 	du:setBtnText(referUI_.btn_next,lu:tansWord("next"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_next,container_,0.50,0.50,-56,696,0,1,1,1,3)
+	du:placeAndAddChildToContainer(referUI_.btn_next,container_,0.50,0.50,-56,25.1,0,1,1,1,3)
 	referUI_.btn_next:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end
@@ -37,7 +37,7 @@ function p_main:initPlace(referUI_,container_)
 	referUI_.btn_prev=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_prev.name="btn_prev"
 	du:setBtnText(referUI_.btn_prev,lu:tansWord("prev"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_prev,container_,0.50,0.50,-280,696,0,1,1,1,4)
+	du:placeAndAddChildToContainer(referUI_.btn_prev,container_,0.50,0.50,-280,25.1,0,1,1,1,4)
 	referUI_.btn_prev:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end
@@ -50,7 +50,7 @@ function p_main:initPlace(referUI_,container_)
 	referUI_.btn_reset=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_reset.name="btn_reset"
 	du:setBtnText(referUI_.btn_reset,lu:tansWord("reset"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_reset,container_,0.50,0.50,-168,696,0,1,1,1,5)
+	du:placeAndAddChildToContainer(referUI_.btn_reset,container_,0.50,0.50,-168,25.1,0,1,1,1,5)
 	referUI_.btn_reset:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end
@@ -63,7 +63,7 @@ function p_main:initPlace(referUI_,container_)
 	referUI_.btn_aiNormal=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_aiNormal.name="btn_aiNormal"
 	du:setBtnText(referUI_.btn_aiNormal,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_aiNormal,container_,0.50,0.50,56,696,0,1,1,1,6)
+	du:placeAndAddChildToContainer(referUI_.btn_aiNormal,container_,0.50,0.50,56,25.1,0,1,1,1,6)
 	referUI_.btn_aiNormal:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end
@@ -76,7 +76,7 @@ function p_main:initPlace(referUI_,container_)
 	referUI_.btn_aiQuick=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_aiQuick.name="btn_aiQuick"
 	du:setBtnText(referUI_.btn_aiQuick,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_aiQuick,container_,0.50,0.50,168,696,0,1,1,1,7)
+	du:placeAndAddChildToContainer(referUI_.btn_aiQuick,container_,0.50,0.50,168,25.1,0,1,1,1,7)
 	referUI_.btn_aiQuick:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end
@@ -89,7 +89,7 @@ function p_main:initPlace(referUI_,container_)
 	referUI_.btn_aiFly=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_aiFly.name="btn_aiFly"
 	du:setBtnText(referUI_.btn_aiFly,lu:tansWord("ai"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
-	du:placeAndAddChildToContainer(referUI_.btn_aiFly,container_,0.50,0.50,280,696,0,1,1,1,8)
+	du:placeAndAddChildToContainer(referUI_.btn_aiFly,container_,0.50,0.50,280,25.1,0,1,1,1,8)
 	referUI_.btn_aiFly:addClickEventListener(
 		function(sender) 
 			if referUI_:isTouchAble()==false then return end

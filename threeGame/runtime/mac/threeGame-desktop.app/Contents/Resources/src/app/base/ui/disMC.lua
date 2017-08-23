@@ -33,7 +33,7 @@ function disMC:getFrameNameByFrameInt(frameInt_)
 	return self.frameNames[frameInt_]
 end
 function disMC:onFrameName(frameName_)
-	print("disMC : "..self.moduleName.." : "..self.className.." : "..self.name.." -> "..frameName_)
+	-- print("disMC : "..self.moduleName.." : "..self.className.." : "..self.name.." -> "..frameName_)
 end
 --更换
 function disMC:replaceDisplayObject(disTarget_,disReplace_)
@@ -144,7 +144,7 @@ function disMC:runActionByFrame(frame_)
 	local _frameName = self:getFrameNameByFrameInt(frame_)
 	if _frameName then
 		local _actionArr = string.split(_frameName,"_")
-		if _actionArr and #_actionArr>0 then
+		if _actionArr and #_actionArr>1 then
 			local _action = _actionArr[1]
 			local _paramater = _actionArr[2]
 			if _action=="s" then
@@ -212,7 +212,7 @@ function disMC:gotoFrame(frameInt_)
 	    if self.frameActionRunning then
 	    	--enterFrame 执行 这个值就变成true了。
 	    	--runActions 执行时，这个对象已经执行完了它自己的方法，变动帧，这个帧的方法会立刻执行。
-	    	self:runActionByFrame(_targetFrameInt)
+	    	self:runActionByFrame(frameInt_)
 	   	else
 	   		--updateCurrentFrame 执行的时候。但是不会有action执行
 	   		--runActions 执行的时候，还没循环到自己的时候，其他的action执行，只会影响其帧数，不会执行方法
@@ -269,7 +269,7 @@ function disMC:onCreate()
 end
 --destory-- call when removeChild
 function disMC:onDestory()
-	print("disMC : onDestory")
+	-- print("disMC : onDestory")
 	self:resetPars()
 	disMC.super.onDestory(self)
 end

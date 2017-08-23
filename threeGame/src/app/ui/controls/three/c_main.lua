@@ -30,7 +30,7 @@ function c_main:init(initDict_)
     --当前关最大回合数
     self.roundMax = 0
     -- 显示场景中 blockCount的个数
-    self.blockCountMax =11
+    self.randomMax =0
 
     --各个关卡的配置
     self.levelConfigs = nil
@@ -126,12 +126,15 @@ function c_main:replayLevel()
     local function gridRestEnd()
         self:reinitByLevelIndex(self.currentLevelIndex)
     end
-    --重置battle
+
+    local _currentLevelConfig = self.levelConfigs.levelDatas[self.currentLevelIndex] 
+    self.randomMax = tonumber(_currentLevelConfig.randomMax)
+    --重置battle,当前关卡，最多随机几个颜色
     self.battle:reset()
     --清理上次的block和各种变量
     self.three.blocks:clearCurrentLevel()
     --初始化地块
-    self.three.grids:reset(self.levelConfigs.levelDatas[self.currentLevelIndex] , gridRestEnd)
+    self.three.grids:reset(_currentLevelConfig, gridRestEnd)
 end
 
 function c_main:prevLevel()
