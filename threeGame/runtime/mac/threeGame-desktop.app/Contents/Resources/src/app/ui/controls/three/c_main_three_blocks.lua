@@ -501,24 +501,6 @@ function c_main_three_blocks:moveBlockToInitPlace()
             end
         end
     end
-
-    -- TODO 处理一个 找不到原因的bug--------------------------------V
-    -- block 进入 场景的时候，会闪一下。有个轨迹往外的闪烁，这里让它开始几帧不可见，这样闪烁就看不到了
-    local function bugSolution( ... )
-       for i=1 , #self.cureMotionList do
-        local _cureMotion=self.cureMotionList[i]
-        _cureMotion:setVisible(true)
-    end      
-    end
-    for i=1 , #self.cureMotionList do
-        local _cureMotion=self.cureMotionList[i]
-        _cureMotion:setVisible(false)
-    end 
-    local _funAction = cc.CallFunc:create(bugSolution)
-    local _delayTime = cc.DelayTime:create(0.3)
-    local _seqAction = cc.Sequence:create(_delayTime, _funAction)
-    self:runAction(_seqAction)
-    -- TODO 处理一个 找不到原因的bug--------------------------------^
 end
 
 --方块位置，两个方向延展多少进行获取
@@ -1775,9 +1757,10 @@ function c_main_three_blocks:needReplaceBlocks()
     end
 
     if _againBoo then --需要重来
-        local function func()
+        local function func()--交换位置
             self:replaceBlocks()
         end            
+        -- 先弹出提示，然后，在进行交换位置
         local _funAction = cc.CallFunc:create(func)
         local _delayTimeAction =cc.DelayTime:create(self.replaceTipTime)
         local _seqAction = cc.Sequence:create(_delayTimeAction, _funAction)
@@ -1815,6 +1798,7 @@ function c_main_three_blocks:replaceBlocks()
                 table.insert(_replaceAbleBlocks, _tempBlock)
                 table.insert(_replaceAbleGrids, _tempGridInfo)
             else
+                --不能交换的Block
                 table.insert(_unReplaceAbleBlocks, _tempBlock)
             end
         end

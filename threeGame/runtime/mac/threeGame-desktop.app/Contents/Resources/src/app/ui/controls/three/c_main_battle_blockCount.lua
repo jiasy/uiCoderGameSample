@@ -13,6 +13,8 @@ function c_main_battle_blockCount:ctor(params_)
     -- 移动轨迹集合
     self.cureMotionList = {}
     --旋转属性
+    self.targetScaleY = 1
+    self.currentScaleY = 1
     self.currentRotateSpeed = 0
     self.targetRotateSpeed = 0
     self.speedEqual = 0.3
@@ -63,11 +65,10 @@ function c_main_battle_blockCount:init(initDict_)
         self.blockPic.name="disMc"
         self.blockPic:init(nil)
         self.blockShow.pic:setVisible(false)
-        self.blockShow:addChild(self.blockPic,10)
+        self.blockShow:addChild(self.blockPic)
         -- 只放到uiList中，这样可以更新的到
         table.insert(self.logicParent.uiList,self.blockPic)
     end
-
 end
 
 --根据当前关卡的randomMax固定一个初始角度
@@ -85,25 +86,34 @@ function c_main_battle_blockCount:reset(currentRotation_)
     --动画重置
     self:gts(1)
     -- 重置旋转属性
-    self:resetRotationAndSpeed(currentRotation_)
+    self:reInitRotationAndSpeed(currentRotation_)
 end
 
 --重置旋转 属性
-function c_main_battle_blockCount:resetRotationAndSpeed(currentRotation_)
+function c_main_battle_blockCount:reInitRotationAndSpeed(currentRotation_)
     self.currentRotation = currentRotation_ + 18
     self.currentRotateSpeed = 0
     self.targetRotateSpeed = 0
     self.currentR = 0
     self.targetR = 0
-    --重置位置
+    self.targetScaleY = 1
+    self.currentScaleY = 1
+    --重置位置 也就圆心的位置
     self:setPosition(cc.p(self.targetDisplay:getPositionX(),self.targetDisplay:getPositionY()))
 end
 
 function c_main_battle_blockCount:resetRotationPos()
     self.currentRotation = self.currentRotation + self.currentRotateSpeed
-    local _y = self.currentR * math.sin(math.rad(self.currentRotation)) + self.targetDisplay:getPositionY()
+    local _circleCenterY = self.targetDisplay:getPositionY()
+    local _y = self.currentR * math.sin(math.rad(self.currentRotation))*self.currentScaleY + _circleCenterY
     local _x = self.currentR * math.cos(math.rad(self.currentRotation)) + self.targetDisplay:getPositionX()
     self:setPosition(cc.p(_x,_y))
+    --重新摆放层级
+    if _y<_circleCenterY then
+        self:getParent():reorderChild(self,21)
+    else
+        self:getParent():reorderChild(self,20)
+    end
 end
 
 function c_main_battle_blockCount:isGetBlockEnd()
@@ -143,7 +153,7 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
         --_trailMotion = cc.MotionStreak:create(0.3, 6, 20, cc.c3b(255, 255, 255), "icon_ball_10.png")
     end
     --local _display = self.displayUtils:createPartical("blockCount", "free")
-    local _targetPo =self:convertToWorldSpace(cc.p(0,0))
+    local _targetPo =self:convertToWorldSpace(cc.p(0,self.blockShow:getPositionY()))
 
     -- self 添加到自己内
     -- po_ 触发点的全局坐标

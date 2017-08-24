@@ -21,6 +21,11 @@ function disMC:pf() self:prevFrame() end
 --init--------------------------------------------------------
 function disMC:init(initDict_)
 	disMC.super.init(self,initDict_)
+	--属性，先同步到第一帧
+	for i=1,#self.mcChildObjectArr do
+		local _mcChildObj=self.mcChildObjectArr[i]
+		_mcChildObj:propertyInFrame(1)
+	end
 end
 
 --获取动作
@@ -127,7 +132,8 @@ function disMC:updateDisplayList()
 				_mcChildObj:propertyInFrame(self.currentFrame)
 			else
 				if _tempObject.lifeState=="create" then
-					_tempObject:onDestory()				end
+					_tempObject:onDestory()				
+				end
 			end
 		else--普通显示对象
 			if _mcChildObj.beginFrame<=self.currentFrame and _mcChildObj.endFrame>=self.currentFrame then

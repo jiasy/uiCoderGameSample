@@ -9,18 +9,29 @@ function c_main_battle:ctor(params_)
     self.className = "main_battle"
     self.moduleName = "three"
     self.trailCount = 0
+    --目标旋转速度
     self.targetRotateSpeed = 0
+    --目标旋转角度
     self.targetR = 0
+    --目标透视角度
+    self.targetScaleY = 1
+
+    --还差多少就认为他们已经相等了
     self.speedEqual= 0.01
     self.rEqual = 1
+    self.scaleYEqual = 0.05
+    --缓动系数
     self.xs = 0.2
     --基础半径 baseR ,上下偏移 bufferR
-    self.baseR = 140
-    self.bufferR = 30
+    self.baseR = 150
+    self.bufferR = 20
     --基础速度 baseSpeed ,上下便 bufferSpeed
-    self.baseSpeed = 1
-    self.bufferSpeed = 0.5
+    self.baseSpeed = 1.2
+    self.bufferSpeed = 0.4
+    --当前参数变化采用的角度
     self.currentBufferDeg = 0
+    self.currentBufferDegSpeed =2
+
 end
 --init data and place------------------------------------------
 function c_main_battle:init(initDict_)
@@ -94,28 +105,32 @@ function c_main_battle:updateF(type_)
     --Logic here,then change state.
     c_main_battle.super.updateF(self,type_)
     if type_ == 914 then
-        self.currentBufferDeg = self.currentBufferDeg + 1
+        self.currentBufferDeg = self.currentBufferDeg + self.currentBufferDegSpeed
         self.targetR = self.baseR + self.bufferR*math.sin(math.rad(self.currentBufferDeg))
         self.targetRotateSpeed = self.baseSpeed + self.bufferSpeed*math.sin(math.rad(self.currentBufferDeg+180))
+        self.targetScaleY = 0.5
 
-        self.fazhen.targetRotateSpeed = self.targetRotateSpeed
-        self.fazhen.targetR = self.targetR
         --确定 法阵 旋转角度
+        self.fazhen.targetRotateSpeed = self.targetRotateSpeed
         self:pursueSpeed(self.fazhen)
+        self.fazhen.targetR = self.targetR
         self:pursueR(self.fazhen)
-        -- print ("self.fazhen.targetRotateSpeed = "..  tostring(self.fazhen.targetRotateSpeed)) 
-        -- print ("self.fazhen.targetR = "..  tostring(self.fazhen.targetR)) 
-        -- print ("self.fazhen.currentRotateSpeed = "..  tostring(self.fazhen.currentRotateSpeed)) 
-        -- print ("self.fazhen.currentR = "..  tostring(self.fazhen.currentR)) 
-        self.fazhen:resetRotationPos()
+        self.fazhen.targetScaleY = self.targetScaleY
+        self:pursueScaleY(self.fazhen)
+
+        self.fazhen:resetRotationPos(self.currentTrailScaleY)
         --关卡中有的显示
         for i=1,self.main.randomMax do
             local _blockCount = self["blockCount"..tostring(i)]
+
             _blockCount.targetRotateSpeed = self.targetRotateSpeed
-            _blockCount.targetR = self.targetR            
             self:pursueSpeed(_blockCount)-- 角度速度趋近
+            _blockCount.targetR = self.targetR
             self:pursueR(_blockCount)-- 半径趋近
-            _blockCount:resetRotationPos()
+            _blockCount.targetScaleY = self.targetScaleY
+            self:pursueScaleY(_blockCount)
+
+            _blockCount:resetRotationPos(self.currentTrailScaleY)
         end
     end
 end
@@ -131,7 +146,18 @@ function c_main_battle:pursueSpeed(target_)
         target_.currentRotateSpeed = target_.targetRotateSpeed
     end
 end
-
+function c_main_battle:pursueScaleY(target_)
+    if target_.currentScaleY == target_.targetScaleY then
+        return
+    end
+    local _disSpeed = target_.targetScaleY - target_.currentScaleY
+    --print ("_disSpeed = "..  tostring(_disSpeed)) 
+    target_.currentScaleY = target_.currentScaleY + _disSpeed*target_.xs
+    --print ("target_.currentScaleY = "..  tostring(target_.currentScaleY)) 
+    if math.abs(target_.targetScaleY - target_.currentScaleY)<target_.speedEqual then
+        target_.currentScaleY = target_.targetScaleY
+    end
+end
 function c_main_battle:pursueR(target_)
     if target_.currentR == target_.targetR then
         return

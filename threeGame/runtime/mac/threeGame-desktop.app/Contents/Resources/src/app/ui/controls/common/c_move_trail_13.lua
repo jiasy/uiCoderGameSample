@@ -21,9 +21,17 @@ function c_move_trail_13:updateF(type_)
     c_move_trail_13.super.updateF(self, type_)
     if type_ == 914 then
         if self.trailMotion then
-            self.trailMotion:setPosition(cc.p(self.container:getPositionX()*self.currentScale,self.container:getPositionY()*self.currentScale))
+            self:setTrailPos()
         end
     end
+end
+
+function c_move_trail_13:setTrailPos()
+    -- 全局坐标，移动的轨迹对象，他的全局坐标
+    local _worldPostion = self:convertToWorldSpace(cc.p(self.container:getPositionX(),self.container:getPositionY()))
+    --self.trailMotion 跟随轨迹所在的容器，内转换这个坐标
+    local _localPostion = self.trailMotion:getParent():convertToNodeSpace(_worldPostion)
+    self.trailMotion:setPosition(_localPostion)
 end
 --init data and place------------------------------------------
 function c_move_trail_13:init(initDict_)

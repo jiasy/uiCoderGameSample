@@ -96,11 +96,11 @@ function displayUtilsInstance:setBlendToDisplay(dis_,mode_)
 		dis_:setBlendFunc(cc.blendFunc(gl.ONE , gl.ONE))
 	elseif mode_=="overlay" then--overlay
 		dis_:setBlendFunc(cc.blendFunc(gl.DST_COLOR , gl.ONE))
-	elseif mode_=="multiply" then--multiply
+	elseif mode_=="multiply" then--multiply 去白
 		dis_:setBlendFunc(cc.blendFunc(gl.DST_COLOR , gl.ONE_MINUS_SRC_ALPHA))
 	elseif mode_=="screen" then--screen
 		dis_:setBlendFunc(cc.blendFunc(gl.ONE_MINUS_DST_COLOR , gl.ONE))
-	elseif mode_=="add" then--add
+	elseif mode_=="add" then--add 去黑
 		dis_:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
 	elseif mode_=="layer" then--layer--black edge
 		dis_:setBlendFunc(cc.blendFunc(gl.ONE_MINUS_SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA))

@@ -5,21 +5,32 @@ local cureMotion = class("cureMotion",
         return ret
     end)
 
---container_ 实际容器
---_fromWorldPos 触发点的全局坐标
---_targetWorldPos 终点的全局坐标
+--层级关系
+--container_ 一般来讲就是目标对象。 <不能放缩，也不能旋转，可以移动> 
+--  self -> cureMotion : 放置在全局坐标 targetWorldPos_ 转换到container_中的坐标后的位置处
+--    self.trail -> c_move_trail_xxx : 放置在(0,0)点 <这个是放缩的，用来匹配两点间的距离>
+--      self.trail.container -> 显示对象的承载。这个就是轨迹移动的对象
+--        self.trail.container.pic -> disPlay_ : 放置进来的显示对象 <根据 self.trail 的Scale，进行反向放缩，这样显示出来的东西才是1:1大小>
+--self.trail.trailMotion 和 container 放置到同一个容器中 container_:getParent():addChild(self.trail.trailMotion,container_.getZOrder())
+--  因为 container_ 是可以移动的。self.trail 在每一帧 同步 self.trail.container 的坐标在 self.trail.trailMotion:getParent() 中的坐标位置。
+
+--container_ 实际容器 [不要做放缩，不要做旋转]
+--fromWorldPos_ 触发点的全局坐标
+--targetWorldPos_ 终点的全局坐标
 --disPlay_ 显示对象
 --trailMotion_ 轨迹对象
 --moveTime_ 移动时间，这个根据Trail的动画来确认了
 --waitTime_ 移动以后的等待时间。可能不是立刻就要消除对象
 --callback_ 回调
 --logicalParent_ 轨迹动画初始化，需要一个DisUI来驱动
-function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPos ,disPlay_ ,trailMotion_ , moveTime_ ,waitTime_, callback_,logicalParent_,trailCount_)
+--trailCount_ 连续的从trail中取轨迹，这样相邻的几次不可能出现重复的
+function cureMotion:ctor(container_ , childIndex_,fromWorldPos_ , targetWorldPos_ ,disPlay_ ,trailMotion_ , moveTime_ ,waitTime_, callback_,logicalParent_,trailCount_)
+    assert(container_:getScaleX()==1 and container_:getScaleY()==1 and container_:getRotation()==0,"ERROR : cureMotion 的 container，不能放缩,不能旋转 : "..container_.name)
     --初始化摆放
     container_:addChild(self,childIndex_)
     -- 转换坐标到container_内
-    local _targetLocalPos = container_:convertToNodeSpace(_targetWorldPos)
-    local _fromLocalPos = container_:convertToNodeSpace(_fromWorldPos)
+    local _targetLocalPos = container_:convertToNodeSpace(targetWorldPos_)
+    local _fromLocalPos = container_:convertToNodeSpace(fromWorldPos_)
     -- 计算角度和距离
     local _po1 = _targetLocalPos
     local _po2 = _fromLocalPos
@@ -77,23 +88,33 @@ function cureMotion:ctor(container_ , childIndex_,_fromWorldPos , _targetWorldPo
 
     if trailMotion_ then
         self.trail.trailMotion = trailMotion_
-        trailMotion_:setPosition(cc.p(_dis,0))
-        self:addChild(trailMotion_)
+        --把他跟跟随目标放置到同一个显示容器中,比他高两层。
+        container_:getParent():addChild(trailMotion_,container_:getLocalZOrder()+2)
+        --重新定位一次位置
+        self.trail:setTrailPos()
     end
     
     local function endCallBack( )
-        self:cleanSelf()
-    end
-    local function moveEndCallBack( )
         if callback_ then
             callback_(self)
         end
+        self:cleanSelf()
+    end
+    local function moveEndCallBack( )
+        -- if callback_ then
+        --     callback_(self)
+        -- end
     end
     self:runAction(cc.Sequence:create(cc.DelayTime:create(moveTime_), cc.CallFunc:create(moveEndCallBack),cc.DelayTime:create(waitTime_), cc.CallFunc:create(endCallBack)))
 
 end
 
 function cureMotion:cleanSelf()
+    --移除掉轨迹
+    if self.trail.trailMotion then
+        --self.trail.trailMotion 并不在 self 的显示树中，所以要单独移除
+        self.trail.trailMotion:removeFromParent(true)
+    end
     table.removebyvalue(self.logicalParent.uiList,self.trail)
     self.logicalParent =nil
     self.trail:onDelete()

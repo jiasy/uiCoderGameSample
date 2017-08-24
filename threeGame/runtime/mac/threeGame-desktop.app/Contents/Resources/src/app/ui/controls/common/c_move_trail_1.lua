@@ -24,15 +24,25 @@ function c_move_trail_1:init(initDict_)
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
+
 --Update Frame
 function c_move_trail_1:updateF(type_)
     c_move_trail_1.super.updateF(self, type_)
     if type_ == 914 then
         if self.trailMotion then
-            self.trailMotion:setPosition(cc.p(self.container:getPositionX()*self.currentScale,self.container:getPositionY()*self.currentScale))
+            self:setTrailPos()
         end
     end
 end
+
+function c_move_trail_1:setTrailPos()
+    -- 全局坐标，移动的轨迹对象，他的全局坐标
+    local _worldPostion = self:convertToWorldSpace(cc.p(self.container:getPositionX(),self.container:getPositionY()))
+    --self.trailMotion 跟随轨迹所在的容器，内转换这个坐标
+    local _localPostion = self.trailMotion:getParent():convertToNodeSpace(_worldPostion)
+    self.trailMotion:setPosition(_localPostion)
+end
+
 --ui stateChange-------------------------------------
 function c_move_trail_1:stateChange(params_)
     --Logic here,then change state.
