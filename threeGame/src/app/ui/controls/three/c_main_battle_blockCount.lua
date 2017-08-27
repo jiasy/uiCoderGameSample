@@ -25,6 +25,7 @@ function c_main_battle_blockCount:ctor(params_)
     self.currentRotation = 0
     --圆心
     self.targetDisplay = nil
+    --
 end
 
 --init data and place------------------------------------------
@@ -68,6 +69,10 @@ function c_main_battle_blockCount:init(initDict_)
         self.blockShow:addChild(self.blockPic)
         -- 只放到uiList中，这样可以更新的到
         table.insert(self.logicParent.uiList,self.blockPic)
+        self.shadow = cc.Sprite:create("three_battle_fazhen_shadow.png")
+        self.shadow:setScaleY(0.5)
+        self:shadowSync()--同步影子位置
+        self.logicParent.shadow:addChild(self.shadow)
     end
 end
 
@@ -91,6 +96,7 @@ end
 
 --重置旋转 属性
 function c_main_battle_blockCount:reInitRotationAndSpeed(currentRotation_)
+    -- + 18 是为了对准坐标位置
     self.currentRotation = currentRotation_ + 18
     self.currentRotateSpeed = 0
     self.targetRotateSpeed = 0
@@ -120,8 +126,13 @@ function c_main_battle_blockCount:isGetBlockEnd()
     return #self.cureMotionList == 0
 end
 
-function c_main_battle_blockCount:getBlock(po_,trailCount_)
+function c_main_battle_blockCount:getBlock(po_,trailCount_,blockGetCallBack_)
+    local _currentLevelID = self.main.currentLevelID
     local function onInPosition(cureMotion_)
+        --当前关卡的唯一ID,已经不是调用 getBlock 时的那个。就返回，不执行后面的方法
+        if self.main.currentLevelID ~= _currentLevelID then
+            return
+        end
         if self.blockPic then
             self.blockPic:playIdleAnimation()
         end
@@ -134,40 +145,50 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_)
                 self.main:battleGetBlockEnd() -- 通知 main. battle已经获取了所有的block
             end
         end
+        if blockGetCallBack_ then
+            blockGetCallBack_()
+        end
     end
     -- body
     local _display = nil
-    local _trailMotion = nil
+    local _motion = nil
     local _trailCount = nil
     if self.type>=1 and self.type <10 then
         local _display = cc.Sprite:create("icon_ball_"..tostring(self.type)..".png")
-        -- _pic:setScale(0.5)
-        -- _pic:setPosition(cc.p(0,0))
-        -- _pic:setAnchorPoint(cc.p(0,0))
-        -- _display = cc.Layer:create()
-        -- _display:addChild(_pic)
-        _trailMotion = cc.MotionStreak:create(0.5, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
+        _motion = cc.MotionStreak:create(0.5, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
         _trailCount = trailCount_
     elseif  tonumber(self.type) == 11 then
         _display = cc.Sprite:create("icon_ball_11.png")
-        --_trailMotion = cc.MotionStreak:create(0.3, 6, 20, cc.c3b(255, 255, 255), "icon_ball_10.png")
     end
-    --local _display = self.displayUtils:createPartical("blockCount", "free")
     local _targetPo =self:convertToWorldSpace(cc.p(0,self.blockShow:getPositionY()))
 
     -- self 添加到自己内
     -- po_ 触发点的全局坐标
     -- _targetPo 目标点的全局坐标
     -- _display 显示对象
-    -- _trailMotion 移动轨迹
+    -- _motion 移动轨迹
     -- 1 移动时间
     -- 1 移动以后留存多久
     -- onInPosition 到位置之后触发方法
     -- self 逻辑容器DisUI
     -- trailCount_ 轨迹计数，避免随机导致的可能两个相邻的block使用了同一个轨迹
-    table.insert(self.cureMotionList,CureMotion.new(self,100,po_,_targetPo,_display,_trailMotion,self.main.getBlockMoveTime,self.main.getBlockWaitTime,onInPosition,self,_trailCount))
+    table.insert(self.cureMotionList,CureMotion.new(self,100,po_,_targetPo,_display,_motion,self.main.getBlockMoveTime,self.main.getBlockWaitTime,onInPosition,self,_trailCount))
 end
 
+--ui stateChange-------------------------------------
+function c_main_battle_blockCount:updateF(type_)
+    --Logic here,then change state.
+    c_main_battle_blockCount.super.updateF(self,type_)
+    if type_ == 914 then
+        self:shadowSync()
+    end
+end
+-- 同步影子位置
+function c_main_battle_blockCount:shadowSync()
+    if self.shadow then
+        self.shadow:setPosition(cc.p(self:getPositionX(),self:getPositionY()))
+    end
+end
 
 --ui stateChange-------------------------------------
 function c_main_battle_blockCount:stateChange(params_)
@@ -202,6 +223,10 @@ function c_main_battle_blockCount:onDestory()
         end
         self.blockPic:removeFromParent(true)
         self.blockPic = nil
+    end
+    if self.shadow then --影子
+        self.shadow:removeFromParent(true)
+        self.shadow = nil
     end
 end
 

@@ -38,7 +38,10 @@ function c_main:init(initDict_)
     self.blockConfigs = nil
 
     --当前关卡序号
-    self.currentLevelIndex = 10
+    self.currentLevelIndex = 16
+
+    --游戏进行ID
+    self.currentLevelID = 0
 
     -- 有初始化 数据就是正常玩的。
     if initDict_ then
@@ -55,7 +58,6 @@ function c_main:init(initDict_)
 
     -- _specialDict["three"] = _threeDict
     -- _avoidInitDict["battle"] = "avoidInitHere" --上面初始化过了
-
     self:initSubUIs(_specialDict, _avoidInitDict)
 
     local function blockBreakInfoCallBack(_,data_)  
@@ -122,6 +124,8 @@ function c_main:nextLevel()
 end
 
 function c_main:replayLevel()
+    --唯一关卡ID，这样重置关卡的时候，上一关的东西不会影响到当前。
+    self.currentLevelID = self.currentLevelID + 1
     --地块初始化结束之后，进行blocks的初始化
     local function gridRestEnd()
         self:reinitByLevelIndex(self.currentLevelIndex)

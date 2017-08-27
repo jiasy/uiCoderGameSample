@@ -21,9 +21,6 @@ function c_main_three_blocks:init(initDict_)
     --操作限制
     self.canOperationBoo = false
 
-    --游戏进行ID
-    self.currentLevelID = 0
-
     --一共有多少种Block
     self.blockMaxTypes = 15
     --随机次数
@@ -74,16 +71,18 @@ function c_main_three_blocks:init(initDict_)
 
     --交换的两个格子下面的特效
     self.blockSwapDownIndex = 1
-    --放格子的层级
+    --放格子的层级(有9行)
     self.blockPlaceIndex = 2
     --拖动的格子层级
-    self.blockMoveIndex = 3
+    self.blockMoveIndex = 13
     --格子特效的层级
-    self.blockEffectIndex = 4
+    self.blockEffectIndex = 14
     --连锁反应的层级
-    self.chainLineEffectIndex = 6
+    self.chainEffectIndex = 15
     --连锁反应的层级
-    self.chainEffectIndex = 5
+    self.chainLineEffectIndex = 16
+    --可以交换的提示放置的位置
+    self.blockCanSwapTipIndex = 17
 
     --方块数组
     self.blocks = {}
@@ -347,7 +346,6 @@ end
 
 --根据关卡号进行创建
 function c_main_three_blocks:reinitByLevelIndex(levelConfig_)
-    self.currentLevelID = self.currentLevelID + 1
     self:clearCurrentLevel()
     self:preSetPar("normal")
     self:initByLevelConfig(levelConfig_)
@@ -376,6 +374,7 @@ function c_main_three_blocks:clearCurrentLevel()
     self.touchBeganPos = nil --触摸开始的位置
     self.movingBlockNum = 0 -- 没有正在移动的方块
     self.debugLog:setString("")
+    self.canOperationBoo = true
 
     --清除block
     for i = 1, self.colMax do
@@ -1666,10 +1665,11 @@ end
 
 --更换Block所在的层级
 function c_main_three_blocks:changeBlockIndex(block_, index_)
-    block_:retain()
-    self.containerLayer:removeChild(block_)
-    self.containerLayer:addChild(block_, index_)
-    block_:release()
+    -- block_:retain()
+    -- self.containerLayer:removeChild(block_)
+    -- self.containerLayer:addChild(block_, index_)
+    -- block_:release()
+    block_:setLocalZOrder(index_)
 end
 
 --初始化格子

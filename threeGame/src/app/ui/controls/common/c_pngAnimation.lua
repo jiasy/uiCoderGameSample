@@ -41,7 +41,7 @@ function c_pngAnimation:init(initDict_)
         _blendMode = _seqNameArr[1]
         _seqName = _seqNameArr[2]
     end
-    print ("_seqName = "..  tostring(_seqName)) 
+    --print ("_seqName = "..  tostring(_seqName)) 
     local _pngAnimation = self.displayUtils:createAnimation(_seqName, true,nil,true)
     if _blendMode then
         self.displayUtils:setBlendToDisplay(_pngAnimation,_blendMode)

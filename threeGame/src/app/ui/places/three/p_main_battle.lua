@@ -1,5 +1,6 @@
 --imports----------------------------------------------------------
 local C_main_battle_fazhen = require("src.app.ui.controls.three.c_main_battle_fazhen")
+local C_main_battle_shadow = require("src.app.ui.controls.three.c_main_battle_shadow")
 local C_main_battle_blockCount = require("src.app.ui.controls.three.c_main_battle_blockCount")
 
 local uiState=require("src.app.base.ui.uiState")
@@ -13,9 +14,14 @@ function p_main_battle:initPlace(referUI_,container_)
 	--Place all displays----------------------------------------------------------
 	referUI_.fazhen=C_main_battle_fazhen.new();
 	referUI_.fazhen.name="fazhen"
-	du:placeAndAddChildToContainer(referUI_.fazhen,container_,0.00,0.00,0,100,0,1,1,1,3)
+	du:placeAndAddChildToContainer(referUI_.fazhen,container_,0.00,0.00,0,100,0,1,0.5,1,2)
 	table.insert(referUI_.uiList,referUI_.fazhen)
 	du:setLogicParent(referUI_.fazhen,referUI_)
+	referUI_.shadow=C_main_battle_shadow.new();
+	referUI_.shadow.name="shadow"
+	du:placeAndAddChildToContainer(referUI_.shadow,container_,0.00,0.00,0,0,0,1,1,1,3)
+	table.insert(referUI_.uiList,referUI_.shadow)
+	du:setLogicParent(referUI_.shadow,referUI_)
 	referUI_.blockCount2=C_main_battle_blockCount.new();
 	referUI_.blockCount2.name="blockCount2"
 	du:placeAndAddChildToContainer(referUI_.blockCount2,container_,0.00,0.00,-79.3,412.6,0,1,1,1,4)
@@ -71,14 +77,10 @@ function p_main_battle:initPlace(referUI_,container_)
 	du:placeAndAddChildToContainer(referUI_.blockCount1,container_,0.00,0.00,-159.3,412.6,0,1,1,1,14)
 	table.insert(referUI_.uiList,referUI_.blockCount1)
 	du:setLogicParent(referUI_.blockCount1,referUI_)
-	referUI_.instance166= cc.Sprite:create("three_battle_bg_1.png")
-	referUI_.instance166.name="instance166"
-	du:placeAndAddChildToContainer(referUI_.instance166,container_,0.50,0.00,0,0,0,1.16,1.16,1,1)
-	du:setLogicParent(referUI_.instance166,referUI_)
-	referUI_.instance168= cc.Sprite:create("map11.png")
-	referUI_.instance168.name="instance168"
-	du:placeAndAddChildToContainer(referUI_.instance168,container_,0.50,-0.00,0,-0.25,0,0.63,0.63,1,2)
-	du:setLogicParent(referUI_.instance168,referUI_)
+	referUI_.bg= cc.Sprite:create("map11.png")
+	referUI_.bg.name="bg"
+	du:placeAndAddChildToContainer(referUI_.bg,container_,0.50,-0.00,0,-0.25,0,0.63,0.63,1,1)
+	du:setLogicParent(referUI_.bg,referUI_)
 	
 	while #_maskInfos>0 do
 		local _maskInfo=table.remove(_maskInfos)

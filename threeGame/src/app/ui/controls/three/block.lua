@@ -8,6 +8,7 @@ local Buffer = require "src.app.ui.controls.three.buffer"
 
 function block:ctor(threeGame_)
     --显示
+    -- self.effectAni = nil --0 脚下的那个动画
     self.blockPic = nil --1
     self.effectAni = nil --2
     self.levelPic = nil --3
@@ -26,9 +27,9 @@ function block:ctor(threeGame_)
 
     self.isDebug = self.parent_blocks.main.isDebug
     --当前的游戏ID
-    self.currentLevelID = self.parent_blocks.currentLevelID
+    self.currentLevelID = self.parent_blocks.main.currentLevelID
     --动画控制引用
-    self.disUtils = displayUtils:getInstance()
+    self.displayUtils = displayUtils:getInstance()
     --类型
     self.type = 0
     --初始化的类型
@@ -73,77 +74,81 @@ function block:ctor(threeGame_)
     self.match = false
 
     if self.isDebug then
-        self.disUtils.ttfConfig.fontSize = 40
-        self.disUtils.ttfConfig.outlineSize = 1
-        self.typeLabel = cc.Label:createWithTTF(self.disUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
+        self.displayUtils.ttfConfig.fontSize = 40
+        self.displayUtils.ttfConfig.outlineSize = 1
+        self.typeLabel = cc.Label:createWithTTF(self.displayUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
         self.typeLabel:enableOutline(cc.c4b(0, 0, 0, 255))
         self.typeLabel:setLineBreakWithoutSpace(true)
         self.typeLabel:setTextColor(cc.c4b(255, 255, 255, 255))
         self.typeLabel:setHeight(60)
         self.typeLabel.name = "typeLabel"
-        self.disUtils:placeAndAddChildToContainer(self.typeLabel, self, 0.50, 0.50, 0, 5, 0.00, 1.00, 1.00, 1.00, 30)
+        self.displayUtils:placeAndAddChildToContainer(self.typeLabel, self, 0.50, 0.50, 0, 5, 0.00, 1.00, 1.00, 1.00, 30)
 
-        self.disUtils.ttfConfig.fontSize = 20
-        self.colLabel = cc.Label:createWithTTF(self.disUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
+        self.displayUtils.ttfConfig.fontSize = 20
+        self.colLabel = cc.Label:createWithTTF(self.displayUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
         self.colLabel:enableOutline(cc.c4b(0, 0, 0, 255))
         self.colLabel:setLineBreakWithoutSpace(true)
         self.colLabel:setTextColor(cc.c4b(255, 255, 255, 255))
         self.colLabel:setHeight(30)
         self.colLabel.name = "colLabel"
-        self.disUtils:placeAndAddChildToContainer(self.colLabel, self, 0.50, 0.50, -20, -10, 0.00, 1.00, 1.00, 1.00, 30)
+        self.displayUtils:placeAndAddChildToContainer(self.colLabel, self, 0.50, 0.50, -20, -10, 0.00, 1.00, 1.00, 1.00, 30)
 
-        self.disUtils.ttfConfig.fontSize = 20
-        self.rowLabel = cc.Label:createWithTTF(self.disUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
+        self.displayUtils.ttfConfig.fontSize = 20
+        self.rowLabel = cc.Label:createWithTTF(self.displayUtils.ttfConfig, "0", cc.TEXT_ALIGNMENT_CENTER)
         self.rowLabel:enableOutline(cc.c4b(0, 0, 0, 255))
         self.rowLabel:setLineBreakWithoutSpace(true)
         self.rowLabel:setTextColor(cc.c4b(255, 255, 255, 255))
         self.rowLabel:setHeight(30)
         self.rowLabel.name = "rowLabel"
-        self.disUtils:placeAndAddChildToContainer(self.rowLabel, self, 0.50, 0.50, 20, -10, 0.00, 1.00, 1.00, 1.00, 30)
+        self.displayUtils:placeAndAddChildToContainer(self.rowLabel, self, 0.50, 0.50, 20, -10, 0.00, 1.00, 1.00, 1.00, 30)
 
-        self.disUtils.ttfConfig.fontSize = 20
-        self.moveLabel = cc.Label:createWithTTF(self.disUtils.ttfConfig, "", cc.TEXT_ALIGNMENT_CENTER)
+        self.displayUtils.ttfConfig.fontSize = 20
+        self.moveLabel = cc.Label:createWithTTF(self.displayUtils.ttfConfig, "", cc.TEXT_ALIGNMENT_CENTER)
         self.moveLabel:enableOutline(cc.c4b(0, 0, 0, 255))
         self.moveLabel:setLineBreakWithoutSpace(true)
         self.moveLabel:setTextColor(cc.c4b(255, 0, 0, 255))
         self.moveLabel:setHeight(30)
         self.moveLabel.name = "moveLabel"
-        self.disUtils:placeAndAddChildToContainer(self.moveLabel, self, 0.50, 0.50, 0, -10, 0.00, 1.00, 1.00, 1.00, 30)
+        self.displayUtils:placeAndAddChildToContainer(self.moveLabel, self, 0.50, 0.50, 0, -10, 0.00, 1.00, 1.00, 1.00, 30)
 
-        self.disUtils.ttfConfig.fontSize = 20
-        self.levelLabel = cc.Label:createWithTTF(self.disUtils.ttfConfig, "", cc.TEXT_ALIGNMENT_CENTER)
+        self.displayUtils.ttfConfig.fontSize = 20
+        self.levelLabel = cc.Label:createWithTTF(self.displayUtils.ttfConfig, "", cc.TEXT_ALIGNMENT_CENTER)
         self.levelLabel:enableOutline(cc.c4b(0, 0, 0, 255))
         self.levelLabel:setLineBreakWithoutSpace(true)
         self.levelLabel:setTextColor(cc.c4b(0, 255, 0, 255))
         self.levelLabel:setHeight(30)
         self.levelLabel.name = "levelLabel"
-        self.disUtils:placeAndAddChildToContainer(self.levelLabel, self, 0.50, 0.50, 0, -15, 0.00, 1.00, 1.00, 1.00, 30)
+        self.displayUtils:placeAndAddChildToContainer(self.levelLabel, self, 0.50, 0.50, 0, -15, 0.00, 1.00, 1.00, 1.00, 30)
     end
 
-    local function onNodeEvent(event)
-        if "enter" == event then
-            self:onEnter()
-        elseif "exit" == event then
-            self:onExit()
-        end
-    end
+    -- local function onNodeEvent(event)
+    --     if "enter" == event then
+    --         self:onEnter()
+    --     elseif "exit" == event then
+    --         self:onExit()
+    --     end
+    -- end
 
-    self:registerScriptHandler(onNodeEvent) --添加添加移除事件
+    -- self:registerScriptHandler(onNodeEvent) --添加添加移除事件
 end
 
 --显示提示
 function block:showTip(time_)
-    local _seq = cc.Sequence:create(cc.EaseOut:create(cc.ScaleTo:create(time_ * 0.7, 1.8), 2.5), cc.EaseOut:create(cc.ScaleTo:create(time_ * 0.3, 1), 2.5))
-    self.tipAni = cc.Sprite:create("icon_ball_special.png")
-    self.tipAni:setAnchorPoint(cc.p(0.5, 0.5))
-    self.tipAni:runAction(_seq)
-    self:addChild(self.tipAni, 7)
+    self.tipAni = require("src.app.ui.controls.common.c_ani_block_tip").new()
+    self.tipAni.name="disMc"
+    self.tipAni:init(nil)
+    self.tipAni:setPosition(cc.p(self:getPositionX(),self:getPositionY()))
+    table.insert(self.parent_blocks.uiList,self.tipAni)
+    self.parent_blocks:addChild(self.tipAni,self.parent_blocks.blockCanSwapTipIndex)
 end
 
 --清理提示
 function block:clearTip()
     if self.tipAni then --特效动画
-        self.tipAni:stopAllActions()
+        if self.tipAni.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.tipAni)
+            self.tipAni:onDelete()
+        end
         self.tipAni:removeFromParent(true)
         self.tipAni = nil
     end
@@ -161,7 +166,7 @@ function block:reinit(type_, level_, createDis_)
 end
 
 function block:addBufferByType(type_)
-    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.main.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     if type_ == 0 then
@@ -189,7 +194,7 @@ function block:bufferCureOne()
 end
 
 function block:activeShow()
-    self.activePic = self.disUtils:createAnimation("ani_move", true)
+    self.activePic = self.displayUtils:createAnimation("ani_move", true)
     self:addChild(self.activePic, 8)
 end
 
@@ -200,7 +205,7 @@ function block:changeToSelfType()
     self.toLevel = nil
     self.changingBoo = false
     self:createDisplay() --创建显示
-    self.transPic = self.disUtils:createAnimation("ani_transition", false)
+    self.transPic = self.displayUtils:createAnimation("ani_transition", false)
     self:addChild(self.transPic, 6)
 end
 
@@ -221,7 +226,7 @@ function block:isChanging()
 end
 
 function block:setCR(col_, row_)
-    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.main.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     if self.col ~= 0 and self.row ~= 0 then --规避初始化
@@ -259,14 +264,17 @@ function block:shine()
     if self:shineAble() == false then
         return
     end
-    self.shinePic = self.disUtils:createAnimation("ani_standby", false, self:shinePicClear())
+    self.shinePic = self.displayUtils:createAnimation("ani_standby", false, self:shinePicClear())
     self:addChild(self.shinePic, 4)
 end
 
 --清闪
 function block:shinePicClear()
     if self.shinePic then --发光
-        self.shinePic:stopAllActions()
+        if self.shinePic.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.shinePic)
+            self.shinePic:onDelete()
+        end
         self.shinePic:removeFromParent(true)
         self.shinePic = nil
     end
@@ -292,12 +300,19 @@ function block:cleanDisplay()
         self.blockPic = nil
     end
     if self.levelPic then --标示
+        if self.levelPic.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.levelPic)
+            self.levelPic:onDelete()
+        end
         self.levelPic:removeFromParent(true)
         self.levelPic = nil
     end
 
     if self.effectAni then --特效动画
-        self.effectAni:stopAllActions()
+        if self.effectAni.name=="disMc" then
+            table.removebyvalue(self.parent_blocks.uiList,self.effectAni)
+            self.effectAni:onDelete()
+        end
         self.effectAni:removeFromParent(true)
         self.effectAni = nil
     end
@@ -352,22 +367,34 @@ function block:createDisplay()
         end
         if self.level == "x_h" then
             self.levelPic = cc.Sprite:create("icon_ball_x_h.png")
+            -- self.levelPic = require("src.app.ui.controls.common.c_block_x").new()
+            -- self.levelPic.name="disMc"
+            -- self.levelPic:init(nil)
+            -- -- 只放到uiList中，这样可以更新的到
+            -- table.insert(self.parent_blocks.uiList,self.levelPic)
         elseif self.level == "x_v" then
             self.levelPic = cc.Sprite:create("icon_ball_x_h.png")
+            -- self.levelPic = require("src.app.ui.controls.common.c_block_x").new()
+            -- self.levelPic.name="disMc"
+            -- self.levelPic:init(nil)
+            -- -- 只放到uiList中，这样可以更新的到
+            -- table.insert(self.parent_blocks.uiList,self.levelPic)
             self.levelPic:setRotation(90)
         elseif self.level == "z" then
             self.levelPic = cc.Sprite:create("icon_ball_z.png")
         else
             print("ERROR 不支持的level : " .. self.level)
         end
-        self.levelPic:setAnchorPoint(cc.p(0.50, 0.50))
-        self.levelPic:setBlendFunc(cc.blendFunc(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA))
-        --self.levelPic:setOpacity(180)
-        --self.levelPic:setBlendFunc(cc.blendFunc(gl.SRC_ALPHA, gl.ONE))
+        
         self:addChild(self.levelPic, 3)
 
-        self.effectAni = self.disUtils:createAnimation(_effectName, true)
-        self:addChild(self.effectAni, 2)
+        self.effectAni = require("src.app.ui.controls.common.c_sprieSheet_fire_around").new()
+        self.effectAni.name="disMc"
+        self.effectAni:init(nil)
+        self.effectAni:setPosition(cc.p(0,-30))
+        table.insert(self.parent_blocks.uiList,self.effectAni)
+        self:addChild(self.effectAni, 0)
+
         if self.isDebug then self.levelLabel:setString(self.level) end
     else
         if self.isDebug then self.levelLabel:setString("") end
@@ -376,7 +403,7 @@ end
 
 --移动向自己的所在位置
 function block:moveToSelfCR(time_, countMove_, moveType_)
-    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.main.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     self:moveToGridByCR(self.col, self.row, time_, countMove_, moveType_)
@@ -384,7 +411,7 @@ end
 
 --获得自己所在的地块的坐标
 function block:getSelfGridPos()
-    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.main.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     local _grid = self.parent_blocks:getGridByCR(self.col, self.row)
@@ -393,7 +420,7 @@ end
 
 --按照这个时间向那个cr的grids所在地移动
 function block:moveToGridByCR(col_, row_, time_, countMoveBoo_, moveType_)
-    if self.currentLevelID ~= self.parent_blocks.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
+    if self.currentLevelID ~= self.parent_blocks.main.currentLevelID then -- 只有在当前局创建的block才会相应。测试的时候，会在任意时间点跳关。免得上一关的block，操作的新关卡的数据
         return
     end
     local _grid = self.parent_blocks:getGridByCR(col_, row_)
@@ -572,6 +599,7 @@ end
 function block:placeInPos()
     local _tempGrid = self.parent_blocks:getGridByCR(self.col, self.row)
     self:setPosition(_tempGrid:getPositionX(), _tempGrid:getPositionY())
+    self:setLocalZOrder(self.parent_blocks.blockPlaceIndex + self.parent_blocks.rowMax-self.row)
 end
 
 function block:addTargetGrid(targetGrids_)
@@ -581,11 +609,11 @@ function block:getRemoveEffectByType()
 
 end
 function block:putEffectIntoThreeGame()
-    local _tempSp = self.disUtils:createAnimation("xiaochudonghua")
+    local _tempSp = self.displayUtils:createAnimation("xiaochudonghua")
     if self.type <10 then
-        _tempSp = self.disUtils:createAnimation("xiaochudonghua")
+        _tempSp = self.displayUtils:createAnimation("xiaochudonghua")
     elseif self.type == 11 then
-        _tempSp = self.disUtils:createAnimation("ani_move")
+        _tempSp = self.displayUtils:createAnimation("ani_move")
     end
     _tempSp:setPosition(cc.p(self:getPositionX(), self:getPositionY()))
     if self.match then
@@ -660,11 +688,10 @@ function block:removeFromGame()
         end
     end
     self:shinePicClear()
-    self.disUtils = nil
+    self.displayUtils = nil
     self.targetGrids = nil
     self.parent_blocks = nil
     self.targetGrids = {}
-    self:stopAllActions()
     self:removeFromParent(true)
 end
 

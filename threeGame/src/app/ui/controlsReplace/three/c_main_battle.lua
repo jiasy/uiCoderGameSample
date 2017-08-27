@@ -18,6 +18,9 @@ function c_main_battle:init(initDict_)
     --local _fazhenDict={}
     --_specialDict["fazhen"]= _fazhenDict
     --_avoidInit["fazhen"]="avoidInitHere"
+    --local _shadowDict={}
+    --_specialDict["shadow"]= _shadowDict
+    --_avoidInit["shadow"]="avoidInitHere"
     --local _blockCount2Dict={}
     --_specialDict["blockCount2"]= _blockCount2Dict
     --_avoidInit["blockCount2"]="avoidInitHere"

@@ -15,9 +15,6 @@ function c_main_battle_blockCount:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _add_fireSquDict={}
-    --_specialDict["add_fireSqu"]= _add_fireSquDict
-    --_avoidInit["add_fireSqu"]="avoidInitHere"
     --local _blockShowDict={}
     --_specialDict["blockShow"]= _blockShowDict
     --_avoidInit["blockShow"]="avoidInitHere"
