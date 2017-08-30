@@ -7,6 +7,15 @@ function c_block_huli:ctor(params_)
     c_block_huli.super.ctor(self,params_)
     self.className="block_huli"
     self.moduleName="common"
+    self.isBlock =false
+end
+
+--init data and place------------------------------------------
+function c_block_huli:init(initDict_)
+    c_block_huli.super.init(self,initDict_)
+    local _specialDict={}--自定义数据初始化子UI
+    local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
+    self:initSubUIs(_specialDict,_avoidInitDict)
 end
 
 function c_block_huli:playIdleAnimation()
@@ -20,6 +29,7 @@ function c_block_huli:startRandomIdle(idleRandomBegin_,idleRandomEnd_)
     self.idleMax = math.random(self.idleRandomBegin,self.idleRandomEnd)
     self.idleCount = math.random(1,self.idleRandomEnd)
     self:gtp(math.random(1,30))
+    self.isBlock =true
 end
 --ui stateChange-------------------------------------
 function c_block_huli:updateF(type_)
@@ -37,14 +47,6 @@ function c_block_huli:updateF(type_)
         end
     end
 end
---init data and place------------------------------------------
-function c_block_huli:init(initDict_)
-    c_block_huli.super.init(self,initDict_)
-    local _specialDict={}--自定义数据初始化子UI
-    local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    self:initSubUIs(_specialDict,_avoidInitDict)
-end
-
 --ui stateChange-------------------------------------
 function c_block_huli:stateChange(params_)
     --Logic here,then change state.

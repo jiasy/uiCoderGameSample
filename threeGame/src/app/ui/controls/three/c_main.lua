@@ -139,6 +139,11 @@ function c_main:replayLevel()
     self.three.blocks:clearCurrentLevel()
     --初始化地块
     self.three.grids:reset(_currentLevelConfig, gridRestEnd)
+    --初始化动画
+    self.battle.bar.sideLeft:gtp("start")
+    self.battle.bar.sideRight:gtp("start")
+    self.up.sideLeft:gtp("start")
+    self.up.sideRight:gtp("start")
 end
 
 function c_main:prevLevel()

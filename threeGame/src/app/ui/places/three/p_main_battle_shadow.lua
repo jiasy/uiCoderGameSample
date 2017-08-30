@@ -9,7 +9,7 @@ function p_main_battle_shadow:initPlace(referUI_,container_)
 	--Place all displays----------------------------------------------------------
 	referUI_.bg= cc.Sprite:create("bluePic.png")
 	referUI_.bg.name="bg"
-	du:placeAndAddChildToContainer(referUI_.bg,container_,0.50,0.00,0,0,0,6.4,2,1,1)
+	du:placeAndAddChildToContainer(referUI_.bg,container_,0.50,0.00,-379.95,0,0,1,1,1,1)
 	du:setLogicParent(referUI_.bg,referUI_)
 	
 	while #_maskInfos>0 do

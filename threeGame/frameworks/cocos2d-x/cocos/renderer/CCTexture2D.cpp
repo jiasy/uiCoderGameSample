@@ -491,6 +491,7 @@ int Texture2D::getPixelsHigh() const
 }
 
 GLuint Texture2D::getName() const
+
 {
     return _name;
 }

@@ -134,7 +134,7 @@ end
 
 --显示提示
 function block:showTip(time_)
-    self.tipAni = require("src.app.ui.controls.common.c_ani_block_tip").new()
+    self.tipAni = require("src.app.ui.controls.ani.c_block_tip").new()
     self.tipAni.name="disMc"
     self.tipAni:init(nil)
     self.tipAni:setPosition(cc.p(self:getPositionX(),self:getPositionY()))
@@ -388,7 +388,7 @@ function block:createDisplay()
         
         self:addChild(self.levelPic, 3)
 
-        self.effectAni = require("src.app.ui.controls.common.c_sprieSheet_fire_around").new()
+        self.effectAni = require("src.app.ui.controls.seq.c_fire_around").new()
         self.effectAni.name="disMc"
         self.effectAni:init(nil)
         self.effectAni:setPosition(cc.p(0,-30))

@@ -7,6 +7,7 @@ function c_block_gui:ctor(params_)
     c_block_gui.super.ctor(self,params_)
     self.className="block_gui"
     self.moduleName="common"
+    self.isBlock =false
 end
 
 --init data and place------------------------------------------
@@ -15,13 +16,6 @@ function c_block_gui:init(initDict_)
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
     self:initSubUIs(_specialDict,_avoidInitDict)
-end
-
-
---ui stateChange-------------------------------------
-function c_block_gui:stateChange(params_)
-    --Logic here,then change state.
-    c_block_gui.super.stateChange(self,params_)
 end
 
 function c_block_gui:playIdleAnimation()
@@ -35,6 +29,7 @@ function c_block_gui:startRandomIdle(idleRandomBegin_,idleRandomEnd_)
     self.idleMax = math.random(self.idleRandomBegin,self.idleRandomEnd)
     self.idleCount = math.random(1,self.idleRandomEnd)
     self:gtp(math.random(1,30))
+    self.isBlock =true
 end
 --ui stateChange-------------------------------------
 function c_block_gui:updateF(type_)
@@ -51,6 +46,11 @@ function c_block_gui:updateF(type_)
             end
         end
     end
+end
+--ui stateChange-------------------------------------
+function c_block_gui:stateChange(params_)
+    --Logic here,then change state.
+    c_block_gui.super.stateChange(self,params_)
 end
 --btn click call back---------------------------------------------------
 function c_block_gui:btnClicked(btnName_,rollName_,listName_,itemDataDict_)

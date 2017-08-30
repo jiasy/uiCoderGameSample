@@ -118,8 +118,8 @@ function c_main_three_blocks:init(initDict_)
     self.showMatchTime = 0
 
     --Block idle 动画播放相关
-    self.blockIdleRandomBegin=300
-    self.blockIdleRandomEnd=500
+    self.blockIdleRandomBegin=500
+    self.blockIdleRandomEnd=800
 
 
     --不能触发出没时间的条件--TODO 游戏结束，游戏暂停

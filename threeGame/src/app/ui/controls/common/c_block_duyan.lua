@@ -7,6 +7,7 @@ function c_block_duyan:ctor(params_)
     c_block_duyan.super.ctor(self,params_)
     self.className="block_duyan"
     self.moduleName="common"
+    self.isBlock =false
 end
 
 --init data and place------------------------------------------
@@ -17,11 +18,9 @@ function c_block_duyan:init(initDict_)
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
 
-
 function c_block_duyan:playIdleAnimation()
     self:gtp("idle"..tostring(math.random(1,2)))
 end
-
 --ui startRandomIdle-------------------------------------
 function c_block_duyan:startRandomIdle(idleRandomBegin_,idleRandomEnd_)
     -- idle动画，时间随机范围
@@ -30,6 +29,7 @@ function c_block_duyan:startRandomIdle(idleRandomBegin_,idleRandomEnd_)
     self.idleMax = math.random(self.idleRandomBegin,self.idleRandomEnd)
     self.idleCount = math.random(1,self.idleRandomEnd)
     self:gtp(math.random(1,30))
+    self.isBlock =true
 end
 --ui stateChange-------------------------------------
 function c_block_duyan:updateF(type_)

@@ -21,6 +21,9 @@ function c_main_battle:init(initDict_)
     --local _shadowDict={}
     --_specialDict["shadow"]= _shadowDict
     --_avoidInit["shadow"]="avoidInitHere"
+    --local _barDict={}
+    --_specialDict["bar"]= _barDict
+    --_avoidInit["bar"]="avoidInitHere"
     --local _blockCount2Dict={}
     --_specialDict["blockCount2"]= _blockCount2Dict
     --_avoidInit["blockCount2"]="avoidInitHere"

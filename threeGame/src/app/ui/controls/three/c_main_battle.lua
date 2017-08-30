@@ -39,7 +39,7 @@ function c_main_battle:ctor(params_)
     self.bufferR = 0.5
     self.bufferSpeed = 0.01
     self.addRPerBlock = 1 --    每消除一个Block ，增加的半径
-    self.addSpeedPerBlock = 0.01  --    每消除一个Block ，增加的角度旋转速度
+    self.addSpeedPerBlock = 0.03  --    每消除一个Block ，增加的角度旋转速度
     --最大半径，最大速度
     self.targetRMax = 150
     self.targetRotateSpeedMax = 2
@@ -60,9 +60,7 @@ function c_main_battle:ctor(params_)
 end
 --init data and place------------------------------------------
 function c_main_battle:init(initDict_)
-    print ("c_main_battle:init in ")
     c_main_battle.super.init(self, initDict_)
-    print ("c_main_battle:init")
     self.main = self:getUiParent()
     local _specialDict = {} --自定义数据初始化子UI
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。
@@ -81,9 +79,9 @@ function c_main_battle:init(initDict_)
     self.fazhen.speedEqual = self.speedEqual
     self.fazhen.rEqual = self.rEqual
     self.fazhen.xs = self.xs
+    self.fazhen.targetRotateSpeedMax = self.targetRotateSpeedMax
 
     self:initSubUIs(_specialDict, _avoidInitDict)
-    print ("c_main_battle:init - end")
 end
 
 function c_main_battle:getBlockCount(type_,special_,blockArr_)
@@ -137,7 +135,6 @@ end
 
 -- 当前关卡几种Block
 function c_main_battle:reset()
-    print ("c_main_battle : reset")
     -- 11 有的关有，有的关没有
     -- 10 不需要显示
     -- 颜色上限9
@@ -168,7 +165,6 @@ function c_main_battle:updateF(type_)
     c_main_battle.super.updateF(self,type_)
 
     if type_ == 914 then
-        print ("c_main_battle : updateF -> "..tostring(type_)) 
         -- 正弦型，放缩
         -- self.currentBufferDeg = self.currentBufferDeg + self.currentBufferDegSpeed
         -- self.targetR = self.baseR + self.bufferR*math.sin(math.rad(self.currentBufferDeg))

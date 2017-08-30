@@ -12,8 +12,16 @@ end
 --init data and place------------------------------------------
 function c_main_battle_fazhen:init(initDict_)
     c_main_battle_fazhen.super.init(self,initDict_)
+    -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
+    --local _circle1Dict={}
+    --_specialDict["circle1"]= _circle1Dict
+    --_avoidInit["circle1"]="avoidInitHere"
+    --local _instance201Dict={}
+    --_specialDict["instance201"]= _instance201Dict
+    --_avoidInit["instance201"]="avoidInitHere"
+    
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
 

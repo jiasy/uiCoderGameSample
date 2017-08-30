@@ -53,16 +53,21 @@
 			var _tempRect:Rect;
 			for(var i:int=0;i<MovieClip(target).numChildren;i++){
 				var _tempMC:DisplayObject=MovieClip(target).getChildAt(i);
+				trace("i = "+String(i)); 
 				if(_tempMC is Rect){
 					_tempRect=Rect(_tempMC);
 					break;
+				}else{
+					//trace("_tempMC = "+String(_tempMC));
 				}
+				trace("_tempMC = "+String(_tempMC));
 			}
+			trace("_tempRect: "+_tempRect)
 			rectWidth=_tempRect.width;
 			rectHeight=_tempRect.height;
 			_tempRect.visible=false;
 			
-			trace("currentFrame : "+currentFrame);
+			trace("currentDrawFrame : "+currentDrawFrame);
 			trace("rectWidth : "+rectWidth);
 			trace("rectHeight : "+rectHeight);
 

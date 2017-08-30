@@ -41,11 +41,6 @@ end
 --btn click call back---------------------------------------------------
 function c_tip:btnClicked(btnName_,rollName_,listName_,itemDataDict_)
     c_tip.super.btnClicked(self,btnName_,rollName_,listName_,itemDataDict_)
-    -----check btn name----------------------------------------------------------
-    if btnName_=="btn_close" then
-    	print("Btn_pressed : "..self.className.." -> btn_close");----------------------------btn_close
-    end
-    
 end
 
 function c_tip:onCreate()

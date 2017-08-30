@@ -29,6 +29,9 @@ function c_main:init(initDict_)
     --local _battleDict={}
     --_specialDict["battle"]= _battleDict
     --_avoidInit["battle"]="avoidInitHere"
+    --local _upDict={}
+    --_specialDict["up"]= _upDict
+    --_avoidInit["up"]="avoidInitHere"
     
     self:initSubUIs(_specialDict,_avoidInitDict)
 end
