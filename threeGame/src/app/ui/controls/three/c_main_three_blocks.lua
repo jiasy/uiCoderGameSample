@@ -103,6 +103,11 @@ function c_main_three_blocks:init(initDict_)
     self.type10ChangeOtherTime = 0
     --type10改变其他block 运行轨迹的时间
     self.type10ChangeOtherMoveTime = 0
+    --Type10连锁触发 普通 block的间隔
+    self.type10ChainBlockRemoveNormalIntervalTime =0
+    --多个special相互传递爆破的时候。间隔的时间
+    self.specialChainBlockActiveIntervalTime = 0
+
     --交换的时间
     self.swapBlockTime = 0
     --无匹配，交换提示时间
@@ -116,11 +121,6 @@ function c_main_three_blocks:init(initDict_)
     self.specialBlockActiveTime=0
     --显示连锁的那几个动画的时间
     self.showMatchTime = 0
-
-    --Block idle 动画播放相关
-    self.blockIdleRandomBegin=500
-    self.blockIdleRandomEnd=800
-
 
     --不能触发出没时间的条件--TODO 游戏结束，游戏暂停
     self.touchMoved = false --触摸中
@@ -175,6 +175,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.delayAiTime = 0.0
         self.movePreGridTime = 0.15
         self.blockAnimationRemoveTime = 0.4
+        self.type10ChainBlockRemoveNormalIntervalTime = 0.1
         self.moveEndAnimationTime = 0.4
         self.type11RemoveAnimationTime = 1
         self.type10ChangeOtherTime = 1
@@ -182,6 +183,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.specialBlockActiveTime = 1
         self.swapBlockTime = 0.3
         self.showMatchTime = 0.5
+        self.specialChainBlockActiveIntervalTime = 0.8
     elseif type_ == "ai_normal" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
         self.aiAutoBoo = true
@@ -189,6 +191,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.delayAiTime = 1
         self.movePreGridTime = 0.15
         self.blockAnimationRemoveTime = 0.4
+        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
         self.moveEndAnimationTime = 0.2
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.5
@@ -196,6 +199,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.specialBlockActiveTime = 0.5
         self.swapBlockTime = 0.2
         self.showMatchTime = 0.2
+        self.specialChainBlockActiveIntervalTime = 0.4
         self:aiSwap()
     elseif type_ == "ai_quick" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
@@ -204,6 +208,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.delayAiTime = 0.5
         self.movePreGridTime = 0.1
         self.blockAnimationRemoveTime = 0.2
+        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
         self.moveEndAnimationTime = 0.1
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.3
@@ -211,6 +216,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.specialBlockActiveTime = 0.3
         self.swapBlockTime = 0.1
         self.showMatchTime = 0.1
+        self.specialChainBlockActiveIntervalTime = 0.2
         self:aiSwap()
     elseif type_ == "ai_fly" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
@@ -219,6 +225,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.delayAiTime = 0.01
         self.movePreGridTime = 0.05
         self.blockAnimationRemoveTime = 0.05
+        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
         self.moveEndAnimationTime = 0.05
         self.type11RemoveAnimationTime = 0.5
         self.type10ChangeOtherTime = 0.1
@@ -226,6 +233,7 @@ function c_main_three_blocks:preSetPar(type_)
         self.specialBlockActiveTime = 0.1
         self.swapBlockTime = 0.05
         self.showMatchTime = 0.05
+        self.specialChainBlockActiveIntervalTime = 0.1
         self:aiSwap()
     end
 end
@@ -595,40 +603,63 @@ end
 function c_main_three_blocks:checkFallDown()
     if self.blockMovingBool then --block消除进行
         if self.movingBlockNum == 0 then
-            self:fallDown() --继续下落
+            local _currentActiveBlockType = self:chainSpecialBlockActive()
+            -- 如果当前有被激活的Block,那么碎裂
+            if  _currentActiveBlockType then
+                -- 碎掉连锁触发的block。
+                self:breakBlocks(true)
+                local _delayTime = 0.01
+                if _currentActiveBlockType =="special" then --特殊的block移除
+                    _delayTime = self.specialChainBlockActiveIntervalTime --时间 间隔，这样能看清触发顺序
+                elseif _currentActiveBlockType =="normal" then --普通的block移除
+                    _delayTime = self.type10ChainBlockRemoveNormalIntervalTime
+                end
+                --碎掉之后，继续下落<按照当前激活的类型进行时间间隔>
+                self:delayFallDown(_delayTime)
+            else
+                self:fallDown() --继续下落
+            end
         end
     end
 end
 
 --是否有处于 激活状态 的block
 function c_main_three_blocks:chainSpecialBlockActive()
-    local _haveActiveBlockBoo =false
+    --触发的block类别
+    local _activeBlockType =nil
+    local _activeSpecialBlock = nil
+    local _activeNormalBlock = nil
     for _row = 1,self.rowMax do
         for _col = 1, self.colMax do
             local _tempBlock = self:getBlockByCR(_col,_row)
             --处于激活状态
             if _tempBlock and _tempBlock.activeBoo then
-                --有处于激活状态的block
-                _haveActiveBlockBoo = true
-                --激活状态，变为匹配状态
-                _tempBlock.activeBoo = false
-                _tempBlock.match = true
-                --特殊块就连锁触发
-                if self:isSpecialBlock(_tempBlock) then
-                    self:specialChainBlockActive(_tempBlock,0)
+                --找特殊的
+                if _activeSpecialBlock == nil and self:isSpecialBlock(_tempBlock) then --当前是特殊的，还没找到一个特殊的
+                    _activeSpecialBlock = _tempBlock --找到了一个特殊的
+                elseif _activeNormalBlock == nil and self:isSpecialBlock(_tempBlock)==false then --当前是普通的，还没找到过一个普通的
+                    _activeNormalBlock = _tempBlock
+                elseif _activeNormalBlock and _activeSpecialBlock then -- 普通的，特殊的，都找到了一个
+                    break
                 end
-                break
+                
             end
         end
-        if _haveActiveBlockBoo then
-            break
-        end
     end
-    --有处于激活状态的Block
-    if _haveActiveBlockBoo then
-        return true
+
+    if _activeNormalBlock then
+        _activeBlockType = "normal"
+        --激活状态，变为匹配状态
+        _activeNormalBlock.activeBoo = false
+        _activeNormalBlock.match = true
+    elseif _activeSpecialBlock then
+        _activeBlockType = "special"
+        _activeSpecialBlock.activeBoo = false
+        _activeSpecialBlock.match = true
+        self:specialChainBlockActive(_activeSpecialBlock)
     end
-    return false
+
+    return _activeBlockType
 end
 
 --更新
@@ -791,7 +822,7 @@ end
 --再有对象消除的时候，预留动画播放的时间
 function c_main_three_blocks:delayFallDown(time_)
     local function callBack()
-        self:fallDown()
+        self:checkFallDown()
     end
 
     local _delayTime = cc.DelayTime:create(time_)
@@ -800,15 +831,6 @@ end
 
 --影响上面的东西
 function c_main_three_blocks:fallDown()
-    -- 如果当前有被激活的Block,那么碎裂
-    if self:chainSpecialBlockActive() then
-        -- 碎掉连锁触发的block。
-        self:breakBlocks(true)
-        -- -- -- 碎掉之后，继续下落
-        -- self:delayFallDown(self.blockAnimationRemoveTime)
-        -- return
-    end
-
     for _row = self.rowMax, 1, -1 do
         for _col = 1, self.colMax do
             local _tempBlock = self:getBlockByCR(_col, _row)
@@ -956,12 +978,7 @@ function c_main_three_blocks:allBlockCanMatch()
         for j = 1, self.rowMax do
             local _tempBlock = self:getBlockByCR(i, j)
             if _tempBlock then
-                _tempBlock:placeInPos()
-                _tempBlock.match = false
-                _tempBlock.chainMatch = false
-                _tempBlock.nearMatch = false
-                _tempBlock.fallingBoo = false
-                _tempBlock.activeBoo =false
+                _tempBlock:reset()
             end
         end
     end
@@ -1011,14 +1028,56 @@ function c_main_three_blocks:getGridByCR(col_, row_)
     return _tempGrid
 end
 
---获取一个随机类型--TODO 配置可配
+--获取一个随机类型
 function c_main_three_blocks:getBlockRandomType()
-    local _type = math.random(1, self.randomMax)
-    return _type
+    return math.random(1,self.randomMax)
+end
+--获取一个场景中存在的随机类型
+function c_main_three_blocks:getExistBlockRandomType()
+    local _haveTypes = self:currentExistBlockTypes()
+    if #_haveTypes > 0 then
+        return _haveTypes[math.random(1,#_haveTypes)]
+    else
+        return nil
+    end
+end
+
+--记录不为零的block
+function c_main_three_blocks:currentExistBlockTypes()
+    local _haveTypeCounts = self:getCurrentBlockTypeCounts()
+    local _haveTypes = {}
+    for i=1,self.randomMax do
+        local _currentBlockCount = _haveTypeCounts[i]
+        if _currentBlockCount > 0 then
+            table.insert(_haveTypes,i)
+        end
+    end
+    return _haveTypes
+end
+
+--统计各个类型存在的个数
+function c_main_three_blocks:getCurrentBlockTypeCounts()
+    local _haveTypeCounts = {}
+    for i=1,self.randomMax do
+        table.insert(_haveTypeCounts,0)
+    end
+    for _row = 1,self.rowMax do
+        for _col = 1, self.colMax do
+            --计数器++
+            local _tempBlock = self:getBlockByCR(_col,_row)
+            if _tempBlock then
+                local _currentBlockCount = _haveTypeCounts[_tempBlock.type]
+                if _currentBlockCount then
+                    _haveTypeCounts[_tempBlock.type] =  _currentBlockCount + 1
+                end
+            end
+        end
+    end
+    return _haveTypeCounts
 end
 
 --循环判断所有特殊的
-function c_main_three_blocks:specialChainBlockActive(specialBlock_, type_)
+function c_main_three_blocks:specialChainBlockActive(specialBlock_)
     local _tempBlocks
     local _activeType = 0 -- 被哪个种类触发
     if specialBlock_.level~=nil and specialBlock_.level ~= "" then
@@ -1030,13 +1089,12 @@ function c_main_three_blocks:specialChainBlockActive(specialBlock_, type_)
             _tempBlocks = self:chain_z(specialBlock_.col, specialBlock_.row)
         end
         _activeType = specialBlock_.type
-    elseif specialBlock_.type == 10 then --y 需要触发连锁的哪个类型
-        local _type = 0
-        if type_ == 0 then
-            _type =self:getBlockRandomType()
-        else
-            _type=type_
+        if _tempBlocks then
+            self:chainBlocks(_tempBlocks, _activeType)
         end
+    elseif specialBlock_.type == 10 then --y 需要触发连锁的哪个类型
+            -- 随机需要在当前存在的block中随机，如果，当前可以连锁的都消除了，那么就没有必要进行了。
+        local _type =self:getExistBlockRandomType()
         _tempBlocks = {}
         for i = 1, self.colMax do
             for j = 1, self.rowMax do
@@ -1047,17 +1105,18 @@ function c_main_three_blocks:specialChainBlockActive(specialBlock_, type_)
                 end
             end
         end
+        if _tempBlocks then
+            self:chainBlocks(_tempBlocks, _activeType,true)
+        end
     else
         self:errorLog("ERROR -- 当前 block 不是一个特殊 block")
-    end
-    if _tempBlocks then
-        self:chainBlocks(_tempBlocks, _activeType)
     end
 end
 
 --在两个blocks之间进行motion
 function c_main_three_blocks:createMotionBetweenBlocks(fromBlock_, targetBlock_, moveTime_)
-    local _linkSp = cc.MotionStreak:create(0.3, 5, 10, cc.c3b(255, 255, 255),"btnUp.png")
+    --type 10 的同类关联
+    local _linkSp = cc.MotionStreak:create(0.3, 5, 10, cc.c3b(255, 255, 255),self.main:getBlockPicNameByType(10))
     _linkSp:setPosition(cc.p(fromBlock_:getPositionX(), fromBlock_:getPositionY()))
     local function callBack() _linkSp:removeFromParent(true) end
     _linkSp:runAction(cc.Sequence:create(cc.MoveTo:create(moveTime_ * 0.4, cc.p(targetBlock_:getPositionX(), targetBlock_:getPositionY())), cc.DelayTime:create(moveTime_ * 0.6), cc.CallFunc:create(callBack)))
@@ -1073,21 +1132,26 @@ function c_main_three_blocks:createCureMotionBetweenBlocks(type_,fromWorldPos_, 
     -- body
     local _display = nil
     local _trailMotion = nil
-    _trailMotion = cc.MotionStreak:create(0.3, 3, 80, cc.c3b(255, 255, 255), "icon_ball_"..tostring(type_)..".png")
+    local _picName = self.main:getBlockPicNameByType(type_)
+    _trailMotion = cc.MotionStreak:create(0.3, 3, 80, cc.c3b(255, 255, 255), _picName)
     table.insert(self.cureMotionList,CureMotion.new(self,self.chainLineEffectIndex,fromWorldPos_,targetWorldPos_,_display,_trailMotion,moveTime_,moveTime_,onInPosition,self,self.trailCount))
 end
 
 
 --数组链式
-function c_main_three_blocks:chainBlocks(tempBlocks_, activeType_)
+function c_main_three_blocks:chainBlocks(tempBlocks_, activeType_,isType10_)
     for i = 1, #tempBlocks_ do
         local _tempBlock = tempBlocks_[i]
         if _tempBlock.match == false and _tempBlock.chainMatch == false and _tempBlock.activeBoo == false then --连锁反应中没处理过的
-            if self:isSpecialBlock(_tempBlock) then --自动消除中有特殊方块
+            if isType10_ then --类型10触发的连锁是特殊的，需要一个个爆破
+                --是不是特殊的格子，连锁都是先
                 _tempBlock:activeShow()
-                _tempBlock.activeBoo = true
             else
-                _tempBlock.chainMatch = true
+                if self:isSpecialBlock(_tempBlock) then --自动消除中有特殊方块
+                    _tempBlock:activeShow()
+                else
+                    _tempBlock.chainMatch = true
+                end
             end
         end
     end
@@ -1127,7 +1191,7 @@ function c_main_three_blocks:swapSpecialDelayActive(activeBlocks_)
 
         --_tempBlock.activeBoo =true
         if self:isSpecialBlock(_tempBlock) then --自动消除中有特殊方块
-            _tempBlock.activeBoo = true
+            _tempBlock:activeShow()
         else
             _tempBlock.chainMatch = true
         end
@@ -1330,7 +1394,7 @@ function c_main_three_blocks:findAndRemoveMatches(swapBoo_)
                     _tempMatchBlock.match = true --避免两次进行移除操作
                     if _tempMatchBlock.chainMatch == false then --连锁反应中没处理过的
                         if self:isSpecialBlock(_tempMatchBlock) then --自动消除中有特殊方块
-                            self:specialChainBlockActive(_tempMatchBlock, 0)
+                            self:specialChainBlockActive(_tempMatchBlock)
                         end
                     end
                     if _tempMatchBlock.bufferIns == nil then --只有没有BUFFER的才能影响边上的8个

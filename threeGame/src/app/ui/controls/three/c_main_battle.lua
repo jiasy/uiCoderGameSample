@@ -51,7 +51,7 @@ function c_main_battle:ctor(params_)
     
     -- 金币相关  -------------------------------------------------------
     self.coinList = {}
-    -- 
+    -- 金币的范围
     self.stageBeginX = -320
     self.stageBeginY= 0
     self.stageWidth = 640
@@ -71,14 +71,8 @@ function c_main_battle:init(initDict_)
         _blockCount.type = i
         --确定中心点
         _blockCount.targetDisplay = self.fazhen
-        _blockCount.speedEqual = self.rEqual
-        _blockCount.rEqual = self.rEqual
-        _blockCount.xs = self.xs
     end
 
-    self.fazhen.speedEqual = self.speedEqual
-    self.fazhen.rEqual = self.rEqual
-    self.fazhen.xs = self.xs
     self.fazhen.targetRotateSpeedMax = self.targetRotateSpeedMax
 
     self:initSubUIs(_specialDict, _avoidInitDict)
@@ -97,7 +91,7 @@ function c_main_battle:getBlockCount(type_,special_,blockArr_)
         --TODO 更新当前Block个数
         --TODO 跳金币
         --TODO 当前回合数内算连击
-        --TODO 变更当前旋转速度+角度
+        --变更当前旋转速度+角度
         if special_ == "s" then--特殊 多加一些
             self.blockAddR = self.blockAddR + self.addRPerBlock * 3
             self.blockAddSpeed = self.blockAddSpeed + self.addSpeedPerBlock * 3
@@ -151,6 +145,7 @@ function c_main_battle:reset()
         end
     end
     self.fazhen:reset()
+    self.bg:reset()
     --Cure路径计数
     self.trailCount = 0
 
@@ -188,38 +183,39 @@ function c_main_battle:updateF(type_)
         self.targetScaleY = 0.5
         
         --确定 法阵 旋转角度
-        self.fazhen.targetRotateSpeed = self.targetRotateSpeed
-        self:pursueSpeed(self.fazhen)
-        self.fazhen.targetR = self.targetR
-        self:pursueR(self.fazhen)
-        self.fazhen.targetScaleY = self.targetScaleY
-        self:pursueScaleY(self.fazhen)
-
-        self.fazhen:resetRotationPos(self.currentTrailScaleY)
+        self:pursue(self.fazhen)
+        self:pursue(self.bg)
+        self.fazhen:resetRotationPos()
+        self.bg:resetRotationPos()
         --关卡中有的显示
         for i=1,self.main.randomMax do
             local _blockCount = self["blockCount"..tostring(i)]
 
-            _blockCount.targetRotateSpeed = self.targetRotateSpeed
-            self:pursueSpeed(_blockCount)-- 角度速度趋近
-            _blockCount.targetR = self.targetR
-            self:pursueR(_blockCount)-- 半径趋近
-            _blockCount.targetScaleY = self.targetScaleY
-            self:pursueScaleY(_blockCount)
+            self:pursue(_blockCount)
 
-            _blockCount:resetRotationPos(self.currentTrailScaleY)
+            _blockCount:resetRotationPos()
         end
     end
 end
+
+function c_main_battle:pursue( target_ )
+        target_.targetRotateSpeed = self.targetRotateSpeed
+        self:pursueSpeed(target_)
+        target_.targetR = self.targetR
+        self:pursueR(target_)
+        target_.targetScaleY = self.targetScaleY
+        self:pursueScaleY(target_)
+end
+
 function c_main_battle:pursueSpeed(target_)
     if target_.currentRotateSpeed == target_.targetRotateSpeed then
         return
     end
     local _disSpeed = target_.targetRotateSpeed - target_.currentRotateSpeed
     --print ("_disSpeed = "..  tostring(_disSpeed)) 
-    target_.currentRotateSpeed = target_.currentRotateSpeed + _disSpeed*target_.xs
+    target_.currentRotateSpeed = target_.currentRotateSpeed + _disSpeed*self.xs
     --print ("target_.currentRotateSpeed = "..  tostring(target_.currentRotateSpeed)) 
-    if math.abs(target_.targetRotateSpeed - target_.currentRotateSpeed)<target_.speedEqual then
+    if math.abs(target_.targetRotateSpeed - target_.currentRotateSpeed)<self.speedEqual then
         target_.currentRotateSpeed = target_.targetRotateSpeed
     end
 end
@@ -229,9 +225,9 @@ function c_main_battle:pursueScaleY(target_)
     end
     local _disSpeed = target_.targetScaleY - target_.currentScaleY
     --print ("_disSpeed = "..  tostring(_disSpeed)) 
-    target_.currentScaleY = target_.currentScaleY + _disSpeed*target_.xs
+    target_.currentScaleY = target_.currentScaleY + _disSpeed*self.xs
     --print ("target_.currentScaleY = "..  tostring(target_.currentScaleY)) 
-    if math.abs(target_.targetScaleY - target_.currentScaleY)<target_.speedEqual then
+    if math.abs(target_.targetScaleY - target_.currentScaleY)<self.speedEqual then
         target_.currentScaleY = target_.targetScaleY
     end
 end
@@ -240,8 +236,8 @@ function c_main_battle:pursueR(target_)
         return
     end
     local _disR = target_.targetR - target_.currentR
-    target_.currentR = target_.currentR + _disR*target_.xs
-    if math.abs(target_.targetR - target_.currentR)<target_.speedEqual then
+    target_.currentR = target_.currentR + _disR*self.xs
+    if math.abs(target_.targetR - target_.currentR)<self.speedEqual then
         target_.currentR = target_.targetR
     end
 end

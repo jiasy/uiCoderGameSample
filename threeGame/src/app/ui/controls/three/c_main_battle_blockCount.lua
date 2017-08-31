@@ -36,33 +36,20 @@ function c_main_battle_blockCount:init(initDict_)
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。
     self:initSubUIs(_specialDict, _avoidInitDict)
     self.count:setString(self.blockCount)
+
     -- --更换小图标
-    -- local _texture = cc.Director:getInstance():getTextureCache():addImage("icon_ball_"..tostring(self.type)..".png")
-    -- self.colorShow:setTexture(_texture)
+    -- local _picFileName = self.main:getBattleBlockPicNameByType(self.type)
+    -- if _picFileName then
+    --     self.blockPic = cc.Sprite:create(_picFileName)
+    --     self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
+    --     self.blockShow.pic:setVisible(false)
+    --     self.blockShow:addChild(self.blockPic)
+    -- end
 
-    if self.type == 1 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_goust").new()
-    elseif self.type == 2 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_gui").new()
-    elseif self.type == 3 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_duyan").new()
-    elseif self.type == 4 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_huli").new()
-    elseif self.type == 5 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_mao").new()
-    end
-
-    if 
-        self.type == 1 
-        or
-        self.type == 2 
-        or
-        self.type == 3
-        or
-        self.type == 4 
-        or
-        self.type == 5
-    then
+    --动画表现 battle 里面的
+    local _aniMC = self.main:getBattleAniMCByType(self.type)
+    if _aniMC then
+        self.blockPic = _aniMC
         self.blockPic.name="disMc"
         self.blockPic:init(nil)
         self.blockShow.pic:setVisible(false)
@@ -122,6 +109,7 @@ function c_main_battle_blockCount:resetRotationPos()
     end
 end
 
+--是否获取了所有的block<block的轨迹动画，是否都结束了>
 function c_main_battle_blockCount:isGetBlockEnd()
     return #self.cureMotionList == 0
 end
@@ -133,7 +121,7 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_,blockGetCallBack_)
         if self.main.currentLevelID ~= _currentLevelID then
             return
         end
-        if self.blockPic then
+        if self.blockPic and self.blockPic.name=="disMc" then
             self.blockPic:playIdleAnimation()
         end
         self.blockCount = self.blockCount +1
@@ -153,12 +141,12 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_,blockGetCallBack_)
     local _display = nil
     local _motion = nil
     local _trailCount = nil
+    local _picFileName =self.main:getBlockPicNameByType(self.type)
     if self.type>=1 and self.type <10 then
-        local _display = cc.Sprite:create("icon_ball_"..tostring(self.type)..".png")
-        _motion = cc.MotionStreak:create(0.5, 10, 40, cc.c3b(255, 255, 255), "icon_ball_"..tostring(self.type)..".png")
+        _motion = cc.MotionStreak:create(0.5, 10, 40, cc.c3b(255, 255, 255), _picFileName)
         _trailCount = trailCount_
     elseif  tonumber(self.type) == 11 then
-        _display = cc.Sprite:create("icon_ball_11.png")
+        _display = cc.Sprite:create(_picFileName)
     end
     local _targetPo =self:convertToWorldSpace(cc.p(0,self.blockShow:getPositionY()))
 

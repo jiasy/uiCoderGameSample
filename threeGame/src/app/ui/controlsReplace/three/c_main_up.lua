@@ -15,15 +15,21 @@ function c_main_up:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _instance298Dict={}
-    --_specialDict["instance298"]= _instance298Dict
-    --_avoidInit["instance298"]="avoidInitHere"
-    --local _instance307Dict={}
-    --_specialDict["instance307"]= _instance307Dict
-    --_avoidInit["instance307"]="avoidInitHere"
     --local _instance314Dict={}
     --_specialDict["instance314"]= _instance314Dict
     --_avoidInit["instance314"]="avoidInitHere"
+    --local _instance323Dict={}
+    --_specialDict["instance323"]= _instance323Dict
+    --_avoidInit["instance323"]="avoidInitHere"
+    --local _instance329Dict={}
+    --_specialDict["instance329"]= _instance329Dict
+    --_avoidInit["instance329"]="avoidInitHere"
+    --local _instance335Dict={}
+    --_specialDict["instance335"]= _instance335Dict
+    --_avoidInit["instance335"]="avoidInitHere"
+    --local _instance342Dict={}
+    --_specialDict["instance342"]= _instance342Dict
+    --_avoidInit["instance342"]="avoidInitHere"
     --local _sideLeftDict={}
     --_specialDict["sideLeft"]= _sideLeftDict
     --_avoidInit["sideLeft"]="avoidInitHere"

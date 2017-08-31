@@ -38,7 +38,7 @@ function c_main:init(initDict_)
     self.blockConfigs = nil
 
     --当前关卡序号
-    self.currentLevelIndex = 16
+    self.currentLevelIndex = 19
 
     --游戏进行ID
     self.currentLevelID = 0
@@ -144,6 +144,7 @@ function c_main:replayLevel()
     self.battle.bar.sideRight:gtp("start")
     self.up.sideLeft:gtp("start")
     self.up.sideRight:gtp("start")
+    self.battle.bg.circleShine:gtp("start")
 end
 
 function c_main:prevLevel()
@@ -160,7 +161,50 @@ function c_main:battleGetBlockEnd()
         self.three.blocks.canOperationBoo = true
     end
 end
-
+--通过type 获取使用的 Block 图片名
+function c_main:getBlockPicNameByType(type_)
+    local _picFileName = nil
+    if type_ == 1 then
+        _picFileName = "glassBlock_greenB.png"
+    elseif type_ == 2 then
+        _picFileName = "glassBlock_blueB.png"
+    elseif type_ == 3 then
+        _picFileName = "glassBlock_pinkB.png"
+    elseif type_ == 4 then
+        _picFileName = "glassBlock_yellowB.png"
+    elseif type_ == 5 then
+        _picFileName = "glassBlock_redB.png"
+    elseif type_ == 10 then
+        _picFileName = "glassBlock_colorB.png"
+    elseif type_ == 11 then
+        _picFileName = "icon_ball_11.png"
+    end
+    return _picFileName
+end
+--通过type 获取使用的 Block 图片名
+function c_main:getAniMcByType(type_)
+    local _aniMc = nil
+    _aniMc = require("src.app.ui.controls.common.c_block_glassBlock").new()
+    _aniMc.main = self
+    _aniMc.type = type_
+    return _aniMc
+end
+--通过type 获取使用的 Block 图片名
+function c_main:getBattleAniMCByType(type_)
+    local _aniMc = nil
+    if type_ == 1 then
+        _aniMc = require("src.app.ui.controls.common.c_block_goust").new()
+    elseif type_ == 2 then
+        _aniMc = require("src.app.ui.controls.common.c_block_gui").new()
+    elseif type_ == 3 then
+        _aniMc = require("src.app.ui.controls.common.c_block_duyan").new()
+    elseif type_ == 4 then
+        _aniMc = require("src.app.ui.controls.common.c_block_huli").new()
+    elseif type_ == 5 then
+        _aniMc = require("src.app.ui.controls.common.c_block_mao").new()
+    end
+    return _aniMc
+end
 --ui stateChange-------------------------------------
 function c_main:stateChange(stateName_, rightNow_)
     --Logic here,then change state.
@@ -171,31 +215,7 @@ end
 --btn click call back---------------------------------------------------
 function c_main:btnClicked(btnName_, rollName_, listName_, itemDataDict_)
     c_main.super.btnClicked(self, btnName_, rollName_, listName_, itemDataDict_)
-     ----- check btn name----------------------------------------------------------
-    if btnName_ == "btn_next" then
-        print("Btn_pressed : " .. self.className .. " -> nextBtn"); ---------------------------- nextBtn
-        self:nextLevel()
-    end
-    if btnName_ == "btn_prev" then
-        print("Btn_pressed : " .. self.className .. " -> prevBtn"); ---------------------------- prevBtn
-        self:prevLevel()
-    end
-    if btnName_ == "btn_aiNormal" then
-        print("Btn_pressed : " .. self.className .. " -> aiNormalBtn"); ---------------------------- aiNormalBtn
-        self.three.blocks:preSetPar("ai_normal")
-    end
-    if btnName_ == "btn_aiQuick" then
-        print("Btn_pressed : " .. self.className .. " -> aiQuickBtn"); ---------------------------- aiQuickBtn
-        self.three.blocks:preSetPar("ai_quick")
-    end
-    if btnName_ == "btn_aiFly" then
-        print("Btn_pressed : " .. self.className .. " -> aiFlyBtn"); ---------------------------- aiFlyBtn
-        self.three.blocks:preSetPar("ai_fly")
-    end
-    if btnName_ == "btn_reset" then
-        print("Btn_pressed : " .. self.className .. " -> resetBtn"); ---------------------------- resetBtn
-        self:replayLevel()
-    end
+
 end
 
 function c_main:onCreate()

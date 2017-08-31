@@ -1,4 +1,5 @@
 --imports----------------------------------------------------------
+local C_circle_round_shine = require("src.app.ui.controls.ani.c_circle_round_shine")
 local C_main_battle_fazhen = require("src.app.ui.controls.three.c_main_battle_fazhen")
 local C_main_battle_shadow = require("src.app.ui.controls.three.c_main_battle_shadow")
 local C_main_battle_bar = require("src.app.ui.controls.three.c_main_battle_bar")
@@ -13,6 +14,11 @@ function p_main_battle:initPlace(referUI_,container_)
 	local uc=uiControl:getInstance()
 	local _maskInfos={}
 	--Place all displays----------------------------------------------------------
+	referUI_.bg=C_circle_round_shine.new();
+	referUI_.bg.name="bg"
+	du:placeAndAddChildToContainer(referUI_.bg,container_,0.00,0.00,0,200,0,1,0.5,1,1)
+	table.insert(referUI_.uiList,referUI_.bg)
+	du:setLogicParent(referUI_.bg,referUI_)
 	referUI_.fazhen=C_main_battle_fazhen.new();
 	referUI_.fazhen.name="fazhen"
 	du:placeAndAddChildToContainer(referUI_.fazhen,container_,0.00,0.00,0,200,0,1,0.5,1,2)
@@ -83,10 +89,6 @@ function p_main_battle:initPlace(referUI_,container_)
 	du:placeAndAddChildToContainer(referUI_.blockCount1,container_,0.00,0.00,-159.3,412.6,0,1,1,1,16)
 	table.insert(referUI_.uiList,referUI_.blockCount1)
 	du:setLogicParent(referUI_.blockCount1,referUI_)
-	referUI_.bg= cc.Sprite:create("battle_ground.png")
-	referUI_.bg.name="bg"
-	du:placeAndAddChildToContainer(referUI_.bg,container_,0.50,0.50,0,200,0,1,0.5,1,1)
-	du:setLogicParent(referUI_.bg,referUI_)
 	referUI_.bg_mask_= cc.Sprite:create("bg_ballarea_up.png")
 	referUI_.bg_mask_.name="bg_mask_"
 	du:placeAndAddChildToContainer(referUI_.bg_mask_,container_,0.50,0.50,0,320,0,1,1,1,4)

@@ -190,10 +190,26 @@ end
 function block:bufferCureOne()
     if self.bufferIns then
         self.bufferIns:clearOne()
+        self:reset()
+    end
+end
+
+--重置
+function block:reset()
+    self:placeInPos()
+    self.match = false
+    self.chainMatch = false
+    self.nearMatch = false
+    self.fallingBoo = false
+    self.activeBoo =false
+    if self.activePic and self.activePic:getParent() then
+        self.activePic:removeFromParent()
+        self.activePic = nil
     end
 end
 
 function block:activeShow()
+    self.activeBoo = true
     self.activePic = self.displayUtils:createAnimation("ani_move", true)
     self:addChild(self.activePic, 8)
 end
@@ -322,44 +338,19 @@ end
 function block:createDisplay()
     self:cleanDisplay()
 
-    local _baseName = "icon_ball_"
-    local _effectName = _baseName .. self.type
-    local _picFileName = _effectName .. ".png"
-
-    if self.type == 1 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_goust").new()
-    elseif self.type == 2 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_gui").new()
-    elseif self.type == 3 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_duyan").new()
-    elseif self.type == 4 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_huli").new()
-    elseif self.type == 5 then
-        self.blockPic = require("src.app.ui.controls.common.c_block_mao").new()
+    --获取动画
+    local _aniMC = self.parent_blocks.main:getAniMcByType(self.type)
+    if _aniMC then
+        self.blockPic = _aniMC
+        self.blockPic.name="disMc"
+        self.blockPic:init(nil)
+        table.insert(self.parent_blocks.uiList,self.blockPic)
     else
+        local _picFileName =self.parent_blocks.main:getBlockPicNameByType(self.type)
         self.blockPic = cc.Sprite:create(_picFileName)
         self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
-        self:addChild(self.blockPic, 1)
     end
-
-    if 
-        self.type == 1 
-        or
-        self.type == 2 
-        or
-        self.type == 3
-        or
-        self.type == 4 
-        or
-        self.type == 5
-    then
-        self.blockPic.name="disMc"
-        self.blockPic:startRandomIdle(self.parent_blocks.blockIdleRandomBegin,self.parent_blocks.blockIdleRandomEnd)
-        self.blockPic:init(nil)
-        self:addChild(self.blockPic,1)
-        -- 只放到uiList中，这样可以更新的到
-        table.insert(self.parent_blocks.uiList,self.blockPic)
-    end
+    self:addChild(self.blockPic,1)
 
     if self.level and self.level ~= "" then
         if self.type > 9 then
@@ -385,7 +376,7 @@ function block:createDisplay()
         else
             print("ERROR 不支持的level : " .. self.level)
         end
-        
+        self.levelPic:setBlendFunc(cc.blendFunc(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA))
         self:addChild(self.levelPic, 3)
 
         self.effectAni = require("src.app.ui.controls.seq.c_fire_around").new()

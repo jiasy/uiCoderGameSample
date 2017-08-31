@@ -40,10 +40,10 @@ function p_main_battle_bar:initPlace(referUI_,container_)
 	mcControl:getInstance():addMcObjectToContainer(referUI_.bar_3,container_,0.00,0.00,1,120,{{0,120,},{-63.6,7,-63.65,1,-63.7,1,-63.75,1,-63.8,1,-63.85,1,-63.95,1,-64.05,1,-64.15,1,-64.3,1,-64.45,1,-64.6,1,-64.8,1,-64.95,1,-65.15,1,-65.4,1,-65.6,1,-65.85,1,-66.1,1,-66.35,1,-66.6,1,-66.85,1,-67.1,1,-67.35,1,-67.55,1,-67.8,1,-67.95,1,-68.15,1,-68.3,1,-68.4,1,-68.5,1,-68.55,1,-68.6,4,-68.55,2,-68.5,1,-68.45,1,-68.4,1,-68.35,1,-68.3,1,-68.2,1,-68.1,1,-68,1,-67.9,1,-67.8,1,-67.65,1,-67.5,1,-67.35,1,-67.2,1,-67,1,-66.8,1,-66.6,1,-66.4,1,-66.2,1,-65.95,1,-65.7,1,-65.5,1,-65.25,1,-65.05,1,-64.8,1,-64.6,1,-64.45,1,-64.25,1,-64.1,1,-63.95,1,-63.85,1,-63.75,1,-63.7,1,-63.65,1,-63.6,42,},{0,120,},{1,120,},{1,120,},{1,120,},{0,120,},{0,120,},{0,120,}},6)
 	table.insert(referUI_.uiList,referUI_.bar_3)
 	du:setLogicParent(referUI_.bar_3,referUI_)
-	referUI_.instance245= cc.Sprite:create("battle_bar_2.png")
-	referUI_.instance245.name="instance245"
-	mcControl:getInstance():addMcObjectToContainer(referUI_.instance245,container_,0.50,1.00,1,120,{{0,120,},{66.05,120,},{0,120,},{1,120,},{1,120,},{1,120,},{0,120,},{0,120,},{0,120,}},3)
-	du:setLogicParent(referUI_.instance245,referUI_)
+	referUI_.instance265= cc.Sprite:create("battle_bar_2.png")
+	referUI_.instance265.name="instance265"
+	mcControl:getInstance():addMcObjectToContainer(referUI_.instance265,container_,0.50,1.00,1,120,{{0,120,},{66.05,120,},{0,120,},{1,120,},{1,120,},{1,120,},{0,120,},{0,120,},{0,120,}},3)
+	du:setLogicParent(referUI_.instance265,referUI_)
 	
 	while #_maskInfos>0 do
 		local _maskInfo=table.remove(_maskInfos)

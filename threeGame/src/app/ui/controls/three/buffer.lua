@@ -29,9 +29,9 @@ function buffer:reInitByType(type_, animation_)
     if type_ == 1 then -- 冰冻
         self.bufferSp = cc.Sprite:create("png_ice.png")
     elseif type_ == 2 then -- 锁链 1
-        self.bufferSp = cc.Sprite:create("png_chain1.png")
+        self.bufferSp = cc.Sprite:create("glassBlock_lock_1.png")
     elseif type_ == 3 then -- 锁链 2
-        self.bufferSp = cc.Sprite:create("png_chain2.png")
+        self.bufferSp = cc.Sprite:create("glassBlock_lock_2.png")
     end
     self.type = type_
     self.bufferSp:setAnchorPoint(cc.p(0.5, 0.5))

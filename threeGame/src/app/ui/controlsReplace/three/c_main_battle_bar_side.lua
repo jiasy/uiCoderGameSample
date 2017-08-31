@@ -15,15 +15,15 @@ function c_main_battle_bar_side:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _instance227Dict={}
-    --_specialDict["instance227"]= _instance227Dict
-    --_avoidInit["instance227"]="avoidInitHere"
-    --local _instance233Dict={}
-    --_specialDict["instance233"]= _instance233Dict
-    --_avoidInit["instance233"]="avoidInitHere"
-    --local _instance239Dict={}
-    --_specialDict["instance239"]= _instance239Dict
-    --_avoidInit["instance239"]="avoidInitHere"
+    --local _instance247Dict={}
+    --_specialDict["instance247"]= _instance247Dict
+    --_avoidInit["instance247"]="avoidInitHere"
+    --local _instance253Dict={}
+    --_specialDict["instance253"]= _instance253Dict
+    --_avoidInit["instance253"]="avoidInitHere"
+    --local _instance259Dict={}
+    --_specialDict["instance259"]= _instance259Dict
+    --_avoidInit["instance259"]="avoidInitHere"
     
     self:initSubUIs(_specialDict,_avoidInitDict)
 end

@@ -20,10 +20,10 @@ function p_main_battle_blockCount:initPlace(referUI_,container_)
 	mcControl:getInstance():addMcObjectToContainer(referUI_.blockShow,container_,0.00,0.00,1,15,{{0,15,},{38,1,40.65,1,42.9,1,44.75,1,46.15,1,47.2,1,47.8,1,48,1,47.8,1,47.15,1,46.1,1,44.7,1,42.85,1,40.65,1,38,1,},{0,15,},{1,1,1.12,1,1.22,1,1.3,1,1.36,1,1.4,1,1.43,1,1.44,1,1.43,1,1.4,1,1.36,1,1.3,1,1.22,1,1.12,1,1,1,},{1,1,1.12,1,1.22,1,1.3,1,1.36,1,1.4,1,1.43,1,1.44,1,1.43,1,1.4,1,1.36,1,1.3,1,1.22,1,1.12,1,1,1,},{1,15,},{0,15,},{0,15,},{0,15,}},2)
 	table.insert(referUI_.uiList,referUI_.blockShow)
 	du:setLogicParent(referUI_.blockShow,referUI_)
-	referUI_.instance829= cc.Sprite:create("icon_ball_special.png")
-	referUI_.instance829.name="instance829"
-	mcControl:getInstance():addMcObjectToContainer(referUI_.instance829,container_,0.50,0.50,2,15,{{0,14,},{38,7,38.05,1,38,1,38.05,1,38,1,38.05,1,38,2,},{0,14,},{0.62,1,0.72,1,0.82,1,0.91,1,1.01,1,1.1,1,1.2,1,1.36,1,1.49,1,1.6,1,1.69,1,1.75,1,1.79,1,1.8,1,},{0.62,1,0.72,1,0.82,1,0.91,1,1.01,1,1.1,1,1.2,1,1.36,1,1.49,1,1.6,1,1.69,1,1.75,1,1.79,1,1.8,1,},{0,1,0.17,1,0.33,1,0.5,1,0.67,1,0.83,1,1,1,0.82,1,0.66,1,0.53,1,0.43,1,0.36,1,0.32,1,0.3,1,},{0,14,},{0,14,},{0,14,}},1)
-	du:setLogicParent(referUI_.instance829,referUI_)
+	referUI_.instance906= cc.Sprite:create("icon_ball_special.png")
+	referUI_.instance906.name="instance906"
+	mcControl:getInstance():addMcObjectToContainer(referUI_.instance906,container_,0.50,0.50,2,15,{{0,14,},{38,7,38.05,1,38,1,38.05,1,38,1,38.05,1,38,2,},{0,14,},{0.62,1,0.72,1,0.82,1,0.91,1,1.01,1,1.1,1,1.2,1,1.36,1,1.49,1,1.6,1,1.69,1,1.75,1,1.79,1,1.8,1,},{0.62,1,0.72,1,0.82,1,0.91,1,1.01,1,1.1,1,1.2,1,1.36,1,1.49,1,1.6,1,1.69,1,1.75,1,1.79,1,1.8,1,},{0,1,0.17,1,0.33,1,0.5,1,0.67,1,0.83,1,1,1,0.82,1,0.66,1,0.53,1,0.43,1,0.36,1,0.32,1,0.3,1,},{0,14,},{0,14,},{0,14,}},1)
+	du:setLogicParent(referUI_.instance906,referUI_)
 	du.ttfConfig.fontSize = 20
 	du.ttfConfig.outlineSize = 2 
 	referUI_.count=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("0"), cc.TEXT_ALIGNMENT_CENTER)

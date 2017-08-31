@@ -24,16 +24,13 @@ function c_main_battle_fazhen:reset()
     self.currentScaleY = 1
     self.currentRotateSpeed = 0
     self.targetRotateSpeed = 0
-    self.speedEqual = 0.3
     self.currentR = 0
     self.targetR = 0
-    self.rEqual = 0.5
-    self.xs = 0.3
     self.currentRotation = 0
     self.target:setRotation(0)--圆心
     self.fazhen:setRotation(0)--法阵
     self.circle:setRotation(0)--圆圈
-    self:setScaleY(self.currentScaleY)
+    --self:setScaleY(self.currentScaleY)
 end
 function c_main_battle_fazhen:resetRotationPos()
     self.currentRotation = self.currentRotation + self.currentRotateSpeed
@@ -47,7 +44,7 @@ function c_main_battle_fazhen:resetRotationPos()
     --self.circle1:setScale(self.targetRotateSpeedMax*0.4 + 0.6*self.targetRotateSpeed)
     self.circle1:setScale(self.targetRotateSpeed)
     self.star:setScale(self.currentR/self.fazhenR)
-    self:setScaleY(self.currentScaleY)
+    --self:setScaleY(self.currentScaleY)
 end
 
 --ui stateChange-------------------------------------

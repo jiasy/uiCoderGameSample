@@ -14,17 +14,17 @@ function p_main_three:initPlace(referUI_,container_)
 	--Place all displays----------------------------------------------------------
 	referUI_.grids=C_main_three_grids.new();
 	referUI_.grids.name="grids"
-	du:placeAndAddChildToContainer(referUI_.grids,container_,0.00,0.00,0,26,0,1,1,1,2)
+	du:placeAndAddChildToContainer(referUI_.grids,container_,0.00,0.00,0,50,0,1,1,1,2)
 	table.insert(referUI_.uiList,referUI_.grids)
 	du:setLogicParent(referUI_.grids,referUI_)
 	referUI_.downs=C_main_three_downs.new();
 	referUI_.downs.name="downs"
-	du:placeAndAddChildToContainer(referUI_.downs,container_,0.00,0.00,0.05,13.05,0,1,1,1,3)
+	du:placeAndAddChildToContainer(referUI_.downs,container_,0.00,0.00,0.05,33.05,0,1,1,1,3)
 	table.insert(referUI_.uiList,referUI_.downs)
 	du:setLogicParent(referUI_.downs,referUI_)
 	referUI_.blocks=C_main_three_blocks.new();
 	referUI_.blocks.name="blocks"
-	du:placeAndAddChildToContainer(referUI_.blocks,container_,0.00,0.00,0,36,0,1,1,1,4)
+	du:placeAndAddChildToContainer(referUI_.blocks,container_,0.00,0.00,0,50,0,1,1,1,4)
 	table.insert(referUI_.uiList,referUI_.blocks)
 	du:setLogicParent(referUI_.blocks,referUI_)
 	referUI_.bg= cc.Sprite:create("bg_ballarea.png")
@@ -45,7 +45,7 @@ function p_main_three:initPlace(referUI_,container_)
 	referUI_.desText.name="desText"
 	referUI_.desText:setString("desText")
 	du:textSet(referUI_.desText,255,255,255,640,86)
-	du:placeAndAddChildToContainer(referUI_.desText,container_,0.50,1.00,0,576,0,1,1,1,5)
+	du:placeAndAddChildToContainer(referUI_.desText,container_,0.50,1.00,0,26.05,0,1,1,1,5)
 	referUI_.desText.isText=true
 	du:setLogicParent(referUI_.desText,referUI_)
 	
