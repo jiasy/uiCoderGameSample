@@ -4,6 +4,7 @@ cc.FileUtils:getInstance():addSearchPath("res/")
 
 cc.FileUtils:getInstance():addSearchPath("res/three/")
 cc.FileUtils:getInstance():addSearchPath("res/three/uis/")
+cc.FileUtils:getInstance():addSearchPath("res/three/gameConfig/")
 cc.FileUtils:getInstance():addSearchPath("res/three/battle/")
 cc.FileUtils:getInstance():addSearchPath("res/three/hero/")
 cc.FileUtils:getInstance():addSearchPath("res/three/spriteSheets/")

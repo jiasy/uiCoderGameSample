@@ -22,6 +22,8 @@ function c_main_battle:ctor(params_)
     self.scaleYEqual = 0.05
     --缓动系数
     self.xs = 0.3
+    --当前回合数
+    self.roundCount = 0
 
     -- 正弦型
     --基础半径 baseR ,上下偏移 bufferR
@@ -100,6 +102,7 @@ function c_main_battle:getBlockCount(type_,special_,blockArr_)
             self.blockAddSpeed = self.blockAddSpeed + self.addSpeedPerBlock
         end
 
+        local _currentLeveLRoundMax = tonumber(self.main.currentLevelConfig.roundMax)
         --限制最大转速，半径
         if self.blockAddR > self.targetRMax then
             self.blockAddR = self.targetRMax
@@ -107,7 +110,13 @@ function c_main_battle:getBlockCount(type_,special_,blockArr_)
         if self.blockAddSpeed > self.targetRotateSpeedMax then
             self.blockAddSpeed = self.targetRotateSpeedMax
         end
-
+        if self:isGetBlockEnd() then--如果，其他的blockCount 也获取完了。
+            if self:isBlockCountConditionFix() then --每一个的条件也满足了
+                self.main:gameSuccess() -- 完成了所有条件
+            else
+                self.main:battleGetBlockEnd() -- 通知 main. battle已经获取了所有的block
+            end
+        end
     end
     for i=1 , _blockNum do
         --轨迹 自增
@@ -119,7 +128,8 @@ end
 -- 判断获取Block的过程是否结束
 function c_main_battle:isGetBlockEnd()
     -- 判断当前关卡的BlockCount
-    for i=1,self.main.randomMax do
+    local _randomMax = tonumber(self.main.currentLevelConfig.randomMax)
+    for i=1,_randomMax do
         if self["blockCount"..tostring(i)]:isGetBlockEnd()==false then
             return false
         end
@@ -127,18 +137,61 @@ function c_main_battle:isGetBlockEnd()
     return true
 end
 
+-- 判断获取Block的过程是否结束
+function c_main_battle:isBlockCountConditionFix()
+    -- 根据当前管卡可以随机的最大数量。来判断是否所有的条件都满足了
+    local _randomMax = tonumber(self.main.currentLevelConfig.randomMax)
+    for i=1,_randomMax do
+        if self["blockCount"..tostring(i)]:isBlockCountConditionFix()==false then
+            return false
+        end
+    end
+    return true
+end
+
+--roundCount 刷新文字显示
+function c_main_battle:addRoundCount()
+    self.roundCount = self.roundCount +1
+    local _currentLeveLRoundMax = tonumber(self.main.currentLevelConfig.roundMax)
+    local _currentRoundCount = 0
+    -- 最开始 初始化 的时候是-2 ，所以，显示的时候要判断。一下
+    if self.roundCount>0 then
+        _currentRoundCount = self.roundCount
+    end
+    self.roundTxt:setString(tostring(_currentRoundCount).."/"..tostring(_currentLeveLRoundMax))
+    if self.roundCount>=_currentLeveLRoundMax then
+        --回合不够用了，失败
+        self.main:gameFail("round")
+    end
+end
 -- 当前关卡几种Block
 function c_main_battle:reset()
+    --重置回合数 -2 的原因是
+    --    这里调用一次 addRoundCount 刷新显示
+    --    blocks 初始化之后，判断当前是否能消除，还会调用一次 addRoundCount
+    self.roundCount = -2
+    self:addRoundCount()
     -- 11 有的关有，有的关没有
     -- 10 不需要显示
     -- 颜色上限9
     for i=1,10 do
+        local _currentLevelConfig = self.main.currentLevelConfig
+        local _randomMax = tonumber(_currentLevelConfig.randomMax)
+
         local _blockCount = self["blockCount"..tostring(i)]
         --按照个数摆放位置
-        if i<=self.main.randomMax then
+        if i<=_randomMax then
+            local _blockCountConditionStr = _currentLevelConfig["type_"..tostring(i).."_max"]
+            if _blockCountConditionStr then
+                local _blockCountCondition = tonumber(_blockCountConditionStr)
+                _blockCount:resetBlockCountCondition(_blockCountCondition)
+            else
+                _blockCount:resetBlockCountCondition(0)
+            end
+
             --重置 属性 显示
             _blockCount:setVisible(true)
-            _blockCount:reset(tonumber(i-1)*360/self.main.randomMax)
+            _blockCount:reset(tonumber(i-1)*360/_randomMax)
         else
             -- 隐藏
             _blockCount:setVisible(false)
@@ -187,8 +240,9 @@ function c_main_battle:updateF(type_)
         self:pursue(self.bg)
         self.fazhen:resetRotationPos()
         self.bg:resetRotationPos()
+        local _randomMax = tonumber(self.main.currentLevelConfig.randomMax)
         --关卡中有的显示
-        for i=1,self.main.randomMax do
+        for i=1,_randomMax do
             local _blockCount = self["blockCount"..tostring(i)]
 
             self:pursue(_blockCount)

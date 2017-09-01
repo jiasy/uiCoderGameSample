@@ -12,16 +12,16 @@ function p_circle_round_shine_circle:initPlace(referUI_,container_)
 	
 	local _maskInfos={}
 	--Place all displays----------------------------------------------------------
-	referUI_.instance185= cc.Sprite:create("battle_shineCircle.png")
-	referUI_.instance185.name="instance185"
-	mcControl:getInstance():addMcObjectToContainer(referUI_.instance185,container_,0.50,0.50,1,120,{{0,120,},{-1.5,93,-1.45,1,-1.5,26,},{0,120,},{0.03,70,0.18,1,0.32,1,0.46,1,0.6,1,0.72,1,0.84,1,0.96,1,1.07,1,1.18,1,1.28,1,1.37,1,1.46,1,1.55,1,1.63,1,1.7,1,1.77,1,1.83,1,1.89,1,1.94,1,1.99,1,2.03,1,2.06,1,2.09,1,2.12,1,2.14,1,2.15,1,2.16,2,0.03,22,},{0.03,70,0.18,1,0.32,1,0.46,1,0.6,1,0.72,1,0.84,1,0.96,1,1.07,1,1.18,1,1.28,1,1.37,1,1.46,1,1.55,1,1.63,1,1.7,1,1.77,1,1.83,1,1.89,1,1.94,1,1.99,1,2.03,1,2.06,1,2.09,1,2.12,1,2.14,1,2.15,1,2.16,2,0.03,22,},{1,120,},{0,120,},{0,120,},{0,120,}},1)
-	du:setLogicParent(referUI_.instance185,referUI_)
-	du:setBlendToDisplay(referUI_.instance185,"add")
-	referUI_.instance187= cc.Sprite:create("battle_shineCircle.png")
-	referUI_.instance187.name="instance187"
-	mcControl:getInstance():addMcObjectToContainer(referUI_.instance187,container_,0.50,0.50,1,120,{{0,120,},{-1.5,120,},{0,120,},{0.03,76,0.24,1,0.43,1,0.62,1,0.8,1,0.96,1,1.12,1,1.26,1,1.39,1,1.52,1,1.63,1,1.73,1,1.82,1,1.9,1,1.97,1,2.03,1,2.07,1,2.11,1,2.14,1,2.15,1,2.16,1,0.03,24,},{0.03,76,0.24,1,0.43,1,0.62,1,0.8,1,0.96,1,1.12,1,1.26,1,1.39,1,1.52,1,1.63,1,1.73,1,1.82,1,1.9,1,1.97,1,2.03,1,2.07,1,2.11,1,2.14,1,2.15,1,2.16,1,0.03,24,},{1,120,},{0,120,},{0,120,},{0,120,}},2)
-	du:setLogicParent(referUI_.instance187,referUI_)
-	du:setBlendToDisplay(referUI_.instance187,"add")
+	referUI_.instance186= cc.Sprite:create("battle_shineCircle.png")
+	referUI_.instance186.name="instance186"
+	mcControl:getInstance():addMcObjectToContainer(referUI_.instance186,container_,0.50,0.50,1,120,{{0,120,},{-1.5,93,-1.45,1,-1.5,26,},{0,120,},{0.03,70,0.18,1,0.32,1,0.46,1,0.6,1,0.72,1,0.84,1,0.96,1,1.07,1,1.18,1,1.28,1,1.37,1,1.46,1,1.55,1,1.63,1,1.7,1,1.77,1,1.83,1,1.89,1,1.94,1,1.99,1,2.03,1,2.06,1,2.09,1,2.12,1,2.14,1,2.15,1,2.16,2,0.03,22,},{0.03,70,0.18,1,0.32,1,0.46,1,0.6,1,0.72,1,0.84,1,0.96,1,1.07,1,1.18,1,1.28,1,1.37,1,1.46,1,1.55,1,1.63,1,1.7,1,1.77,1,1.83,1,1.89,1,1.94,1,1.99,1,2.03,1,2.06,1,2.09,1,2.12,1,2.14,1,2.15,1,2.16,2,0.03,22,},{1,120,},{0,120,},{0,120,},{0,120,}},1)
+	du:setLogicParent(referUI_.instance186,referUI_)
+	du:setBlendToDisplay(referUI_.instance186,"add")
+	referUI_.instance188= cc.Sprite:create("battle_shineCircle.png")
+	referUI_.instance188.name="instance188"
+	mcControl:getInstance():addMcObjectToContainer(referUI_.instance188,container_,0.50,0.50,1,120,{{0,120,},{-1.5,120,},{0,120,},{0.03,76,0.24,1,0.43,1,0.62,1,0.8,1,0.96,1,1.12,1,1.26,1,1.39,1,1.52,1,1.63,1,1.73,1,1.82,1,1.9,1,1.97,1,2.03,1,2.07,1,2.11,1,2.14,1,2.15,1,2.16,1,0.03,24,},{0.03,76,0.24,1,0.43,1,0.62,1,0.8,1,0.96,1,1.12,1,1.26,1,1.39,1,1.52,1,1.63,1,1.73,1,1.82,1,1.9,1,1.97,1,2.03,1,2.07,1,2.11,1,2.14,1,2.15,1,2.16,1,0.03,24,},{1,120,},{0,120,},{0,120,},{0,120,}},2)
+	du:setLogicParent(referUI_.instance188,referUI_)
+	du:setBlendToDisplay(referUI_.instance188,"add")
 	referUI_.pic_mask_= cc.Sprite:create("battle_circle_add.png")
 	referUI_.pic_mask_.name="pic_mask_"
 	mcControl:getInstance():addMcObjectToContainer(referUI_.pic_mask_,container_,0.50,0.50,1,120,{{2.5,120,},{0.05,120,},{0,120,},{0.77,120,},{0.76,120,},{1,120,},{0,120,},{0,120,},{0,120,}},3)

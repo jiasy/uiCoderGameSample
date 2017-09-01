@@ -20,17 +20,22 @@ end
 --init data and place------------------------------------------
 function c_main:init(initDict_)
     c_main.super.init(self, initDict_)
+    --当前游戏状态
+    --initing
+    --gaming
+    --successing
+    --failing
+    self.currentGameState = "initing"
+
     self.frameCount = 0
     -- getBlock 轨迹移动时间
     self.getBlockMoveTime = 1
     -- getBlock 给轨迹消散预留时间
     self.getBlockWaitTime = 0.5
-    --回合数
-    self.roundCount = 0
     --当前关最大回合数
-    self.roundMax = 0
+    -- self.currentConfig.roundMax = 0
     -- 显示场景中 blockCount的个数
-    self.randomMax =0
+    -- self.currentConfig.randomMax =0
 
     --各个关卡的配置
     self.levelConfigs = nil
@@ -42,6 +47,18 @@ function c_main:init(initDict_)
 
     --游戏进行ID
     self.currentLevelID = 0
+
+    --每消除一个Block的分数
+    self.scorePerBlock = 10
+    --每一个连击 叠加 的分数
+    self.scorePerCombo = 10
+    --每一个特殊block爆破 叠加 分数
+    self.scorePerSpecial = 10
+    --当前回合 Combo 数
+    self.currentCombo = 0
+    --当前爆破的 Special 数
+    self.currentSpecial = 0
+
 
     -- 有初始化 数据就是正常玩的。
     if initDict_ then
@@ -73,7 +90,13 @@ function c_main:init(initDict_)
     end 
     local function roundEndCallBack()
         print "three main - roundEndCallBack"
-        self.roundCount = self.roundCount + 1
+        --battle进行游戏过关条件的判断。
+        self.battle:addRoundCount()
+        if self.currentGameState == "initing" then
+            self.currentGameState = "gaming"
+        elseif self.currentGameState == "successing" then
+            print ("three c_main : successing") 
+        end
     end
 
     self.three.blocks.blockBreakInfoCallBack = blockBreakInfoCallBack
@@ -90,11 +113,9 @@ function c_main:init(initDict_)
     self:replayLevel()
 end
 
-
 function c_main:updateF( type_ )
     c_main.super.updateF(self, type_)
 end
-
 
 --获取关卡配置
 function c_main:getLevelConfigs()
@@ -131,14 +152,14 @@ function c_main:replayLevel()
         self:reinitByLevelIndex(self.currentLevelIndex)
     end
 
-    local _currentLevelConfig = self.levelConfigs.levelDatas[self.currentLevelIndex] 
-    self.randomMax = tonumber(_currentLevelConfig.randomMax)
+    self.currentLevelConfig = self.levelConfigs.levelDatas[self.currentLevelIndex] 
+    self.currentGameState = "initing"
     --重置battle,当前关卡，最多随机几个颜色
     self.battle:reset()
     --清理上次的block和各种变量
     self.three.blocks:clearCurrentLevel()
     --初始化地块
-    self.three.grids:reset(_currentLevelConfig, gridRestEnd)
+    self.three.grids:reset(gridRestEnd)
     --初始化动画
     self.battle.bar.sideLeft:gtp("start")
     self.battle.bar.sideRight:gtp("start")
@@ -161,6 +182,28 @@ function c_main:battleGetBlockEnd()
         self.three.blocks.canOperationBoo = true
     end
 end
+
+--游戏成功
+function c_main:gameSuccess()
+    if self.currentGameState ~= "gaming" then
+        return
+    end
+    self.currentGameState = "successing"
+end
+
+--游戏失败
+function c_main:gameFail(type_)
+    if self.currentGameState ~= "gaming" then
+        return
+    end
+    self.currentGameState = "failing"
+    if type_ == "round" then --回合数
+        
+    elseif type_ == "time" then --时间
+
+    end
+end
+
 --通过type 获取使用的 Block 图片名
 function c_main:getBlockPicNameByType(type_)
     local _picFileName = nil

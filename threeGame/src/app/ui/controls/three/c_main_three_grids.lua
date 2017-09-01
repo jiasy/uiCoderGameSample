@@ -36,7 +36,7 @@ function c_main_three_grids:stateChange(stateName_, rightNow_)
     c_main_three_grids.super.stateChange(self, stateName_, rightNow_)
 end
 
-function c_main_three_grids:reset(levelConfig_,resetEndFunc_)
+function c_main_three_grids:reset(resetEndFunc_)
     print ("c_main_three_grids:reset")
     if self.grids == nil then
         print ("c_main_three_grids:reset 调用前需要先初始化 -> getGrids") 
@@ -50,8 +50,9 @@ function c_main_three_grids:reset(levelConfig_,resetEndFunc_)
         end
     end
 
-    for i = 1, #levelConfig_.lostGrids do
-        local _tempGridInfo = levelConfig_.lostGrids[i]
+    local _currentLevelConfig = self.main.currentLevelConfig
+    for i = 1, #_currentLevelConfig.lostGrids do
+        local _tempGridInfo = _currentLevelConfig.lostGrids[i]
         self.grids[_tempGridInfo.col][_tempGridInfo.row]:setVisible(false)
     end
 

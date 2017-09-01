@@ -9,6 +9,7 @@ function c_main_battle_blockCount:ctor(params_)
     self.className = "main_battle_blockCount"
     self.moduleName = "three"
     self.blockCount = 0
+    self.blockCountCondition = 0
     self.type=0
     -- 移动轨迹集合
     self.cureMotionList = {}
@@ -63,6 +64,15 @@ function c_main_battle_blockCount:init(initDict_)
     end
 end
 
+--重置过关条件
+function c_main_battle_blockCount:resetBlockCountCondition(blockCountCondition_)
+    self.blockCountCondition = blockCountCondition_
+    --计数器清零
+    self.blockCount = -1
+    --这里会自增，变成0，然后重新设置字符串显示
+    self:addBlockCount()
+end
+
 --根据当前关卡的randomMax固定一个初始角度
 function c_main_battle_blockCount:reset(currentRotation_)
     --清空原有轨迹移动对象
@@ -72,9 +82,6 @@ function c_main_battle_blockCount:reset(currentRotation_)
         item:removeFromParent()
     end
     self.cureMotionList = {}
-    --计数器清零
-    self.blockCount = 0
-    self.count:setString(tostring(self.blockCount))
     --动画重置
     self:gts(1)
     -- 重置旋转属性
@@ -114,6 +121,35 @@ function c_main_battle_blockCount:isGetBlockEnd()
     return #self.cureMotionList == 0
 end
 
+-- 条件是否满足
+function c_main_battle_blockCount:isBlockCountConditionFix()
+    if self.blockCountCondition ==0 then -- 没有限制的话，就是完成了
+        return true
+    else
+        if self.blockCount >= self.blockCountCondition then
+            return true
+        else
+            return false
+        end
+    end
+end
+
+--blockCount 自增，判断 blockCountCondition，刷新文字显示
+function c_main_battle_blockCount:addBlockCount()
+    self.blockCount = self.blockCount +1
+    if self.blockCountCondition ~= 0 then--如果有限制条件的话
+        self.count:setString(tostring(self.blockCount).."/"..tostring(self.blockCountCondition))
+        if self.blockCount >= self.blockCountCondition then
+            self.count:setTextColor(cc.c4b(102,204,0,255))
+        else
+            self.count:setTextColor(cc.c4b(255,102,102,255))
+        end
+    else
+        self.count:setString(tostring(self.blockCount))
+        self.count:setTextColor(cc.c4b(255,255,255,255))
+    end
+end
+
 function c_main_battle_blockCount:getBlock(po_,trailCount_,blockGetCallBack_)
     local _currentLevelID = self.main.currentLevelID
     local function onInPosition(cureMotion_)
@@ -124,15 +160,10 @@ function c_main_battle_blockCount:getBlock(po_,trailCount_,blockGetCallBack_)
         if self.blockPic and self.blockPic.name=="disMc" then
             self.blockPic:playIdleAnimation()
         end
-        self.blockCount = self.blockCount +1
-        self.count:setString(tostring(self.blockCount))
+        --block 自增
+        self:addBlockCount()
         self:gtp(2)
         table.removebyvalue(self.cureMotionList,cureMotion_)
-        if #self.cureMotionList == 0 then--自己的获取完了的时候
-            if self.logicParent:isGetBlockEnd() then--如果，其他的blockCount 也获取完了。
-                self.main:battleGetBlockEnd() -- 通知 main. battle已经获取了所有的block
-            end
-        end
         if blockGetCallBack_ then
             blockGetCallBack_()
         end

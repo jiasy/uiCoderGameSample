@@ -167,73 +167,46 @@ function c_main_three_blocks:stateChange(stateName_, rightNow_)
     --判断切换这个状态时候需要的操作，数据整理等等。
     c_main_three_blocks.super.stateChange(self, stateName_, rightNow_)
 end
-
+function c_main_three_blocks:resetSpeed(type_)
+    local _xs = 1
+    if type_ == "normal" then
+        _xs = 1
+    elseif type_ == "ai_normal" then
+        _xs = 1
+    elseif type_ == "ai_quick" then
+        _xs = 0.3
+    elseif type_ == "ai_fly" then
+        _xs = 0.09
+    end
+    self.delayTipTime = _xs* 5
+    self.delayAiTime = _xs* 0.0
+    self.movePreGridTime = _xs* 0.15
+    self.blockAnimationRemoveTime = _xs* 0.4
+    self.type10ChainBlockRemoveNormalIntervalTime = _xs* 0.1
+    self.moveEndAnimationTime = _xs* 0.4
+    self.type11RemoveAnimationTime = _xs* 1
+    self.type10ChangeOtherTime = _xs* 1
+    self.type10ChangeOtherMoveTime = _xs* 1
+    self.specialBlockActiveTime = _xs* 1
+    self.swapBlockTime = _xs* 0.3
+    self.showMatchTime = _xs* 0.5
+    self.specialChainBlockActiveIntervalTime = _xs* 0.8
+end
 function c_main_three_blocks:preSetPar(type_)
+    self:resetSpeed(type_)
     if type_ == "normal" then
         self.aiAutoBoo = false
-        self.delayTipTime = 5
-        self.delayAiTime = 0.0
-        self.movePreGridTime = 0.15
-        self.blockAnimationRemoveTime = 0.4
-        self.type10ChainBlockRemoveNormalIntervalTime = 0.1
-        self.moveEndAnimationTime = 0.4
-        self.type11RemoveAnimationTime = 1
-        self.type10ChangeOtherTime = 1
-        self.type10ChangeOtherMoveTime = 1
-        self.specialBlockActiveTime = 1
-        self.swapBlockTime = 0.3
-        self.showMatchTime = 0.5
-        self.specialChainBlockActiveIntervalTime = 0.8
     elseif type_ == "ai_normal" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
         self.aiAutoBoo = true
-        self.delayTipTime = 0.01
-        self.delayAiTime = 1
-        self.movePreGridTime = 0.15
-        self.blockAnimationRemoveTime = 0.4
-        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
-        self.moveEndAnimationTime = 0.2
-        self.type11RemoveAnimationTime = 0.5
-        self.type10ChangeOtherTime = 0.5
-        self.type10ChangeOtherMoveTime = 1
-        self.specialBlockActiveTime = 0.5
-        self.swapBlockTime = 0.2
-        self.showMatchTime = 0.2
-        self.specialChainBlockActiveIntervalTime = 0.4
         self:aiSwap()
     elseif type_ == "ai_quick" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
         self.aiAutoBoo = true
-        self.delayTipTime = 0.01
-        self.delayAiTime = 0.5
-        self.movePreGridTime = 0.1
-        self.blockAnimationRemoveTime = 0.2
-        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
-        self.moveEndAnimationTime = 0.1
-        self.type11RemoveAnimationTime = 0.5
-        self.type10ChangeOtherTime = 0.3
-        self.type10ChangeOtherMoveTime = 1
-        self.specialBlockActiveTime = 0.3
-        self.swapBlockTime = 0.1
-        self.showMatchTime = 0.1
-        self.specialChainBlockActiveIntervalTime = 0.2
         self:aiSwap()
     elseif type_ == "ai_fly" then
         if self.aiAutoBoo ~= true then self:aiSwap() end
         self.aiAutoBoo = true
-        self.delayTipTime = 0.01
-        self.delayAiTime = 0.01
-        self.movePreGridTime = 0.05
-        self.blockAnimationRemoveTime = 0.05
-        self.type10ChainBlockRemoveNormalIntervalTime = 0.05
-        self.moveEndAnimationTime = 0.05
-        self.type11RemoveAnimationTime = 0.5
-        self.type10ChangeOtherTime = 0.1
-        self.type10ChangeOtherMoveTime = 1
-        self.specialBlockActiveTime = 0.1
-        self.swapBlockTime = 0.05
-        self.showMatchTime = 0.05
-        self.specialChainBlockActiveIntervalTime = 0.1
         self:aiSwap()
     end
 end
@@ -438,12 +411,13 @@ function c_main_three_blocks:clearCurrentLevel()
 end
 
 --根据当前关卡配置，初始化
-function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
+function c_main_three_blocks:initByLevelConfig()
+    local _currentLevelConfig = self.main.currentLevelConfig
     --设置测试标题
-    self.logicParent.desText:setString(self.main.currentLevelIndex .. " : " .. currentLevelConfig_.des)
+    self.logicParent.desText:setString(self.main.currentLevelIndex .. " : " .. _currentLevelConfig.des)
 
-    for i = 1, #currentLevelConfig_.blockInfos do
-        local _tempBlockInfo = currentLevelConfig_.blockInfos[i]
+    for i = 1, #_currentLevelConfig.blockInfos do
+        local _tempBlockInfo = _currentLevelConfig.blockInfos[i]
         local _level = 0 --获取预设level
         if _tempBlockInfo.level then
             _level = _tempBlockInfo.level
@@ -456,7 +430,7 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     end
 
     for i = 1, 9 do --列预存
-        local _sourceConfig = currentLevelConfig_["prev_" .. i]
+        local _sourceConfig = _currentLevelConfig["prev_" .. i]
         local _targetConfig = {}
         for j = 1, #_sourceConfig do
             table.insert(_targetConfig, _sourceConfig[j])
@@ -465,7 +439,7 @@ function c_main_three_blocks:initByLevelConfig(currentLevelConfig_)
     end
 
     -- 当前关随机几个颜色
-    self.randomMax = currentLevelConfig_.randomMax
+    self.randomMax = _currentLevelConfig.randomMax
 
     if self:needRandom() == false then --没有超过随机次数限制
         
