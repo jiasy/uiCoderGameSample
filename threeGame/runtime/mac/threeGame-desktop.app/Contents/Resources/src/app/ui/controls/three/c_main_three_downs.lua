@@ -35,6 +35,9 @@ function c_main_three_downs:init(initDict_)
     -- local _down_1Dict = {}
     -- self.down_1:init(_down_1Dict)
     self:initSubUIs(_specialDict,_avoidInitDict)
+    for i=1,9 do
+        self["down_"..tostring(i)]:setVisible(false)
+    end
 end
 
 --ui stateChange-------------------------------------

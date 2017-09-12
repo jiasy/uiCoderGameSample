@@ -11,6 +11,9 @@ function disMC:ctor(params_)
 	self.mcChildObjectArr={}
 	self.mcControl=mcControl:getInstance()
 	self.testUtils=testUtils:getInstance()
+	--通过代码添加的 disMC ，在Flash中编辑，第一帧命名成self。这样就是自己控制的了。
+	self.controlSelf = false
+	self.logicParent = nil
 end
 
 function disMC:gtp(param_) self:gotoAndPlay(param_) end
@@ -26,6 +29,15 @@ function disMC:init(initDict_)
 		local _mcChildObj=self.mcChildObjectArr[i]
 		_mcChildObj:propertyInFrame(1)
 	end
+	if self.logicParent == nil then
+		-- 代码创建的 self
+		local _firstFrameName = self:getFrameNameByFrameInt(1)
+		if _firstFrameName == "self" then
+			self.controlSelf = true
+			table.insert(mcControl:getInstance().controlSelfs,self)
+		end
+	end
+
 end
 
 --获取动作
@@ -159,6 +171,12 @@ function disMC:runActionByFrame(frame_)
 				self:gts(_paramater)
 			elseif _action=="gtp" then
 				self:gtp(_paramater)
+			elseif _action=="remove" then
+				if self.controlSelf then
+					self:removeFromParent()
+				else
+					assert(false,self.className .. "第一帧 不是 self ,不能用 remove 做帧名")
+				end
 			end
 		else
 			self:onFrameName(_frameName)
@@ -276,6 +294,11 @@ end
 --destory-- call when removeChild
 function disMC:onDestory()
 	-- print("disMC : onDestory")
+	-- 不是flash编辑的，是自己控制的
+	if self.logicParent == nil and self.controlSelf then
+		table.removebyvalue(mcControl:getInstance().controlSelfs,self)
+	end
+
 	self:resetPars()
 	disMC.super.onDestory(self)
 end

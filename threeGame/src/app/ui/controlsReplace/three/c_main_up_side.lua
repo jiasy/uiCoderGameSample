@@ -15,24 +15,24 @@ function c_main_up_side:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _instance409Dict={}
-    --_specialDict["instance409"]= _instance409Dict
-    --_avoidInit["instance409"]="avoidInitHere"
-    --local _instance415Dict={}
-    --_specialDict["instance415"]= _instance415Dict
-    --_avoidInit["instance415"]="avoidInitHere"
-    --local _instance421Dict={}
-    --_specialDict["instance421"]= _instance421Dict
-    --_avoidInit["instance421"]="avoidInitHere"
-    --local _instance427Dict={}
-    --_specialDict["instance427"]= _instance427Dict
-    --_avoidInit["instance427"]="avoidInitHere"
-    --local _instance433Dict={}
-    --_specialDict["instance433"]= _instance433Dict
-    --_avoidInit["instance433"]="avoidInitHere"
-    --local _instance439Dict={}
-    --_specialDict["instance439"]= _instance439Dict
-    --_avoidInit["instance439"]="avoidInitHere"
+    --local _instance416Dict={}
+    --_specialDict["instance416"]= _instance416Dict
+    --_avoidInit["instance416"]="avoidInitHere"
+    --local _instance422Dict={}
+    --_specialDict["instance422"]= _instance422Dict
+    --_avoidInit["instance422"]="avoidInitHere"
+    --local _instance428Dict={}
+    --_specialDict["instance428"]= _instance428Dict
+    --_avoidInit["instance428"]="avoidInitHere"
+    --local _instance434Dict={}
+    --_specialDict["instance434"]= _instance434Dict
+    --_avoidInit["instance434"]="avoidInitHere"
+    --local _instance440Dict={}
+    --_specialDict["instance440"]= _instance440Dict
+    --_avoidInit["instance440"]="avoidInitHere"
+    --local _instance446Dict={}
+    --_specialDict["instance446"]= _instance446Dict
+    --_avoidInit["instance446"]="avoidInitHere"
     
     self:initSubUIs(_specialDict,_avoidInitDict)
 end

@@ -76,7 +76,7 @@ function p_main_battle:initPlace(referUI_,container_)
 	du:setLogicParent(referUI_.blockCount10,referUI_)
 	referUI_.blockCount11=C_main_battle_blockCount.new();
 	referUI_.blockCount11.name="blockCount11"
-	du:placeAndAddChildToContainer(referUI_.blockCount11,container_,0.00,0.00,274.15,403.75,0,1,1,1,16)
+	du:placeAndAddChildToContainer(referUI_.blockCount11,container_,0.00,0.00,264,412.6,0,1,1,1,16)
 	table.insert(referUI_.uiList,referUI_.blockCount11)
 	du:setLogicParent(referUI_.blockCount11,referUI_)
 	referUI_.blockCount7=C_main_battle_blockCount.new();

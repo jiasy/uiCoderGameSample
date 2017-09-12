@@ -7,39 +7,39 @@ function p_testUIBtn:initPlace(referUI_,container_)
 	local uc=uiControl:getInstance()
 	local _maskInfos={}
 	--Place all displays----------------------------------------------------------
-	referUI_.instance479= cc.Sprite:create("btnUp.png")
-	referUI_.instance479.name="instance479"
-	du:placeAndAddChildToContainer(referUI_.instance479,container_,0.50,0.50,0,0,0,1,1,1,1)
-	du:setLogicParent(referUI_.instance479,referUI_)
+	referUI_.instance509= cc.Sprite:create("btnUp.png")
+	referUI_.instance509.name="instance509"
+	du:placeAndAddChildToContainer(referUI_.instance509,container_,0.50,0.50,0,0,0,1,1,1,1)
+	du:setLogicParent(referUI_.instance509,referUI_)
 	referUI_.aaa= cc.Sprite:create("btnUp.png")
 	referUI_.aaa.name="aaa"
 	du:placeAndAddChildToContainer(referUI_.aaa,container_,0.50,0.50,0,0,0,1,1,1,2)
 	du:setLogicParent(referUI_.aaa,referUI_)
 	du:setBlendToDisplay(referUI_.aaa,"screen")
-	referUI_.instance482= cc.Sprite:create("btnUp.png")
-	referUI_.instance482.name="instance482"
-	du:placeAndAddChildToContainer(referUI_.instance482,container_,0.50,0.50,0,0,0,1,1,1,3)
-	du:setLogicParent(referUI_.instance482,referUI_)
+	referUI_.instance512= cc.Sprite:create("btnUp.png")
+	referUI_.instance512.name="instance512"
+	du:placeAndAddChildToContainer(referUI_.instance512,container_,0.50,0.50,0,0,0,1,1,1,3)
+	du:setLogicParent(referUI_.instance512,referUI_)
 	referUI_.pic= cc.Sprite:create("btnUp.png")
 	referUI_.pic.name="pic"
 	du:placeAndAddChildToContainer(referUI_.pic,container_,0.50,0.50,0,0,0,1,1,1,4)
 	du:setLogicParent(referUI_.pic,referUI_)
 	du:setBlendToDisplay(referUI_.pic,"lighten")
-	referUI_.instance485= cc.Sprite:create("btnUp.png")
-	referUI_.instance485.name="instance485"
-	du:placeAndAddChildToContainer(referUI_.instance485,container_,0.50,0.50,0,0,0,1,1,1,5)
-	du:setLogicParent(referUI_.instance485,referUI_)
-	du:setBlendToDisplay(referUI_.instance485,"lighten")
-	referUI_.instance487= cc.Sprite:create("btnUp.png")
-	referUI_.instance487.name="instance487"
-	du:placeAndAddChildToContainer(referUI_.instance487,container_,0.50,0.50,0,0,0,1,1,1,6)
-	du:setLogicParent(referUI_.instance487,referUI_)
-	du:setBlendToDisplay(referUI_.instance487,"lighten")
-	referUI_.instance489= cc.Sprite:create("btnUp.png")
-	referUI_.instance489.name="instance489"
-	du:placeAndAddChildToContainer(referUI_.instance489,container_,0.50,0.50,0,0,0,1,1,1,7)
-	du:setLogicParent(referUI_.instance489,referUI_)
-	du:setBlendToDisplay(referUI_.instance489,"lighten")
+	referUI_.instance515= cc.Sprite:create("btnUp.png")
+	referUI_.instance515.name="instance515"
+	du:placeAndAddChildToContainer(referUI_.instance515,container_,0.50,0.50,0,0,0,1,1,1,5)
+	du:setLogicParent(referUI_.instance515,referUI_)
+	du:setBlendToDisplay(referUI_.instance515,"lighten")
+	referUI_.instance517= cc.Sprite:create("btnUp.png")
+	referUI_.instance517.name="instance517"
+	du:placeAndAddChildToContainer(referUI_.instance517,container_,0.50,0.50,0,0,0,1,1,1,6)
+	du:setLogicParent(referUI_.instance517,referUI_)
+	du:setBlendToDisplay(referUI_.instance517,"lighten")
+	referUI_.instance519= cc.Sprite:create("btnUp.png")
+	referUI_.instance519.name="instance519"
+	du:placeAndAddChildToContainer(referUI_.instance519,container_,0.50,0.50,0,0,0,1,1,1,7)
+	du:setLogicParent(referUI_.instance519,referUI_)
+	du:setBlendToDisplay(referUI_.instance519,"lighten")
 	referUI_.pic_mask_4= cc.Sprite:create("btnUp.png")
 	referUI_.pic_mask_4.name="pic_mask_4"
 	du:placeAndAddChildToContainer(referUI_.pic_mask_4,container_,0.50,0.50,0,0,0,1,1,1,8)
@@ -50,20 +50,20 @@ function p_testUIBtn:initPlace(referUI_,container_)
 	table.insert(_maskInfos,_pic_mask_4Mask)
 	du.ttfConfig.fontSize = 20
 	du.ttfConfig.outlineSize = 0 
-	referUI_.instance492=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("按下"), cc.TEXT_ALIGNMENT_CENTER)
-	referUI_.instance492.name="instance492"
-	du:textSet(referUI_.instance492,255,255,255,nil,24)
-	du:placeAndAddChildToContainer(referUI_.instance492,container_,0.50,0.50,0,0,0,1,1,1,9)
-	referUI_.instance492.isText=true
-	du:setLogicParent(referUI_.instance492,referUI_)
+	referUI_.instance522=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("按下"), cc.TEXT_ALIGNMENT_CENTER)
+	referUI_.instance522.name="instance522"
+	du:textSet(referUI_.instance522,255,255,255,nil,24)
+	du:placeAndAddChildToContainer(referUI_.instance522,container_,0.50,0.50,0,0,0,1,1,1,9)
+	referUI_.instance522.isText=true
+	du:setLogicParent(referUI_.instance522,referUI_)
 	du.ttfConfig.fontSize = 20
 	du.ttfConfig.outlineSize = 0 
-	referUI_.instance494=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("正常"), cc.TEXT_ALIGNMENT_CENTER)
-	referUI_.instance494.name="instance494"
-	du:textSet(referUI_.instance494,255,255,255,nil,24)
-	du:placeAndAddChildToContainer(referUI_.instance494,container_,0.50,0.50,0,0,0,1,1,1,10)
-	referUI_.instance494.isText=true
-	du:setLogicParent(referUI_.instance494,referUI_)
+	referUI_.instance524=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("正常"), cc.TEXT_ALIGNMENT_CENTER)
+	referUI_.instance524.name="instance524"
+	du:textSet(referUI_.instance524,255,255,255,nil,24)
+	du:placeAndAddChildToContainer(referUI_.instance524,container_,0.50,0.50,0,0,0,1,1,1,10)
+	referUI_.instance524.isText=true
+	du:setLogicParent(referUI_.instance524,referUI_)
 	
 	while #_maskInfos>0 do
 		local _maskInfo=table.remove(_maskInfos)
@@ -74,16 +74,16 @@ function p_testUIBtn:initPlace(referUI_,container_)
     local _statePlaceArr=nil
     ---------------------------------------------------------------btnState1
     _statePlaceArr={}
-    table.insert(_statePlaceArr,{referUI_.instance479,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance509,0.00,0.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.aaa,0.00,0.00,1.00,1.00,0.00,0.00})
-    table.insert(_statePlaceArr,{referUI_.instance482,21.05,0.00,1.35,0.50,0.00,0.00})
+    table.insert(_statePlaceArr,{referUI_.instance512,21.05,0.00,1.35,0.50,0.00,0.00})
     table.insert(_statePlaceArr,{referUI_.pic,-57.05,0.00,0.20,0.20,0.00,0.00})
-    table.insert(_statePlaceArr,{referUI_.instance485,57.05,0.00,0.20,0.20,0.00,0.00})
-    table.insert(_statePlaceArr,{referUI_.instance487,0.00,24.00,0.20,0.20,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance489,0.00,-24.00,0.20,0.20,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance515,57.05,0.00,0.20,0.20,0.00,0.00})
+    table.insert(_statePlaceArr,{referUI_.instance517,0.00,24.00,0.20,0.20,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance519,0.00,-24.00,0.20,0.20,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.pic_mask_4,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance492,0.00,0.00,1.00,1.00,0.00,0.00})
-    table.insert(_statePlaceArr,{referUI_.instance494,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance522,0.00,0.00,1.00,1.00,0.00,0.00})
+    table.insert(_statePlaceArr,{referUI_.instance524,0.00,0.00,1.00,1.00,0.00,1.00})
     
     referUI_.btnState1 = uiState.new(referUI_,_statePlaceArr)
     referUI_.btnState1.stateName="btnState1"
@@ -91,16 +91,16 @@ function p_testUIBtn:initPlace(referUI_,container_)
     referUI_:stateAniPreset("btnState1",true,0.3,53)
     ---------------------------------------------------------------btnState2
     _statePlaceArr={}
-    table.insert(_statePlaceArr,{referUI_.instance479,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance509,0.00,0.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.aaa,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance482,55.05,0.00,0.25,0.50,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance512,55.05,0.00,0.25,0.50,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.pic,80.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance485,-80.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance487,0.00,-40.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance489,0.00,40.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance515,-80.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance517,0.00,-40.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance519,0.00,40.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.pic_mask_4,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance492,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance494,0.00,0.00,1.00,1.00,0.00,0.00})
+    table.insert(_statePlaceArr,{referUI_.instance522,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance524,0.00,0.00,1.00,1.00,0.00,0.00})
     
     referUI_.btnState2 = uiState.new(referUI_,_statePlaceArr)
     referUI_.btnState2.stateName="btnState2"
@@ -108,16 +108,16 @@ function p_testUIBtn:initPlace(referUI_,container_)
     referUI_:stateAniPreset("btnState2",true,0.3,53)
     ---------------------------------------------------------------btnState3
     _statePlaceArr={}
-    table.insert(_statePlaceArr,{referUI_.instance479,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance509,0.00,0.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.aaa,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance482,55.05,0.00,0.25,0.50,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance512,55.05,0.00,0.25,0.50,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.pic,80.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance485,-80.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance487,0.00,-40.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance489,0.00,40.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance515,-80.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance517,0.00,-40.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance519,0.00,40.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.pic_mask_4,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance492,0.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.instance494,0.00,0.00,1.00,1.00,0.00,0.00})
+    table.insert(_statePlaceArr,{referUI_.instance522,0.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance524,0.00,0.00,1.00,1.00,0.00,0.00})
     
     referUI_.btnState3 = uiState.new(referUI_,_statePlaceArr)
     referUI_.btnState3.stateName="btnState3"

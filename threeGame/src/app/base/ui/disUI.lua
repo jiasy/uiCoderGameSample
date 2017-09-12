@@ -77,7 +77,9 @@ function disUI:stateChange(stateName_,rightNow_)
 	end
 	for i=1,#self.uiList do
 		local _tempUi=self.uiList[i]
-		_tempUi:stateChange(stateName_)
+		if _tempUi.stateChange then -- 有些没有实现的就不通知
+			_tempUi:stateChange(stateName_)
+		end
 	end
 end
 --

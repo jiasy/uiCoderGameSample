@@ -1,6 +1,6 @@
 --class define--------------------------------------------------------
-local C_disMC=require("src.app.base.ui.disMC")
-local c_main_up = class("c_main_up",C_disMC)
+local C_disUI=require("src.app.base.ui.disUI")
+local c_main_up = class("c_main_up",C_disUI)
 
 --ui create------------------------------------------
 function c_main_up:ctor(params_)

@@ -19,7 +19,17 @@ function c_main_three:init(initDict_)
 
     self:initSubUIs(_specialDict, _avoidInitDict)
 end
-
+--重置游戏
+function c_main_three:reset()
+    -- grids 初始化 结束之后，调用的方法
+    local function gridRestEndFunc_()
+        self.blocks:reinitLevel()
+    end
+    --清理上次的block和各种变量
+    self.blocks:clearCurrentLevel()
+    --初始化地块
+    self.grids:reset(gridRestEndFunc_)
+end
 --ui stateChange-------------------------------------
 function c_main_three:stateChange(stateName_, rightNow_)
     --Logic here,then change state.

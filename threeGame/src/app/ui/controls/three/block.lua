@@ -343,6 +343,9 @@ function block:createDisplay()
     if _aniMC then
         self.blockPic = _aniMC
         self.blockPic.name="disMc"
+        --让他获取到自己的引用
+        self.blockPic.ownerBlock = self
+        -- init 方法会用到 ownerBlock 这个属性
         self.blockPic:init(nil)
         table.insert(self.parent_blocks.uiList,self.blockPic)
     else

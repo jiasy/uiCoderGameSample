@@ -18,9 +18,9 @@ function c_main_battle_fazhen:init(initDict_)
     --local _circle1Dict={}
     --_specialDict["circle1"]= _circle1Dict
     --_avoidInit["circle1"]="avoidInitHere"
-    --local _instance222Dict={}
-    --_specialDict["instance222"]= _instance222Dict
-    --_avoidInit["instance222"]="avoidInitHere"
+    --local _instance230Dict={}
+    --_specialDict["instance230"]= _instance230Dict
+    --_avoidInit["instance230"]="avoidInitHere"
     
     self:initSubUIs(_specialDict,_avoidInitDict)
 end

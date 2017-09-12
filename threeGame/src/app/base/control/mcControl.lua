@@ -6,6 +6,7 @@ function mcControlInstance:ctor(params_)
     self.actionUtils=actionUtils:getInstance()
     self.displayUtils=displayUtils:getInstance()
     self.updateArr={}
+    self.controlSelfs={}
     table.insert(self.updateArr,self.uiControl.lBgArr)
     table.insert(self.updateArr,self.uiControl.lBaseArr)
     table.insert(self.updateArr,self.uiControl.lUiArr)
@@ -41,6 +42,11 @@ function mcControlInstance:updateLayerArr(type_)
         for j=1,#_uiArr do
             _uiArr[j]:updateF(type_)
         end
+    end
+    --disMC,自己控制自己的
+    for i=1,#self.controlSelfs do
+        local _controlSelf=self.controlSelfs[i]
+        _controlSelf:updateF(type_)
     end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------

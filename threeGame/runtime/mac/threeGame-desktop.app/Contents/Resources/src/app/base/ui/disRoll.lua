@@ -441,6 +441,9 @@ function disRoll:moveEnd()
             self.pressing=false -- 松手
             self.easeing=false -- 界内，不用缓动回位
         end
+        if _xMove<1 and _xMove>-1 then
+            _xMove = 0
+        end
         if _xMove==0 then--没有超界
             for i=1,5 do
                 table.insert(self.xMousePosArr,0)
@@ -461,6 +464,9 @@ function disRoll:moveEnd()
         else--显示区内松手
             self.pressing=false -- 松手
             self.easeing=false -- 界内，不用缓动回位
+        end
+        if _yMove<1 and _yMove>-1 then
+            _yMove = 0
         end
         if _yMove==0 then--没有超界
             for i=1,5 do

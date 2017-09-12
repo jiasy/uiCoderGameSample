@@ -15,6 +15,14 @@ function c_main:ctor(params_)
     self.className = "main"
     self.moduleName = "three"
     self.layerType = "ui"
+
+    local _eventDispatcher = cc.Director:getInstance():getEventDispatcher()
+    local function handleBuyGoods(event_) 
+        self.currentLevelIndex = event_.itemIndex
+        self:replayLevel()
+    end
+    local _listener = cc.EventListenerCustom:create("debug.level_select", handleBuyGoods)
+    _eventDispatcher:addEventListenerWithSceneGraphPriority(_listener, self)
 end
 
 --init data and place------------------------------------------
@@ -43,7 +51,7 @@ function c_main:init(initDict_)
     self.blockConfigs = nil
 
     --当前关卡序号
-    self.currentLevelIndex = 19
+    self.currentLevelIndex = 3
 
     --游戏进行ID
     self.currentLevelID = 0
@@ -56,8 +64,6 @@ function c_main:init(initDict_)
     self.scorePerSpecial = 10
     --当前回合 Combo 数
     self.currentCombo = 0
-    --当前爆破的 Special 数
-    self.currentSpecial = 0
 
 
     -- 有初始化 数据就是正常玩的。
@@ -69,6 +75,13 @@ function c_main:init(initDict_)
         self.isDebug = false
     end
 
+    if device.platform ~= "mac" then
+        self.isDebug = false
+        self.debug:setVisible(false)
+    else
+        self.debug:setVisible(true)
+    end
+
     -- ----- ui init----------------------------------------------------------
     local _specialDict = {} --自定义数据初始化子UI
     local _avoidInitDict = {} --避免在这里进行初始化的UI名称做KEY的字典。
@@ -77,7 +90,8 @@ function c_main:init(initDict_)
     -- _avoidInitDict["battle"] = "avoidInitHere" --上面初始化过了
     self:initSubUIs(_specialDict, _avoidInitDict)
 
-    local function blockBreakInfoCallBack(_,data_)  
+    --每一个Block的记录
+    local function blockBreakInfoCallBack(_,data_)
         for k,_blockArr in pairs( data_ ) do
             if #_blockArr>0 then
                 local _keyArr = string.split(k,"_")
@@ -92,11 +106,12 @@ function c_main:init(initDict_)
         print "three main - roundEndCallBack"
         --battle进行游戏过关条件的判断。
         self.battle:addRoundCount()
-        if self.currentGameState == "initing" then
+        if self.currentGameState == "initing" then -- 重置 游戏状态 为 游戏中
             self.currentGameState = "gaming"
-        elseif self.currentGameState == "successing" then
-            print ("three c_main : successing") 
         end
+        self.three.blocks.canOperationBoo = true
+        --判断一下回合
+        self.needCheckGameState = true
     end
 
     self.three.blocks.blockBreakInfoCallBack = blockBreakInfoCallBack
@@ -112,9 +127,43 @@ function c_main:init(initDict_)
     --初始化当前关卡
     self:replayLevel()
 end
+--游戏成功
+function c_main:gameSuccessing()
+    if self.currentGameState ~= "gaming" then
+        return
+    end
+    self.currentGameState = "successing"
+end
+
+--游戏失败
+function c_main:gameFailing(type_)
+    if self.currentGameState ~= "gaming" then
+        return
+    end
+    self.currentGameState = "failing"
+    if type_ == "round" then --回合数
+        
+    elseif type_ == "time" then --时间
+
+    end
+end
 
 function c_main:updateF( type_ )
     c_main.super.updateF(self, type_)
+    --battle 会更改这个值，让main进行检测
+    if self.needCheckGameState then
+        self.needCheckGameState = false
+        if self.battle:isBlockCountConditionFix() then --每一个的条件也满足了
+            self.three.blocks.canOperationBoo = false
+            self:gameSuccessing() -- 完成了所有条件
+        else
+            local _currentLeveLRoundMax = tonumber(self.currentLevelConfig.roundMax)
+            if self.battle.roundCount>=_currentLeveLRoundMax then
+                self.three.blocks.canOperationBoo = false
+                self:gameFailing("round")
+            end
+        end
+    end
 end
 
 --获取关卡配置
@@ -123,6 +172,10 @@ function c_main:getLevelConfigs()
     local _str = io.readfile(_fileFullPath)
     local _tempObj = json.decode(_str)
     self.levelConfigs = _tempObj
+    if device.platform == "mac" then
+        --测试工具数据
+        self.debug.levelList:createList(self.levelConfigs.levelDatas)
+    end
 end
 
 function c_main:getBlockConfigs()
@@ -132,9 +185,6 @@ function c_main:getBlockConfigs()
     -- self.blockConfigs = _tempObj
 end
 
-function c_main:reinitByLevelIndex(levelIndex_)
-    self.three.blocks:reinitByLevelIndex(self.levelConfigs.levelDatas[levelIndex_])
-end
 
 function c_main:nextLevel()
     self.currentLevelIndex = self.currentLevelIndex + 1
@@ -147,19 +197,11 @@ end
 function c_main:replayLevel()
     --唯一关卡ID，这样重置关卡的时候，上一关的东西不会影响到当前。
     self.currentLevelID = self.currentLevelID + 1
-    --地块初始化结束之后，进行blocks的初始化
-    local function gridRestEnd()
-        self:reinitByLevelIndex(self.currentLevelIndex)
-    end
-
     self.currentLevelConfig = self.levelConfigs.levelDatas[self.currentLevelIndex] 
     self.currentGameState = "initing"
     --重置battle,当前关卡，最多随机几个颜色
     self.battle:reset()
-    --清理上次的block和各种变量
-    self.three.blocks:clearCurrentLevel()
-    --初始化地块
-    self.three.grids:reset(gridRestEnd)
+    self.three:reset()
     --初始化动画
     self.battle.bar.sideLeft:gtp("start")
     self.battle.bar.sideRight:gtp("start")
@@ -176,34 +218,25 @@ function c_main:prevLevel()
     self:replayLevel()
 end
 
---battle 部分是否获取完了所有消除的方块。
-function c_main:battleGetBlockEnd()
-    if self.three.blocks.canOperationBoo == false then-- 重置 三消的回合状态
-        self.three.blocks.canOperationBoo = true
+
+--通过type 获取使用的 Block 图片名
+function c_main:getBattleBlockPicNameByType(type_)
+    local _picFileName = nil
+    if type_ == 1 then
+        _picFileName = "glassBlock_greenM.png"
+    elseif type_ == 2 then
+        _picFileName = "glassBlock_blueM.png"
+    elseif type_ == 3 then
+        _picFileName = "glassBlock_pinkM.png"
+    elseif type_ == 4 then
+        _picFileName = "glassBlock_yellowM.png"
+    elseif type_ == 5 then
+        _picFileName = "glassBlock_redM.png"
+    elseif type_ == 11 then
+        _picFileName = "glassBlock_six.png"
     end
+    return _picFileName
 end
-
---游戏成功
-function c_main:gameSuccess()
-    if self.currentGameState ~= "gaming" then
-        return
-    end
-    self.currentGameState = "successing"
-end
-
---游戏失败
-function c_main:gameFail(type_)
-    if self.currentGameState ~= "gaming" then
-        return
-    end
-    self.currentGameState = "failing"
-    if type_ == "round" then --回合数
-        
-    elseif type_ == "time" then --时间
-
-    end
-end
-
 --通过type 获取使用的 Block 图片名
 function c_main:getBlockPicNameByType(type_)
     local _picFileName = nil
@@ -220,14 +253,19 @@ function c_main:getBlockPicNameByType(type_)
     elseif type_ == 10 then
         _picFileName = "glassBlock_colorB.png"
     elseif type_ == 11 then
-        _picFileName = "icon_ball_11.png"
+        _picFileName = "glassBlock_six.png"
     end
     return _picFileName
 end
 --通过type 获取使用的 Block 图片名
 function c_main:getAniMcByType(type_)
     local _aniMc = nil
-    _aniMc = require("src.app.ui.controls.common.c_block_glassBlock").new()
+    if type_ == 11 then
+        _aniMc = require("src.app.ui.controls.common.c_block_glassBlockType11").new()
+    else
+        _aniMc = require("src.app.ui.controls.common.c_block_glassBlock").new()
+    end
+    
     _aniMc.main = self
     _aniMc.type = type_
     return _aniMc
@@ -270,6 +308,8 @@ end
 function c_main:onDestory()
     --ui remove logic here
     --print(self.moduleName .. " : " .. self.className .. " : " .. "onDestory")
+    local _eventDispatcher = cc.Director:getInstance():getEventDispatcher()
+    _eventDispatcher.removeCustomEventListeners("debug.level_select")
     c_main.super.onDestory(self)
 end
 

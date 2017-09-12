@@ -38,30 +38,30 @@ function c_main_battle_blockCount:init(initDict_)
     self:initSubUIs(_specialDict, _avoidInitDict)
     self.count:setString(self.blockCount)
 
-    -- --更换小图标
-    -- local _picFileName = self.main:getBattleBlockPicNameByType(self.type)
-    -- if _picFileName then
-    --     self.blockPic = cc.Sprite:create(_picFileName)
-    --     self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
-    --     self.blockShow.pic:setVisible(false)
-    --     self.blockShow:addChild(self.blockPic)
-    -- end
-
-    --动画表现 battle 里面的
-    local _aniMC = self.main:getBattleAniMCByType(self.type)
-    if _aniMC then
-        self.blockPic = _aniMC
-        self.blockPic.name="disMc"
-        self.blockPic:init(nil)
+    --更换小图标
+    local _picFileName = self.main:getBattleBlockPicNameByType(self.type)
+    if _picFileName then
+        self.blockPic = cc.Sprite:create(_picFileName)
+        self.blockPic:setAnchorPoint(cc.p(0.50, 0.50))
         self.blockShow.pic:setVisible(false)
         self.blockShow:addChild(self.blockPic)
-        -- 只放到uiList中，这样可以更新的到
-        table.insert(self.logicParent.uiList,self.blockPic)
-        self.shadow = cc.Sprite:create("three_battle_fazhen_shadow.png")
-        self.shadow:setScaleY(0.5)
-        self:shadowSync()--同步影子位置
-        self.logicParent.shadow:addChild(self.shadow)
     end
+
+    -- --动画表现 battle 里面的
+    -- local _aniMC = self.main:getBattleAniMCByType(self.type)
+    -- if _aniMC then
+    --     self.blockPic = _aniMC
+    --     self.blockPic.name="disMc"
+    --     self.blockPic:init(nil)
+    --     self.blockShow.pic:setVisible(false)
+    --     self.blockShow:addChild(self.blockPic)
+    --     -- 只放到uiList中，这样可以更新的到
+    --     table.insert(self.logicParent.uiList,self.blockPic)
+    --     self.shadow = cc.Sprite:create("three_battle_fazhen_shadow.png")
+    --     self.shadow:setScaleY(0.5)
+    --     self:shadowSync()--同步影子位置
+    --     self.logicParent.shadow:addChild(self.shadow)
+    -- end
 end
 
 --重置过关条件

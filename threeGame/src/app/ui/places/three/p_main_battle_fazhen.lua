@@ -18,11 +18,11 @@ function p_main_battle_fazhen:initPlace(referUI_,container_)
 	mcControl:getInstance():addMcObjectToContainer(referUI_.circle1,container_,0.00,0.00,1,1,{{0,1,},{0,1,},{0,1,},{1,1,},{1,1,},{1,1,},{0,1,},{0,1,},{0,1,}},1)
 	table.insert(referUI_.uiList,referUI_.circle1)
 	du:setLogicParent(referUI_.circle1,referUI_)
-	referUI_.instance222=C_circle_shine.new();
-	referUI_.instance222.name="instance222"
-	mcControl:getInstance():addMcObjectToContainer(referUI_.instance222,container_,0.00,0.00,1,1,{{0,1,},{0,1,},{0,1,},{1,1,},{1,1,},{1,1,},{0,1,},{0,1,},{0,1,}},7)
-	table.insert(referUI_.uiList,referUI_.instance222)
-	du:setLogicParent(referUI_.instance222,referUI_)
+	referUI_.instance230=C_circle_shine.new();
+	referUI_.instance230.name="instance230"
+	mcControl:getInstance():addMcObjectToContainer(referUI_.instance230,container_,0.00,0.00,1,1,{{0,1,},{0,1,},{0,1,},{1,1,},{1,1,},{1,1,},{0,1,},{0,1,},{0,1,}},7)
+	table.insert(referUI_.uiList,referUI_.instance230)
+	du:setLogicParent(referUI_.instance230,referUI_)
 	referUI_.star= cc.Sprite:create("three_battle_start.png")
 	referUI_.star.name="star"
 	mcControl:getInstance():addMcObjectToContainer(referUI_.star,container_,0.50,0.50,1,1,{{0,1,},{0,1,},{0,1,},{1,1,},{1,1,},{1,1,},{0,1,},{0,1,},{0,1,}},2)

@@ -111,11 +111,8 @@ function c_main_battle:getBlockCount(type_,special_,blockArr_)
             self.blockAddSpeed = self.targetRotateSpeedMax
         end
         if self:isGetBlockEnd() then--如果，其他的blockCount 也获取完了。
-            if self:isBlockCountConditionFix() then --每一个的条件也满足了
-                self.main:gameSuccess() -- 完成了所有条件
-            else
-                self.main:battleGetBlockEnd() -- 通知 main. battle已经获取了所有的block
-            end
+            --让main检测一遍游戏状态
+            self.main.needCheckGameState = true
         end
     end
     for i=1 , _blockNum do
@@ -146,6 +143,10 @@ function c_main_battle:isBlockCountConditionFix()
             return false
         end
     end
+    --类型11是否满足
+    if self["blockCount11"]:isBlockCountConditionFix()==false then
+        return false
+    end
     return true
 end
 
@@ -159,10 +160,7 @@ function c_main_battle:addRoundCount()
         _currentRoundCount = self.roundCount
     end
     self.roundTxt:setString(tostring(_currentRoundCount).."/"..tostring(_currentLeveLRoundMax))
-    if self.roundCount>=_currentLeveLRoundMax then
-        --回合不够用了，失败
-        self.main:gameFail("round")
-    end
+
 end
 -- 当前关卡几种Block
 function c_main_battle:reset()
@@ -174,21 +172,13 @@ function c_main_battle:reset()
     -- 11 有的关有，有的关没有
     -- 10 不需要显示
     -- 颜色上限9
+    local _currentLevelConfig = self.main.currentLevelConfig
     for i=1,10 do
-        local _currentLevelConfig = self.main.currentLevelConfig
         local _randomMax = tonumber(_currentLevelConfig.randomMax)
-
         local _blockCount = self["blockCount"..tostring(i)]
         --按照个数摆放位置
         if i<=_randomMax then
-            local _blockCountConditionStr = _currentLevelConfig["type_"..tostring(i).."_max"]
-            if _blockCountConditionStr then
-                local _blockCountCondition = tonumber(_blockCountConditionStr)
-                _blockCount:resetBlockCountCondition(_blockCountCondition)
-            else
-                _blockCount:resetBlockCountCondition(0)
-            end
-
+            _blockCount:resetBlockCountCondition(tonumber(_currentLevelConfig["type_"..tostring(i).."_max"]))
             --重置 属性 显示
             _blockCount:setVisible(true)
             _blockCount:reset(tonumber(i-1)*360/_randomMax)
@@ -197,6 +187,21 @@ function c_main_battle:reset()
             _blockCount:setVisible(false)
         end
     end
+    --type11 相关显示设置
+    local _type11BlockCount =  self["blockCount11"]
+    local _type11TargetPoint = self:convertToNodeSpace(self.main.up:convertToWorldSpace(cc.p(self.main.up.type11Target:getPositionX(),self.main.up.type11Target:getPositionY()-30)))
+    _type11BlockCount:setPosition(_type11TargetPoint)
+    local _type11Condition = tonumber(_currentLevelConfig["type_11_max"])
+    _type11BlockCount:resetBlockCountCondition(_type11Condition)
+    --顶上的是否显示
+    if _type11Condition~=0 then
+        self.main.up.type11Target:setVisible(false)
+        _type11BlockCount:setVisible(true)
+    else
+        _type11BlockCount:setVisible(false)
+        self.main.up.type11Target:setVisible(true)
+    end
+
     self.fazhen:reset()
     self.bg:reset()
     --Cure路径计数
@@ -207,9 +212,7 @@ function c_main_battle:reset()
     self.blockAddSpeed = self.targetRotateSpeed
     self.blockAddR = self.targetR
 end
---ui stateChange-------------------------------------
 function c_main_battle:updateF(type_)
-    --Logic here,then change state.
     c_main_battle.super.updateF(self,type_)
 
     if type_ == 914 then

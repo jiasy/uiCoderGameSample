@@ -1,5 +1,6 @@
 --imports----------------------------------------------------------
 local C_testUIBtn = require("src.app.ui.controls.uiBtn.c_testUIBtn")
+local C_level_list = require("src.app.ui.controls.debug.c_level_list")
 
 local uiState=require("src.app.base.ui.uiState")
 local p_level_contorl = {}
@@ -22,6 +23,12 @@ function p_level_contorl:initPlace(referUI_,container_)
 	table.insert(referUI_.disBaseList,referUI_.btn_state_s1)
 	table.insert(referUI_.uiBtnList,referUI_.btn_state_s1)
 	du:setLogicParent(referUI_.btn_state_s1,referUI_)
+	referUI_.levelList=C_level_list.new();
+	referUI_.levelList.name="levelList"
+	du:placeAndAddChildToContainer(referUI_.levelList,container_,0.00,0.00,-300,1600,0,1,1,1,10)
+	referUI_.levelList:setItemInfo("debug","level_list_item",3,0,0)
+	table.insert(referUI_.uiList,referUI_.levelList)
+	du:setLogicParent(referUI_.levelList,referUI_)
 	referUI_.btn_next=ccui.Button:create("btnUp.png", "btnDown.png","btnDown.png")
 	referUI_.btn_next.name="btn_next"
 	du:setBtnText(referUI_.btn_next,lu:tansWord("next"),du.ttfConfig.fontFilePath,20,"center",cc.c3b(255, 255, 255))
@@ -100,6 +107,10 @@ function p_level_contorl:initPlace(referUI_,container_)
 		end
 	)
 	du:setLogicParent(referUI_.btn_aiFly,referUI_)
+	referUI_.instance505= cc.Sprite:create("bluePic.png")
+	referUI_.instance505.name="instance505"
+	du:placeAndAddChildToContainer(referUI_.instance505,container_,0.00,1.00,-300,1600,0,6,4,1,9)
+	du:setLogicParent(referUI_.instance505,referUI_)
 	
 	while #_maskInfos>0 do
 		local _maskInfo=table.remove(_maskInfos)
@@ -110,14 +121,16 @@ function p_level_contorl:initPlace(referUI_,container_)
     local _statePlaceArr=nil
     ---------------------------------------------------------------s1
     _statePlaceArr={}
-    table.insert(_statePlaceArr,{referUI_.btn_next,380.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.btn_prev,380.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.btn_reset,380.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.btn_aiNormal,380.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.btn_aiQuick,380.00,0.00,1.00,1.00,0.00,1.00})
-    table.insert(_statePlaceArr,{referUI_.btn_aiFly,380.00,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_next,-373.95,597.90,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_prev,-373.95,624.90,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_reset,-373.95,568.90,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_aiNormal,374.90,624.90,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_aiQuick,374.90,597.90,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.btn_aiFly,374.90,574.90,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.btn_state_s2,277.45,0.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.btn_state_s1,277.45,-45.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance505,-300.00,1600.00,6.00,4.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.levelList,-300.00,1600.00,1.00,1.00,0.00,1.00})
     
     referUI_.s1 = uiState.new(referUI_,_statePlaceArr)
     referUI_.s1.stateName="s1"
@@ -133,6 +146,8 @@ function p_level_contorl:initPlace(referUI_,container_)
     table.insert(_statePlaceArr,{referUI_.btn_aiFly,222.90,574.90,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.btn_state_s2,364.80,0.00,1.00,1.00,0.00,1.00})
     table.insert(_statePlaceArr,{referUI_.btn_state_s1,277.45,0.00,1.00,1.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.instance505,-300.00,1050.00,6.00,4.00,0.00,1.00})
+    table.insert(_statePlaceArr,{referUI_.levelList,-300.00,1050.00,1.00,1.00,0.00,1.00})
     
     referUI_.s2 = uiState.new(referUI_,_statePlaceArr)
     referUI_.s2.stateName="s2"

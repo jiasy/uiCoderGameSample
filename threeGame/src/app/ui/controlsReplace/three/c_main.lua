@@ -23,9 +23,6 @@ function c_main:init(initDict_)
     -----ui init----------------------------------------------------------
     local _specialDict={}--自定义数据初始化子UI
     local _avoidInitDict={}--避免在这里进行初始化的UI名称做KEY的字典。
-    --local _yuzhouDict={}
-    --_specialDict["yuzhou"]= _yuzhouDict
-    --_avoidInit["yuzhou"]="avoidInitHere"
     --local _threeDict={}
     --_specialDict["three"]= _threeDict
     --_avoidInit["three"]="avoidInitHere"
