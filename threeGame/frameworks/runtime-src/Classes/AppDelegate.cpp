@@ -8,6 +8,11 @@
 #include "ide-support/CodeIDESupport.h"
 #endif
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
+//#import <HockeySDK/HockeySDK.h>
+#endif
+
+
 #if (COCOS2D_DEBUG > 0) && (CC_CODE_IDE_DEBUG_SUPPORT > 0)
 #include "runtime/Runtime.h"
 #include "ide-support/RuntimeLuaImpl.h"
@@ -84,6 +89,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     return true;
 }
+
+
 
 // This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.
 void AppDelegate::applicationDidEnterBackground()

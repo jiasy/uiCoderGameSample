@@ -52,8 +52,8 @@ function p_testUIBtn:initPlace(referUI_,container_)
 	du.ttfConfig.outlineSize = 0 
 	referUI_.instance522=cc.Label:createWithTTF(du.ttfConfig, lu:tansWord("按下"), cc.TEXT_ALIGNMENT_CENTER)
 	referUI_.instance522.name="instance522"
-	du:textSet(referUI_.instance522,255,255,255,nil,24)
-	du:placeAndAddChildToContainer(referUI_.instance522,container_,0.50,0.50,0,0,0,1,1,1,9)
+	du:textSet(referUI_.instance522,255,255,255,nil,32)
+	du:placeAndAddChildToContainer(referUI_.instance522,container_,0.50,0.63,0,0,0,1,1,1,9)
 	referUI_.instance522.isText=true
 	du:setLogicParent(referUI_.instance522,referUI_)
 	du.ttfConfig.fontSize = 20

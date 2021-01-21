@@ -215,7 +215,7 @@ function disRoll:onTouchMoved(touch_,event_)
                 then
                     --超过了视为手指移动太远，按钮就恢复原状
                     self.currentTapingBtn:moveOut()
-                    self.currentTapingBtn=nil 
+                    self.currentTapingBtn=nil
                 end
             end
         end

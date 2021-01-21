@@ -53,6 +53,9 @@ function uiControlInstance:ctor(params_)
     self.p31 = cc.p(0,0)
     self.p32 = cc.p(self.realWidth*0.5,0)
     self.p33 = cc.p(self.realWidth,0)
+    self.mainContainer:setScale(self.scaleBuffer)--Adaption for Mobile screen
+    self.mainContainer:setAnchorPoint(cc.p(0,0))
+    self.mainContainer:setPosition(cc.p(self.bufferX,self.bufferY))-- Move to the right place.
     self.alignModePoints= {}
     self.alignModePoints["LT"] = self.p11--left top
     self.alignModePoints["T"]  = self.p12--center top
@@ -63,9 +66,6 @@ function uiControlInstance:ctor(params_)
     self.alignModePoints["LB"] = self.p31--left bottom
     self.alignModePoints["B"]  = self.p32--bottom
     self.alignModePoints["RB"] = self.p33--right bottom
-    self.mainContainer:setScale(self.scaleBuffer)--Adaption for Mobile screen
-    self.mainContainer:setAnchorPoint(cc.p(0,0))
-    self.mainContainer:setPosition(cc.p(self.bufferX,self.bufferY))-- Move to the right place.
     --Array for container's sub layer
     self.lLoadingArr={}--loading : game loading... resource loading
     self.lTipArr={}--    tip     : guide or tip
